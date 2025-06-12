@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: '3.8'
 
 services:
   frontend:
@@ -12,7 +11,7 @@ services:
       - /app/.next # Anonymous volume for Next.js build cache
     ports:
       - '${FRONTEND_PORT:-3000}:3000' # Use .env variable or default to 3000
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
     environment:
       - NODE_ENV=development
       # Add any other frontend specific env vars here if needed
@@ -28,7 +27,7 @@ services:
       - /app/node_modules # Anonymous volume
     ports:
       - '${BACKEND_PORT:-8000}:8000' # Use .env variable or default to 8000
-    command: npm run dev # This will use nodemon defined in backend/package.json
+    command: sh -c "npm install && npm run dev" # This will use nodemon defined in backend/package.json
     environment:
       - NODE_ENV=development
       - REDIS_URL=redis://redis:6379 # Connect to the redis service
