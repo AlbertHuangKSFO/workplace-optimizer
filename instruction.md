@@ -1,57 +1,51 @@
 # AI Agent 开发指令文档 - 职场沟通优化器
 
-> 专为AI Agent和Cursor设计的详细开发指令，包含阶段性总结和开源准备
+> 专为 AI Agent 和 Cursor 设计的详细开发指令，包含阶段性总结和开源准备
 
 ## 项目概述
 
 ### 项目名称
+
 - 中文名：职场沟通优化器
 - 英文名：Workplace Communication Optimizer
 - 项目代码：workplace-optimizer
 
 ### 核心功能
-创建一个为互联网大厂员工设计的职场沟通工具，采用iTools风格界面设计，支持多AI供应商，包含以下功能模块：
+
+创建一个为互联网大厂员工设计的职场沟通工具，采用 iTools 风格界面设计，支持多 AI 供应商，包含以下功能模块：
 
 **沟通优化类:**
+
 1. 话术优化器 (Speech Optimizer)
 2. 邮件润色器 (Email Polisher)
 3. 会议发言生成器 (Meeting Speech Generator)
 
-**语言转换类:**
-4. 黑话翻译器 (Jargon Translator)
-5. 跨部门沟通翻译 (Cross-Department Translator)
-6. 职场情商助手 (EQ Assistant)
+**语言转换类:** 4. 黑话翻译器 (Jargon Translator) 5. 跨部门沟通翻译 (Cross-Department Translator) 6. 职场情商助手 (EQ Assistant)
 
-**内容生成类:**
-7. PPT金句生成器 (PPT Phrase Generator)
-8. 职场人设生成器 (Professional Persona Generator)
-9. 汇报数据美化器 (Data Beautifier)
+**内容生成类:** 7. PPT 金句生成器 (PPT Phrase Generator) 8. 职场人设生成器 (Professional Persona Generator) 9. 汇报数据美化器 (Data Beautifier)
 
-**危机处理类:**
-10. 甩锅/背锅话术 (Blame/Cover Tactics)
-11. 危机公关模板 (Crisis Communication Templates)
-12. 离职/跳槽文案生成器 (Resignation/Job-hopping Templates)
+**危机处理类:** 10. 甩锅/背锅话术 (Blame/Cover Tactics) 11. 危机公关模板 (Crisis Communication Templates) 12. 离职/跳槽文案生成器 (Resignation/Job-hopping Templates)
 
-**智能分析类:**
-13. 团队氛围检测器 (Team Mood Detector)
-14. 会议记录智能整理 (Meeting Notes Organizer)
-15. 职场梗图生成器 (Workplace Meme Generator)
+**智能分析类:** 13. 团队氛围检测器 (Team Mood Detector) 14. 会议记录智能整理 (Meeting Notes Organizer) 15. 职场梗图生成器 (Workplace Meme Generator)
 
 ### 技术要求
+
 - **前端**: React 18 + TypeScript + Tailwind CSS + Shadcn/ui
 - **后端**: Node.js + Express + TypeScript
-- **AI模型**: 多供应商接入 (OpenAI、Anthropic、Google、国内厂商)
-- **UI设计**: 仿iTools风格，现代化界面设计
+- **AI 模型**: 多供应商接入 (OpenAI、Anthropic、Google、国内厂商)
+- **UI 设计**: 仿 iTools 风格，现代化界面设计
 - **容器化**: Docker + Docker Compose
 - **多语言**: 中文 + 英文完整支持
 - **开源准备**: 完整的开源项目结构
-- **git update**: 该项目属于一个git库，当你完成阶段性任务以后需要上传到这个库
+- **git update**: 该项目属于一个 git 库，当你完成阶段性任务以后需要上传到这个库
+- **访客统计**: 实现匿名的基本访客和工具使用频率统计
 
 ## AI Agent 执行指令
 
 ### 阶段一：项目初始化和基础架构 (Stage 1)
 
-#### 任务1.1: 创建项目结构
+#### 任务 1.1: 创建项目结构
+
 ```bash
 # 创建以下完整的项目目录结构
 workplace-optimizer/
@@ -73,7 +67,8 @@ workplace-optimizer/
 └── LICENSE
 ```
 
-#### 任务1.2: 初始化前端项目
+#### 任务 1.2: 初始化前端项目
+
 ```bash
 # 在frontend目录执行：
 npx create-react-app . --template typescript
@@ -153,7 +148,8 @@ src/
     └── components.css         # 组件样式
 ```
 
-#### 任务1.3: 初始化后端项目
+#### 任务 1.3: 初始化后端项目
+
 ```bash
 # 在backend目录执行：
 npm init -y
@@ -206,7 +202,6 @@ src/
 │   │   └── models.ts
 │   └── index.ts
 ├── middleware/                 # 中间件
-│   ├── auth.ts               # 认证中间件
 │   ├── rateLimit.ts          # 限流中间件
 │   ├── validation.ts         # 验证中间件
 │   └── errorHandler.ts       # 错误处理
@@ -242,10 +237,12 @@ src/
     └── helper.ts             # 辅助函数
 ```
 
-#### 任务1.4: 创建Docker配置
-创建完整的Docker配置文件，包括开发和生产环境。
+#### 任务 1.4: 创建 Docker 配置
 
-#### 任务1.5: 创建环境变量文件
+创建完整的 Docker 配置文件，包括开发和生产环境。
+
+#### 任务 1.5: 创建环境变量文件
+
 ```bash
 # .env.example内容：
 # OpenAI配置
@@ -301,7 +298,6 @@ REDIS_URL=redis://localhost:6379
 CACHE_TTL=3600
 
 # 安全配置
-JWT_SECRET=your_jwt_secret_here
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 
@@ -316,29 +312,35 @@ SIDEBAR_DEFAULT_COLLAPSED=false
 ```
 
 #### 阶段一总结检查点
-完成阶段一后，AI Agent需要生成总结报告：
+
+完成阶段一后，AI Agent 需要生成总结报告：
+
 ```markdown
 ## 阶段一完成总结
+
 - [x] 项目目录结构创建完成
-- [x] 前端React项目初始化完成，依赖安装成功
-- [x] 后端Node.js项目初始化完成，依赖安装成功
-- [x] Docker配置文件创建完成
+- [x] 前端 React 项目初始化完成，依赖安装成功
+- [x] 后端 Node.js 项目初始化完成，依赖安装成功
+- [x] Docker 配置文件创建完成
 - [x] 环境变量模板文件创建完成
 - [x] 基础开源项目结构准备完成
 
 ### 验证命令
-docker-compose up --build   # 验证所有服务能正常启动
-npm run dev                 # 验证前后端开发服务器能正常运行
+
+docker-compose up --build # 验证所有服务能正常启动
+npm run dev # 验证前后端开发服务器能正常运行
 
 ### 下一阶段准备
+
 - 确认所有依赖安装无错误
-- 确认Docker服务能正常启动
+- 确认 Docker 服务能正常启动
 - 准备开始核心功能开发
 ```
 
 ### 阶段二：核心功能开发 (Stage 2)
 
-#### 任务2.1: 开发iTools风格界面布局
+#### 任务 2.1: 开发 iTools 风格界面布局
+
 ```typescript
 // 需要创建的核心界面文件：
 frontend/src/components/layout/
@@ -366,7 +368,8 @@ frontend/src/constants/
 - 流畅的动画过渡效果
 ```
 
-#### 任务2.2: 开发多AI供应商适配器
+#### 任务 2.2: 开发多 AI 供应商适配器
+
 ```typescript
 // backend/src/services/ai/adapters/
 // 为每个AI供应商创建统一接口适配器
@@ -374,22 +377,23 @@ frontend/src/constants/
 
 // 统一接口定义：
 interface AIAdapter {
-  provider: string
-  generateText(prompt: string, options?: GenerateOptions): Promise<string>
-  estimateCost(prompt: string): number
-  checkHealth(): Promise<boolean>
-  getModels(): Promise<ModelInfo[]>
+  provider: string;
+  generateText(prompt: string, options?: GenerateOptions): Promise<string>;
+  estimateCost(prompt: string): number;
+  checkHealth(): Promise<boolean>;
+  getModels(): Promise<ModelInfo[]>;
 }
 
 // 智能路由器：
 class ModelRouter {
-  selectOptimalModel(task: TaskType): AIAdapter
-  executeWithFallback(adapters: AIAdapter[]): Promise<string>
-  loadBalance(): AIAdapter
+  selectOptimalModel(task: TaskType): AIAdapter;
+  executeWithFallback(adapters: AIAdapter[]): Promise<string>;
+  loadBalance(): AIAdapter;
 }
 ```
 
-#### 任务2.3: 开发核心功能模块 (分类实现)
+#### 任务 2.3: 开发核心功能模块 (分类实现)
+
 ```typescript
 // 按功能分类开发，每类包含前后端完整实现：
 
@@ -416,7 +420,8 @@ frontend/src/features/analysis/
 backend/src/controllers/analysis/
 ```
 
-#### 任务2.4: 开发模型管理和监控系统
+#### 任务 2.4: 开发模型管理和监控系统
+
 ```typescript
 // backend/src/services/ai/ModelManager.ts
 // 实现模型管理、健康检查、成本追踪
@@ -429,7 +434,8 @@ backend/src/controllers/analysis/
 └── ModelSwitcher.tsx         # 模型切换器
 ```
 
-#### 任务2.5: 实现国际化支持
+#### 任务 2.5: 实现国际化支持
+
 ```json
 // frontend/src/i18n/locales/zh/common.json
 // frontend/src/i18n/locales/en/common.json
@@ -437,86 +443,100 @@ backend/src/controllers/analysis/
 ```
 
 #### 阶段二总结检查点
+
 ```markdown
 ## 阶段二完成总结
-- [x] iTools风格界面布局开发完成，包含左侧导航栏和响应式设计
-- [x] 多AI供应商适配器开发完成，支持8家主流供应商
-- [x] 15个核心功能模块按分类开发完成，包含前后端实现
+
+- [x] iTools 风格界面布局开发完成，包含左侧导航栏和响应式设计
+- [x] 多 AI 供应商适配器开发完成，支持 8 家主流供应商
+- [x] 15 个核心功能模块按分类开发完成，包含前后端实现
 - [x] 模型管理和监控系统实现完成，支持智能路由和成本控制
 - [x] 国际化支持实现完成，支持中英文切换
 
 ### 界面功能测试
+
 - 测试左侧导航栏展开/折叠功能
 - 测试工具卡片的悬停效果和点击交互
 - 测试响应式布局在不同屏幕尺寸下的表现
 - 测试深色/亮色主题切换
 
-### AI供应商测试
-- 测试各供应商API连接状态
+### AI 供应商测试
+
+- 测试各供应商 API 连接状态
 - 测试智能路由和降级策略
 - 测试成本追踪和预警功能
 - 测试模型切换的响应速度
 
 ### 功能模块测试
+
 - 测试沟通优化类功能 (话术优化、邮件润色、会议发言)
 - 测试语言转换类功能 (黑话翻译、跨部门沟通、情商助手)
-- 测试内容生成类功能 (PPT金句、人设生成、数据美化)
+- 测试内容生成类功能 (PPT 金句、人设生成、数据美化)
 - 测试危机处理类功能 (甩锅话术、危机公关、离职文案)
 - 测试智能分析类功能 (团队氛围、会议整理、梗图生成)
 
-### API端点验证
-- POST /api/communication/* (沟通优化类接口)
-- POST /api/translation/* (翻译功能类接口)
-- POST /api/generation/* (内容生成类接口)
-- POST /api/crisis/* (危机处理类接口)
-- POST /api/analysis/* (智能分析类接口)
+### API 端点验证
+
+- POST /api/communication/\* (沟通优化类接口)
+- POST /api/translation/\* (翻译功能类接口)
+- POST /api/generation/\* (内容生成类接口)
+- POST /api/crisis/\* (危机处理类接口)
+- POST /api/analysis/\* (智能分析类接口)
 - GET /api/models/status (模型状态接口)
 - GET /api/models/cost (成本统计接口)
 ```
 
-### 阶段三：功能扩展和UI完善 (Stage 3)
+### 阶段三：功能扩展和 UI 完善 (Stage 3)
 
-#### 任务3.1: 完善界面交互和用户体验
+#### 任务 3.1: 完善界面交互和用户体验
+
 - 优化左侧导航栏的交互体验
 - 完善工具卡片的加载状态和错误处理
 - 实现全局搜索功能
 - 添加键盘快捷键支持
 - 优化移动端触摸交互
 
-#### 任务3.2: 增强AI模型能力
-- 实现A/B测试功能，对比不同提示词效果
-- 添加个性化学习功能，记录用户偏好
-- 实现智能成本控制，自动优化API调用
-- 添加模型性能分析和报告功能
+#### 任务 3.2: 增强 AI 模型能力
 
-#### 任务3.3: 完善功能模块细节
+- 实现 A/B 测试功能，对比不同提示词效果
+- 实现智能成本控制，自动优化 API 调用
+- 添加模型性能分析和报告功能
+- 实现基本的匿名访客统计和工具使用频率统计
+
+#### 任务 3.3: 完善功能模块细节
+
 - 为每个功能添加高级选项和参数调节
 - 实现历史记录和收藏功能
 - 添加批量处理能力
 - 实现结果导出和分享功能
 
-#### 任务3.4: 性能优化和缓存策略
-- 实现智能缓存减少重复API调用
+#### 任务 3.4: 性能优化和缓存策略
+
+- 实现智能缓存减少重复 API 调用
 - 优化前端代码分割和懒加载
 - 实现请求去重和防抖
 - 添加离线模式支持错误处理界面
 
-#### 任务3.3: 性能优化
+#### 任务 3.3: 性能优化
+
 - 缓存策略实现
 - 请求限流
 - 代码分割
 - 图片懒加载
 
 #### 阶段三总结检查点
+
 ```markdown
 ## 阶段三完成总结
-- [x] 所有8个核心功能模块开发完成
+
+- [x] 所有 8 个核心功能模块开发完成
 - [x] 用户界面完善，支持响应式和暗黑模式
 - [x] 性能优化实施完成
 - [x] 完整的错误处理和用户反馈
 
 ### 完整功能测试
-- 测试所有8个功能模块
+
+- 测试所有 8 个功能模块
 - 测试响应式布局
 - 测试暗黑模式切换
 - 测试性能和缓存
@@ -524,38 +544,44 @@ backend/src/controllers/analysis/
 
 ### 阶段四：开源准备和文档完善 (Stage 4)
 
-#### 任务4.1: 创建完整的README文档
+#### 任务 4.1: 创建完整的 README 文档
+
 ```markdown
 # 需要创建的文档文件：
-README.md              # 英文主README
-README.zh.md           # 中文README
+
+README.md # 英文主 README
+README.zh.md # 中文 README
 docs/en/
-├── installation.md    # 安装指南
-├── api.md            # API文档
-├── development.md    # 开发指南
-├── deployment.md     # 部署指南
-└── contributing.md   # 贡献指南
+├── installation.md # 安装指南
+├── api.md # API 文档
+├── development.md # 开发指南
+├── deployment.md # 部署指南
+└── contributing.md # 贡献指南
 
 docs/zh/
-├── installation.md    # 安装指南
-├── api.md            # API文档
-├── development.md    # 开发指南
-├── deployment.md     # 部署指南
-└── contributing.md   # 贡献指南
+├── installation.md # 安装指南
+├── api.md # API 文档
+├── development.md # 开发指南
+├── deployment.md # 部署指南
+└── contributing.md # 贡献指南
 ```
 
-#### 任务4.2: 创建GitHub模板文件
+#### 任务 4.2: 创建 GitHub 模板文件
+
 ```markdown
 # .github/ISSUE_TEMPLATE/
-├── bug_report.md      # Bug报告模板
+
+├── bug_report.md # Bug 报告模板
 ├── feature_request.md # 功能请求模板
-└── question.md        # 问题咨询模板
+└── question.md # 问题咨询模板
 
 # .github/PULL_REQUEST_TEMPLATE.md
-# PR模板，包含检查清单
+
+# PR 模板，包含检查清单
 ```
 
-#### 任务4.3: 创建CI/CD工作流
+#### 任务 4.3: 创建 CI/CD 工作流
+
 ```yaml
 # .github/workflows/
 ├── ci.yml            # 持续集成
@@ -563,14 +589,18 @@ docs/zh/
 └── release.yml       # 发布工作流
 ```
 
-#### 任务4.4: 创建开源协议和贡献指南
+#### 任务 4.4: 创建开源协议和贡献指南
+
 ```markdown
-# LICENSE文件 (建议MIT协议)
+# LICENSE 文件 (建议 MIT 协议)
+
 # CONTRIBUTING.md 贡献指南
+
 # CODE_OF_CONDUCT.md 行为准则
 ```
 
-#### 任务4.5: 创建部署脚本和配置
+#### 任务 4.5: 创建部署脚本和配置
+
 ```bash
 # scripts/
 ├── deploy.sh         # 部署脚本
@@ -581,16 +611,19 @@ docs/zh/
 ```
 
 #### 阶段四总结检查点
+
 ```markdown
 ## 阶段四完成总结 (最终总结)
-- [x] 完整的中英文README文档创建完成
-- [x] API文档和开发文档完善完成
-- [x] GitHub Issue和PR模板创建完成
-- [x] CI/CD工作流配置完成
+
+- [x] 完整的中英文 README 文档创建完成
+- [x] API 文档和开发文档完善完成
+- [x] GitHub Issue 和 PR 模板创建完成
+- [x] CI/CD 工作流配置完成
 - [x] 开源协议和贡献指南创建完成
 - [x] 部署脚本和生产配置完成
 
 ### 开源准备检查清单
+
 - [x] 代码质量检查通过
 - [x] 安全漏洞扫描通过
 - [x] 完整的文档覆盖
@@ -598,36 +631,41 @@ docs/zh/
 - [x] 许可证和法律文件完整
 
 ### 最终验证
+
 - 完整功能演示录屏
 - 部署文档验证
-- 新用户onboarding测试
+- 新用户 onboarding 测试
 - 社区反馈收集准备
 ```
 
 ## 特殊要求和注意事项
 
-### AI Agent执行规范
+### AI Agent 执行规范
+
 1. **阶段性检查**: 每完成一个阶段必须生成总结报告
 2. **错误处理**: 遇到错误时提供详细的错误信息和解决方案
-3. **代码质量**: 所有代码必须包含完整的TypeScript类型定义
+3. **代码质量**: 所有代码必须包含完整的 TypeScript 类型定义
 4. **注释标准**: 关键功能必须有中英文注释
 5. **测试要求**: 核心功能必须包含单元测试
 
 ### 开源项目标准
+
 1. **文档完整性**: 中英文文档必须同步更新
 2. **社区友好**: 包含完整的贡献指南和行为准则
-3. **部署简单**: 一键Docker部署
+3. **部署简单**: 一键 Docker 部署
 4. **示例丰富**: 包含完整的使用示例
 5. **持续集成**: 自动化测试和部署
 
 ### 多语言支持要求
+
 1. **界面语言**: 前端界面完整的中英文支持
-2. **提示词本地化**: AI提示词针对中英文分别优化
+2. **提示词本地化**: AI 提示词针对中英文分别优化
 3. **文档双语**: 所有文档必须有中英文版本
 4. **错误信息**: 错误提示支持多语言
-5. **API响应**: API响应消息支持国际化
+5. **API 响应**: API 响应消息支持国际化
 
-### Docker和部署要求
+### Docker 和部署要求
+
 1. **多环境配置**: 开发、测试、生产环境分离
 2. **健康检查**: 所有服务包含健康检查
 3. **日志管理**: 完整的日志收集和管理
@@ -637,34 +675,39 @@ docs/zh/
 ## 最终交付清单
 
 ### 代码交付
-- [x] 完整的前端React应用
-- [x] 完整的后端Node.js API
-- [x] SGLang模型服务集成
-- [x] Docker完整配置
+
+- [x] 完整的前端 React 应用
+- [x] 完整的后端 Node.js API
+- [x] SGLang 模型服务集成
+- [x] Docker 完整配置
 - [x] 环境变量配置模板
 
 ### 文档交付
-- [x] 中英文README
-- [x] API文档
+
+- [x] 中英文 README
+- [x] API 文档
 - [x] 部署指南
 - [x] 开发指南
 - [x] 贡献指南
 
 ### 开源准备
-- [x] GitHub模板文件
-- [x] CI/CD工作流
+
+- [x] GitHub 模板文件
+- [x] CI/CD 工作流
 - [x] 开源协议
 - [x] 社区管理文件
 
 ### 运维配置
-- [x] 生产环境Docker配置
+
+- [x] 生产环境 Docker 配置
 - [x] 部署脚本
 - [x] 备份方案
 - [x] 监控配置
 
-## AI Agent执行命令
+## AI Agent 执行命令
 
 开始执行请使用以下命令格式：
+
 ```bash
 # 开始执行
 AI Agent: 开始执行阶段一任务，创建项目基础架构

@@ -27,12 +27,11 @@ services:
       - /app/node_modules # Anonymous volume
     ports:
       - '${BACKEND_PORT:-8000}:8000' # Use .env variable or default to 8000
-    command: sh -c "npm install && npm run dev" # This will use nodemon defined in backend/package.json
+    command: sh -c "npm install && npx ts-node src/index.ts || sleep 3600" # Use npx and keep container alive on error
     environment:
       - NODE_ENV=development
       - REDIS_URL=redis://redis:6379 # Connect to the redis service
-      # We'll rely on a .env file at the root for other backend ENVs
-      # Or they can be explicitly defined here
+      - TS_NODE_CACHE=false # Attempt to disable ts-node caching
     env_file:
       - .env.example # Load variables from .env.example (or .env if it exists)
     depends_on:

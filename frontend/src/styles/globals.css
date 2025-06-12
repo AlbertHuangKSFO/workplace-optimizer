@@ -1,0 +1,53 @@
+/* frontend/src/styles/globals.css */
+@import 'tailwindcss';
+
+/*
+  Define global CSS variables based on appColors for easier JS access if needed,
+  or for components not easily styled by Tailwind directly.
+  This is optional and an alternative to directly using Tailwind classes.
+  The AppLayout already sets bg-gray-800 and text-gray-100 on the body.
+*/
+/*
+:root {
+  --color-bg-dark: #1f2937; // Updated to match gray-800
+  --color-bg-medium-dark: #374151; // gray-700 for example
+  --color-bg-light-dark: #4b5563; // gray-600 for example
+  --color-text-primary-dark: #f3f4f6; // Updated to match gray-100
+  --color-text-secondary-dark: #9ca3af; // gray-400
+  --color-text-tertiary-dark: #6b7280; // gray-500
+  --color-accent-primary: #0ea5e9;
+  --color-accent-primary-hover: #0284c7;
+  --color-border-dark: #4b5563; // gray-600
+}
+*/
+
+/* Basic body styling (already partially handled in layout.tsx via className) */
+/*
+body {
+  @apply bg-gray-800 text-gray-100 antialiased;
+}
+*/
+
+/* Custom scrollbar styling for a more modern look (optional) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-600 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-500;
+}
+
+/* For Firefox (scrollbar-width and scrollbar-color are simpler) */
+/* html {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.neutral.600') theme('colors.neutral.800');
+} */
