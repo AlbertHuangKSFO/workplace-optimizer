@@ -1,0 +1,61 @@
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: workplace-optimizer-frontend-prod
+    ports:
+      - '${FRONTEND_PORT:-3000}:3000'
+    environment:
+      - NODE_ENV=production
+      # Ensure any necessary build-time or run-time env vars are passed
+      # For Next.js, public env vars need to be prefixed with NEXT_PUBLIC_
+      # and build-time private env vars can be passed during build.
+      # Run-time private env vars are typically handled by the Node.js server environment.
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: workplace-optimizer-backend-prod
+    ports:
+      - '${BACKEND_PORT:-8000}:8000'
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      # Production should use a .env file or environment variables set in the deployment environment
+      # Do NOT commit actual .env files with secrets to version control.
+    env_file:
+      - .env # Load variables from a .env file in production (this file should be created on the server, not committed)
+    depends_on:
+      - redis
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: workplace-optimizer-redis-prod
+    volumes:
+      - redis-data-prod:/data # Persist Redis data for production
+    # For production, Redis might not need to expose its port externally
+    # unless specific direct access is required.
+    # ports:
+    #   - "6379:6379"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data-prod: # Separate volume for production Redis data
+    driver: local

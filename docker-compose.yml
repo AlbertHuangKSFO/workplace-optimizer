@@ -1,0 +1,60 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  frontend:
+    image: node:18-alpine
+    container_name: workplace-optimizer-frontend-dev
+    working_dir: /app
+    volumes:
+      - ./frontend:/app # Mount the frontend source code
+      - /app/node_modules # Anonymous volume to prevent local node_modules from overwriting container's
+      - /app/.next # Anonymous volume for Next.js build cache
+    ports:
+      - '${FRONTEND_PORT:-3000}:3000' # Use .env variable or default to 3000
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      # Add any other frontend specific env vars here if needed
+    networks:
+      - app-network
+
+  backend:
+    image: node:18-alpine
+    container_name: workplace-optimizer-backend-dev
+    working_dir: /app
+    volumes:
+      - ./backend:/app # Mount the backend source code
+      - /app/node_modules # Anonymous volume
+    ports:
+      - '${BACKEND_PORT:-8000}:8000' # Use .env variable or default to 8000
+    command: npm run dev # This will use nodemon defined in backend/package.json
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379 # Connect to the redis service
+      # We'll rely on a .env file at the root for other backend ENVs
+      # Or they can be explicitly defined here
+    env_file:
+      - .env.example # Load variables from .env.example (or .env if it exists)
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: workplace-optimizer-redis-dev
+    ports:
+      - '6379:6379' # Expose Redis port to host if needed for direct access
+    volumes:
+      - redis-data:/data # Persist Redis data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
