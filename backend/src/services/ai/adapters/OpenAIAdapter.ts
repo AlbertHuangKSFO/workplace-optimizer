@@ -249,14 +249,10 @@ export class OpenAIAdapter implements AIAdapter {
         id: model.id,
         name: getOpenAIModelDisplayName(model.id), // Use helper function for display name
         provider: this.provider,
-        description: `OpenAI model: ${getOpenAIModelDisplayName(model.id)}`, // Also use display name in description
-        owned_by: model.owned_by, // Retain owned_by from OpenAI's response
-        isDefault:
-          model.id === defaultModelId ||
-          (finalFilteredModels.length === 1 && model.id === 'gpt-3.5-turbo'),
+        isDefault: model.id === 'gpt-4o', // Set gpt-4o as default
       }));
     } catch (error) {
-      console.error('Error fetching OpenAI models:', error);
+      console.error('Error fetching models from OpenAI:', error);
       // Fallback to a predefined list if API call fails
       // Ensure fallback models also have user-friendly names
       const fallbackModels: Omit<ModelInfo, 'provider'>[] = [
@@ -266,10 +262,11 @@ export class OpenAIAdapter implements AIAdapter {
         { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' },
       ];
       return fallbackModels.map((m) => ({
-        ...m,
+        id: m.id, // Explicitly provide the id
+        name: getOpenAIModelDisplayName(m.id), // Use helper for consistent display name
         provider: this.provider,
-        name: getOpenAIModelDisplayName(m.id), // Apply display name to fallbacks too
-        description: `OpenAI model: ${getOpenAIModelDisplayName(m.id)}`,
+        description: `OpenAI model: ${getOpenAIModelDisplayName(m.id)}`, // Optional, but good to have
+        isDefault: m.isDefault, // Preserve isDefault status
       }));
     }
   }

@@ -5,14 +5,22 @@ import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import { AppConfig } from './config/app'; // Import AppConfig to ensure it's loaded
 import apiRoutes from './routes'; // Import the main API router
 // Ensure ModelManager is initialized (it self-initializes on import, but good to have a clear dependency chain if needed later)
 import { ModelManager } from './services/ai/ModelManager';
 
-dotenv.config(); // AppConfig already does this, but doesn't hurt
+// 使用绝对路径加载.env文件，确保在任何工作目录下都能正确加载
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app = express();
+
+// SUPER EARLY DEBUG LOG MIDDLEWARE
+app.use((req, res, next) => {
+  console.log(`[SUPER DEBUG] Request received: ${req.method} ${req.originalUrl}`);
+  next();
+});
 
 // Initialize and set ModelManager instance
 const modelManagerInstance = ModelManager.getInstance();
@@ -39,10 +47,18 @@ app.get('/', (req: Request, res: Response) => {
 // Global error handler (basic example, can be expanded)
 // This should be defined AFTER all other app.use() and routes calls
 app.use((err: any, req: Request, res: Response, next: express.NextFunction) => {
-  console.error(err.stack);
+  console.error('[SUPER DEBUG] GLOBAL ERROR HANDLER CAUGHT AN ERROR:', err);
+  console.error('[SUPER DEBUG] Error Name:', err.name);
+  console.error('[SUPER DEBUG] Error Message:', err.message);
+  console.error('[SUPER DEBUG] Error Stack:', err.stack);
+  console.error('[SUPER DEBUG] Request URL that caused error:', req.originalUrl);
+
   res.status(err.status || 500).json({
     message: err.message || 'An unexpected error occurred',
-    error: process.env.NODE_ENV === 'development' ? err : {},
+    error:
+      process.env.NODE_ENV === 'development'
+        ? { name: err.name, message: err.message, stack: err.stack }
+        : {},
   });
 });
 

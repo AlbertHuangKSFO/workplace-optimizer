@@ -1,10 +1,10 @@
 'use client';
 
-import DailySlackingAlmanac from '@/features/office-fun/DailySlackingAlmanac';
+import BullshitFortuneTelling from '@/features/office-fun/BullshitFortuneTelling';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function DailySlackingAlmanacPage(): React.JSX.Element {
+function BullshitFortuneTellingPage(): React.JSX.Element {
   return (
     <Suspense
       fallback={
@@ -13,9 +13,9 @@ function DailySlackingAlmanacPage(): React.JSX.Element {
         </div>
       }
     >
-      <DailySlackingAlmanac />
+      <BullshitFortuneTelling />
     </Suspense>
   );
 }
 
-export default DailySlackingAlmanacPage;
+export default BullshitFortuneTellingPage;

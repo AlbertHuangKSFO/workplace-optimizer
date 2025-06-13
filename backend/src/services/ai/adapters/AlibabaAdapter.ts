@@ -195,4 +195,17 @@ export class AlibabaAdapter implements AIAdapter {
       return false;
     }
   }
+
+  async estimateCost(prompt: string, modelId: string): Promise<number> {
+    console.warn(
+      `[AlibabaAdapter] estimateCost is a placeholder and not fully implemented for model ${modelId}. Returning 0.`
+    );
+    // TODO: Implement actual cost estimation based on Alibaba Cloud DashScope's pricing and token counting.
+    // This would involve:
+    // 1. Getting the specific model's pricing.
+    // 2. Using a tokenizer relevant for Qwen models to count input tokens.
+    // 3. Estimating output tokens.
+    // 4. Calculating cost.
+    return 0;
+  }
 }

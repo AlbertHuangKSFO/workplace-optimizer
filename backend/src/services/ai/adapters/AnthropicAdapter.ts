@@ -4,63 +4,83 @@ import { AIAdapter, GenerateOptions, ModelInfo } from '../../../types/model';
 
 const ANTHROPIC_PROVIDER_NAME = 'anthropic';
 
-// Common Claude models (reflecting user's API key access as of recent curl)
+// Common Claude models (官方最新模型列表)
 const PREDEFINED_CLAUDE_MODELS: ModelInfo[] = [
+  // Claude 4 Models (Latest)
   {
     id: 'claude-opus-4-20250514',
     name: 'Claude 4 Opus',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description:
-      "Anthropic's next-generation most powerful model for highly complex tasks (via user's API key).",
-    contextWindow: 200000, // Assuming similar context window, adjust if known
+    description: "Anthropic's most powerful and capable model for highly complex tasks.",
+    contextWindow: 200000,
     isDefault: false,
   },
   {
     id: 'claude-sonnet-4-20250514',
     name: 'Claude 4 Sonnet',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description:
-      "Anthropic's next-generation balanced model for intelligence and speed (via user's API key).",
-    contextWindow: 200000, // Assuming similar context window
-    isDefault: true, // Setting this as a new primary default
+    description: 'High-performance model with exceptional reasoning capabilities.',
+    contextWindow: 200000,
+    isDefault: true, // 设为默认，因为它是最新的平衡模型
   },
+  // Claude 3.7 Models
   {
-    id: 'claude-3-5-sonnet-20241022', // As seen in curl as "Claude Sonnet 3.5 (New)"
-    name: 'Claude 3.5 Sonnet (Newer)',
+    id: 'claude-3-7-sonnet-20250219',
+    name: 'Claude 3.7 Sonnet',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description:
-      "Anthropic's most intelligent model to date (newer version accessible by user's API key).",
+    description: 'High-performance model with early extended thinking capabilities.',
+    contextWindow: 200000,
+    isDefault: false,
+  },
+  // Claude 3.5 Models
+  {
+    id: 'claude-3-5-sonnet-20241022', // Latest 3.5 Sonnet
+    name: 'Claude 3.5 Sonnet v2',
+    provider: ANTHROPIC_PROVIDER_NAME,
+    description: 'Latest Claude 3.5 Sonnet with enhanced capabilities.',
     contextWindow: 200000,
     isDefault: false,
   },
   {
-    id: 'claude-3-5-sonnet-20240620', // As seen in curl as "Claude Sonnet 3.5 (Old)"
+    id: 'claude-3-5-sonnet-20240620', // Previous 3.5 Sonnet
     name: 'Claude 3.5 Sonnet',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description:
-      "Anthropic's intelligent model, balancing performance and cost (previous 3.5 version).",
+    description: 'Intelligent model balancing performance and cost.',
     contextWindow: 200000,
+    isDefault: false,
   },
+  {
+    id: 'claude-3-5-haiku-20241022', // Latest 3.5 Haiku
+    name: 'Claude 3.5 Haiku',
+    provider: ANTHROPIC_PROVIDER_NAME,
+    description: 'Fastest Claude model with blazing speed and accuracy.',
+    contextWindow: 200000,
+    isDefault: false,
+  },
+  // Claude 3 Models (Legacy but still supported)
   {
     id: 'claude-3-opus-20240229',
     name: 'Claude 3 Opus',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description: "Anthropic's powerful model for complex tasks (previous generation Opus).",
+    description: 'Powerful model for complex tasks.',
     contextWindow: 200000,
+    isDefault: false,
   },
   {
     id: 'claude-3-sonnet-20240229',
     name: 'Claude 3 Sonnet',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description: 'Balanced intelligence and speed (previous generation Sonnet).',
+    description: 'Balanced intelligence and speed.',
     contextWindow: 200000,
+    isDefault: false,
   },
   {
     id: 'claude-3-haiku-20240307',
     name: 'Claude 3 Haiku',
     provider: ANTHROPIC_PROVIDER_NAME,
-    description: 'Fastest and most compact model for near-instant responsiveness.',
+    description: 'Fast and compact model for near-instant responsiveness.',
     contextWindow: 200000,
+    isDefault: false,
   },
 ];
 
@@ -86,12 +106,15 @@ export class AnthropicAdapter implements AIAdapter {
     this.client = new Anthropic({
       apiKey: this.apiKey,
       baseURL: confirmedBaseUrl,
+      defaultHeaders: {
+        'anthropic-version': '2023-06-01',
+      },
     });
   }
 
   async generateText(prompt: string, options?: GenerateOptions): Promise<string> {
     try {
-      const modelId = options?.modelId || 'claude-3-opus-20240229';
+      const modelId = options?.modelId || 'claude-sonnet-4-20250514';
       const messages: Anthropic.Messages.MessageParam[] = [{ role: 'user', content: prompt }];
       const systemPrompt = options?.systemPrompt;
 

@@ -13,6 +13,8 @@
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.12",
     "@types/react-router-dom": "^5.3.3",
@@ -29,7 +31,9 @@
     "react-hot-toast": "^2.5.2",
     "react-i18next": "^15.5.3",
     "react-loading-skeleton": "^3.5.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.2",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
@@ -44,5 +48,8 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
-  }
+  },
+  "eslintConfig": {},
+  "browserslist": {},
+  "proxy": "http://localhost:8000"
 }

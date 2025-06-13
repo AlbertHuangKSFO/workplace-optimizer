@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config(); // Load environment variables from .env file
+// 使用绝对路径加载.env文件，确保在任何工作目录下都能正确加载
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') }); // Load environment variables from .env file
 
 interface AppConfigType {
   nodeEnv: string;
@@ -97,7 +99,7 @@ export const AppConfig: AppConfigType = {
   openaiBaseUrl: getEnv('OPENAI_BASE_URL', 'https://api.openai.com/v1')!,
 
   anthropicApiKey: getEnvOrThrow('ANTHROPIC_API_KEY'),
-  anthropicBaseUrl: getEnv('ANTHROPIC_BASE_URL', 'https://api.anthropic.com/v1')!,
+  anthropicBaseUrl: getEnv('ANTHROPIC_BASE_URL', 'https://api.anthropic.com')!,
 
   googleApiKey: getEnvOrThrow('GOOGLE_API_KEY'),
   googleGeminiBaseUrl: getEnv(
@@ -108,7 +110,7 @@ export const AppConfig: AppConfigType = {
   alibabaApiKey: getEnvOrThrow('ALIBABA_API_KEY'),
   alibabaBaseUrl: getEnv('ALIBABA_BASE_URL', 'https://dashscope.aliyuncs.com/api/v1')!,
 
-  defaultProvider: getEnv('DEFAULT_PROVIDER', 'anthropic')!,
+  defaultProvider: getEnv('DEFAULT_PROVIDER', 'openai')!,
   fallbackProviders: getEnv('FALLBACK_PROVIDERS', 'openai,google,alibaba')!
     .split(',')
     .map((p) => p.trim()),
