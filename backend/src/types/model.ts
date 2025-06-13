@@ -47,6 +47,11 @@ export interface AIAdapter {
    */
   checkHealth(): Promise<boolean>;
 
-  // Optional: Estimate cost for a given prompt and model
-  // estimateCost?(prompt: string, modelId: string): Promise<number>;
+  /**
+   * Estimates the cost of generating text for a given prompt and model.
+   * @param prompt The input prompt string.
+   * @param modelId The ID of the model to be used.
+   * @returns A promise that resolves to the estimated cost (e.g., in USD).
+   */
+  estimateCost(prompt: string, modelId: string): Promise<number>;
 }

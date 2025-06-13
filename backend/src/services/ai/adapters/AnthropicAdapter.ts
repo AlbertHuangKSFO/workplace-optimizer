@@ -170,4 +170,12 @@ export class AnthropicAdapter implements AIAdapter {
       return false;
     }
   }
+
+  async estimateCost(prompt: string, modelId: string): Promise<number> {
+    console.warn(
+      `[AnthropicAdapter] estimateCost is a placeholder and not fully implemented for model ${modelId}. Returning 0.`
+    );
+    // TODO: Implement actual cost estimation based on Anthropic's pricing and token counting.
+    return 0;
+  }
 }

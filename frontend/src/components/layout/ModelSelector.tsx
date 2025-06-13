@@ -24,45 +24,59 @@ export function ModelSelector({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('[ModelSelector] Props received: selectedModelId:', selectedModelId);
+
   useEffect(() => {
+    console.log('[ModelSelector] useEffect running. Deps: onModelInitialized changed?'); // Basic log
     async function fetchModels() {
+      console.log('[ModelSelector] fetchModels started.');
       try {
         setIsLoading(true);
         setError(null);
         const models = await getAvailableModels();
+        console.log('[ModelSelector] Models fetched:', models);
         setAvailableModels(models);
 
         if (models.length > 0) {
           const defaultModel = models.find(m => m.isDefault) || models[0];
+          console.log('[ModelSelector] Default model determined:', defaultModel);
           if (defaultModel && onModelInitialized) {
+            console.log('[ModelSelector] Calling onModelInitialized with:', defaultModel.id);
             onModelInitialized(defaultModel.id);
           } else if (defaultModel && !selectedModelId) {
-            // If no model is selected yet by parent, and onModelInitialized is not provided,
-            // we can select the default one directly.
+            console.log('[ModelSelector] No selectedModelId, calling onModelSelect with default:', defaultModel.id);
             onModelSelect(defaultModel.id);
           }
         } else {
+          console.log('[ModelSelector] No models available after fetch.');
           setError('No models available.');
         }
       } catch (err) {
-        console.error('Failed to fetch models:', err);
+        console.error('[ModelSelector] Failed to fetch models:', err);
         setError('Failed to load models.');
       } finally {
         setIsLoading(false);
+        console.log('[ModelSelector] fetchModels finished.');
       }
     }
     fetchModels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onModelInitialized]); // Rerun if onModelInitialized changes, though unlikely. Parent controls selection via onModelSelect.
+  }, [onModelInitialized]); // Dependency array kept as is for now
 
   const currentSelectedModel = useMemo(() => {
-    return availableModels.find(m => m.id === selectedModelId);
+    const model = availableModels.find(m => m.id === selectedModelId);
+    console.log('[ModelSelector] currentSelectedModel computed:', model, 'based on selectedModelId:', selectedModelId);
+    return model;
   }, [availableModels, selectedModelId]);
 
   const handleSelectModelInternal = (model: ModelInfo) => {
+    console.log('[ModelSelector] handleSelectModelInternal called for model:', model.id, 'Current prop selectedModelId:', selectedModelId);
     onModelSelect(model.id);
     setIsOpen(false);
   };
+
+  const displayName = currentSelectedModel?.name || selectedModelId || 'Select Model';
+  console.log('[ModelSelector] Render: displayName:', displayName, 'isLoading:', isLoading, 'error:', error);
 
   if (isLoading) {
     return (
@@ -97,9 +111,6 @@ export function ModelSelector({
       </div>
     );
   }
-
-  // Fallback display name if model somehow not found, though unlikely with above checks
-  const displayName = currentSelectedModel?.name || selectedModelId || 'Select Model';
 
   return (
     <div className={cn("relative", className)} >

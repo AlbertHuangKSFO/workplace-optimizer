@@ -256,4 +256,12 @@ export class GoogleAdapter implements AIAdapter {
       return false;
     }
   }
+
+  async estimateCost(prompt: string, modelId: string): Promise<number> {
+    console.warn(
+      `[GoogleAdapter] estimateCost is a placeholder and not fully implemented for model ${modelId}. Returning 0.`
+    );
+    // TODO: Implement actual cost estimation based on Google's pricing and token counting.
+    return 0;
+  }
 }

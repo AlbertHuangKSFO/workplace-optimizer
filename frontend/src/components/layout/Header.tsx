@@ -1,6 +1,7 @@
 'use client';
 
 import { Github, User } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { ModelSelector } from './ModelSelector';
 
 // Placeholder for ModelSelector, to be created later as per docs
@@ -8,6 +9,18 @@ import { ModelSelector } from './ModelSelector';
 
 export function Header() {
   const githubUrl = 'https://github.com/AlbertHuangKSFO/workplace-optimizer';
+  const [selectedModelId, setSelectedModelId] = useState<string>('');
+  console.log('[Header] Current selectedModelId state:', selectedModelId);
+
+  const handleModelSelect = useCallback((modelId: string) => {
+    console.log('[Header] handleModelSelect called with:', modelId);
+    setSelectedModelId(modelId);
+  }, []);
+
+  const handleModelInitialized = useCallback((defaultModelId: string) => {
+    console.log('[Header] handleModelInitialized called with:', defaultModelId);
+    setSelectedModelId(defaultModelId);
+  }, []);
 
   return (
     <header className="h-14 flex items-center justify-between bg-neutral-800 px-6 border-b border-neutral-700 flex-shrink-0">
@@ -16,7 +29,11 @@ export function Header() {
         <h1 className="text-md font-medium text-neutral-200">当前工具: 话术优化器</h1>
       </div>
       <div className="flex items-center space-x-4">
-        <ModelSelector />
+        <ModelSelector
+          selectedModelId={selectedModelId}
+          onModelSelect={handleModelSelect}
+          onModelInitialized={handleModelInitialized}
+        />
         {/* Placeholder for ModelSelector */}
         {/* <ModelSelector /> */}
         <a

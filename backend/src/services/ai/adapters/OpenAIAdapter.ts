@@ -4,6 +4,33 @@ import { AIAdapter, GenerateOptions, ModelInfo } from '../../../types/model';
 
 const OPENAI_PROVIDER_NAME = 'openai';
 
+function getOpenAIModelDisplayName(modelId: string): string {
+  const nameMap: Record<string, string> = {
+    'gpt-4o': 'GPT-4 Omni',
+    'gpt-4o-mini': 'GPT-4 Omni Mini',
+    'gpt-4-turbo': 'GPT-4 Turbo',
+    'gpt-4-turbo-preview': 'GPT-4 Turbo Preview',
+    'gpt-4-0125-preview': 'GPT-4 Turbo (0125 Preview)',
+    'gpt-4-vision-preview': 'GPT-4 Vision Preview',
+    'gpt-4': 'GPT-4',
+    'gpt-3.5-turbo': 'GPT-3.5 Turbo',
+    'gpt-3.5-turbo-0125': 'GPT-3.5 Turbo (0125)',
+    'gpt-3.5-turbo-16k': 'GPT-3.5 Turbo (16K)',
+    // Add more mappings as new models are supported or recognized
+  };
+  // Attempt to find a direct match
+  if (nameMap[modelId]) {
+    return nameMap[modelId];
+  }
+  // Handle dated versions like gpt-4o-2024-05-13
+  const datedMatch = modelId.match(/^(gpt-4o|gpt-4-turbo)-(\d{4}-\d{2}-\d{2})$/);
+  if (datedMatch && nameMap[datedMatch[1]]) {
+    return `${nameMap[datedMatch[1]]} (${datedMatch[2]})`;
+  }
+  // Fallback for models not in the map or more complex IDs
+  return modelId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export class OpenAIAdapter implements AIAdapter {
   public readonly provider = OPENAI_PROVIDER_NAME;
   private client: OpenAI;
@@ -220,9 +247,9 @@ export class OpenAIAdapter implements AIAdapter {
 
       return finalFilteredModels.map((model) => ({
         id: model.id,
-        name: model.id, // Keep original ID for name for now, can be prettified in frontend if needed
+        name: getOpenAIModelDisplayName(model.id), // Use helper function for display name
         provider: this.provider,
-        description: `OpenAI model: ${model.id}`,
+        description: `OpenAI model: ${getOpenAIModelDisplayName(model.id)}`, // Also use display name in description
         owned_by: model.owned_by, // Retain owned_by from OpenAI's response
         isDefault:
           model.id === defaultModelId ||
@@ -231,11 +258,19 @@ export class OpenAIAdapter implements AIAdapter {
     } catch (error) {
       console.error('Error fetching OpenAI models:', error);
       // Fallback to a predefined list if API call fails
-      return [
-        { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', provider: this.provider },
-        { id: 'gpt-4', name: 'GPT-4', provider: this.provider },
-        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: this.provider, isDefault: true },
+      // Ensure fallback models also have user-friendly names
+      const fallbackModels: Omit<ModelInfo, 'provider'>[] = [
+        { id: 'gpt-4o', name: 'GPT-4 Omni', isDefault: true },
+        { id: 'gpt-4-turbo', name: 'GPT-4 Turbo' },
+        { id: 'gpt-4', name: 'GPT-4' },
+        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' },
       ];
+      return fallbackModels.map((m) => ({
+        ...m,
+        provider: this.provider,
+        name: getOpenAIModelDisplayName(m.id), // Apply display name to fallbacks too
+        description: `OpenAI model: ${getOpenAIModelDisplayName(m.id)}`,
+      }));
     }
   }
 
@@ -248,5 +283,18 @@ export class OpenAIAdapter implements AIAdapter {
       console.error('OpenAI health check failed:', error);
       return false;
     }
+  }
+
+  async estimateCost(prompt: string, modelId: string): Promise<number> {
+    console.warn(
+      `[OpenAIAdapter] estimateCost is a placeholder and not fully implemented for model ${modelId}. Returning 0.`
+    );
+    // TODO: Implement actual cost estimation based on OpenAI's pricing and token counting.
+    // This would involve:
+    // 1. Getting the specific model's pricing (input/output per token/1k tokens).
+    // 2. Using a tokenizer (like tiktoken for OpenAI) to count input tokens.
+    // 3. Estimating output tokens (this is tricky, might need a rough guess or be based on maxTokens).
+    // 4. Calculating cost.
+    return 0;
   }
 }

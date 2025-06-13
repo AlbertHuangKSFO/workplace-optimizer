@@ -1,12 +1,12 @@
 import {
   Bot,
+  Drama,
   FolderKanban,
   Home,
   Lightbulb,
   LineChart,
   MessageSquareText,
   ShieldAlert,
-  Users,
 } from 'lucide-react';
 
 export interface NavLink {
@@ -75,11 +75,35 @@ export const navigationLinks: NavCategory[] = [
     ],
   },
   {
-    label: '团队与设置',
-    icon: Users, // Example icon for a different category
+    label: '摸鱼作乐',
+    icon: Drama,
     children: [
-      { href: '/settings', label: '设置', icon: Lightbulb },
-      { href: '/team', label: '团队管理', icon: Lightbulb },
+      { href: '/tools/pro-slackers-time-manager', label: '摸鱼时间管理大师', icon: Lightbulb },
+      { href: '/tools/awesome-compliment-generator', label: '彩虹屁生成器', icon: Lightbulb },
+      {
+        href: '/tools/weekly-report-sparkle-enhancer',
+        label: '"这周干了啥"亮点包装器',
+        icon: Lightbulb,
+      },
+      { href: '/tools/universal-excuse-generator', label: '"万能借口"生成器', icon: Lightbulb },
+      {
+        href: '/tools/lunch-decision-overlord',
+        label: '"今天中午吃什么？"终极选择器',
+        icon: Lightbulb,
+      },
+      { href: '/tools/meeting-doodle-buddy', label: '"会议神游"涂鸦伴侣', icon: Lightbulb },
+      { href: '/tools/daily-grind-affirmations', label: '"打工人"每日一句', icon: Lightbulb },
+      { href: '/tools/meeting-bingo-generator', label: '"会议BINGO"卡片生成器', icon: Lightbulb },
+      { href: '/tools/office-outfit-advisor', label: '"今天穿什么？"职场版', icon: Lightbulb },
+      { href: '/tools/anti-pua-assistant', label: '"拒绝PUA"小助手', icon: Lightbulb },
+      { href: '/tools/impressive-meeting-phrases', label: '"开会装B速成手册"', icon: Lightbulb },
+      {
+        href: '/tools/office-fengshui-detector',
+        label: '"办公室风水/工位能量检测器（玄学版）"',
+        icon: Lightbulb,
+      },
+      { href: '/tools/sanity-check-meter', label: '"下班前精神状态检查器"', icon: Lightbulb },
+      { href: '/tools/daily-slacking-almanac', label: '"今日宜摸鱼/忌加班"黄历', icon: Lightbulb },
     ],
   },
 ];

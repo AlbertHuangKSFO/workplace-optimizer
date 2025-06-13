@@ -77,3 +77,26 @@
 - **任务 2.5: 实现国际化支持 (中英文切换)**。
 
 ---
+
+## 本次会话修复与改进总结
+
+### 后端 (Backend)
+
+1.  **解决了 `Internal server error: ModelManager not configured.` 错误:**
+    - **问题**: `ModelManager` 实例未在 Express 应用上下文中正确设置，导致控制器无法获取该实例。
+    - **修复**: 修改了 `backend/src/index.ts`，在 Express 应用初始化时，通过 `app.set('modelManager', ModelManager.getInstance());` 将 `ModelManager` 单例设置到应用上下文中。
+
+### 前端 (Frontend)
+
+1.  **修复了 `ModelSelector` 下拉菜单的 UI 显示问题 (背景透明导致内容叠加):**
+    - **问题**: 下拉菜单容器使用了非标准或可能透明的 Tailwind CSS 背景类 (`bg-neutral-750`)。
+    - **修复**: 将 `frontend/src/components/layout/ModelSelector.tsx` 中下拉菜单的背景类修改为 `bg-neutral-800`，确保了不透明的背景，解决了显示问题。
+
+### 早期修复 (为当前稳定状态奠定基础):
+
+- **Docker 配置**:
+  - 修正了 `docker-compose.yml` 中后端服务的 `env_file` 配置，使其从项目根目录的 `.env` 文件加载环境变量，而不是 `.env.example`，这解决了 API 密钥无效的问题。
+- **前端构建与依赖**:
+  - 添加了缺失的 Shadcn UI 组件 (`alert`, `button`, `label`, `textarea`) 到 `frontend` 项目，解决了 "Module not found" 构建错误。
+  - 创建了共享的 Axios 实例 `frontend/src/services/axiosInstance.ts`，并重构了 `generationService.ts` 和 `modelService.ts` 以使用此共享实例，解决了 `Module not found: Can't resolve './axiosInstance'` 构建错误。
+  - 明确了前端环境变量 `NEXT_PUBLIC_API_BASE_URL` 应在 `frontend/.env.local` 文件中定义，以确保前端能正确连接到后端 API。

@@ -28,6 +28,23 @@
 
 **智能分析类:** 13. 团队氛围检测器 (Team Mood Detector) 14. 会议记录智能整理 (Meeting Notes Organizer) 15. 职场梗图生成器 (Workplace Meme Generator)
 
+**摸鱼作乐与职场调剂 (Office Fun & Well-being):**
+
+16. 摸鱼时间管理大师 (Pro Slacker's Time Manager)
+17. 彩虹屁生成器 (Awesome Compliment Generator)
+18. "这周干了啥"亮点包装器 (Weekly Report "Sparkle" Enhancer)
+19. "万能借口"生成器 (Universal Excuse Generator)
+20. "今天中午吃什么？"终极选择器 (Lunch Decision Overlord)
+21. "会议神游"涂鸦伴侣 (Meeting Doodle Buddy)
+22. "打工人"每日一句 (Daily Grind Affirmations/Antidotes)
+23. "会议BINGO"卡片生成器 (Meeting BINGO Card Generator)
+24. "今天穿什么？"职场版 (What to Wear - Office Edition)
+25. "拒绝PUA"小助手 (Anti-PUA Assistant / Workplace Gaslight Shield)
+26. "开会装B速成手册" (Meeting Bullsh*t Bingo Companion / Impressive Phrases for Meetings)
+27. "办公室风水/工位能量检测器（玄学版）" (Office Feng Shui / Desk Energy Detector - Metaphysical Edition)
+28. "下班前精神状态检查器" (End-of-Day Sanity Check / Burnout Meter - Humorous)
+29. "今日宜摸鱼/忌加班"黄历 (Daily "Good for Slacking / Bad for Overtime" Almanac)
+
 ### 技术要求
 
 - **前端**: React 18 + TypeScript + Tailwind CSS + Shadcn/ui
