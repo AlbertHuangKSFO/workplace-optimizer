@@ -27,7 +27,7 @@ export function ModelSelector({
   console.log('[ModelSelector] Props received: selectedModelId:', selectedModelId);
 
   useEffect(() => {
-    console.log('[ModelSelector] useEffect running. Deps: onModelInitialized changed?'); // Basic log
+    console.log('[ModelSelector] useEffect running. About to call fetchModels');
     async function fetchModels() {
       console.log('[ModelSelector] fetchModels started.');
       try {
@@ -40,12 +40,13 @@ export function ModelSelector({
         if (models.length > 0) {
           const defaultModel = models.find(m => m.isDefault) || models[0];
           console.log('[ModelSelector] Default model determined:', defaultModel);
-          if (defaultModel && onModelInitialized) {
+          if (defaultModel) {
             console.log('[ModelSelector] Calling onModelInitialized with:', defaultModel.id);
-            onModelInitialized(defaultModel.id);
-          } else if (defaultModel && !selectedModelId) {
-            console.log('[ModelSelector] No selectedModelId, calling onModelSelect with default:', defaultModel.id);
-            onModelSelect(defaultModel.id);
+            if (onModelInitialized) {
+              onModelInitialized(defaultModel.id);
+            } else {
+              onModelSelect(defaultModel.id);
+            }
           }
         } else {
           console.log('[ModelSelector] No models available after fetch.');
@@ -60,8 +61,7 @@ export function ModelSelector({
       }
     }
     fetchModels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onModelInitialized]); // Dependency array kept as is for now
+  }, []); // Changed: Remove dependency on onModelInitialized to prevent infinite loops
 
   const currentSelectedModel = useMemo(() => {
     const model = availableModels.find(m => m.id === selectedModelId);

@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-// Support both NEXT_PUBLIC_API_URL (Docker) and NEXT_PUBLIC_API_BASE_URL (local) for backward compatibility
-// In Docker environment, API calls should go to the backend container
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'http://localhost:8000/api';
+// Always use the Next.js API proxy route, not direct backend access
+// This allows Next.js rewrites to handle the backend routing
+const API_BASE_URL = '/api';
+
+console.log('[axiosInstance] API_BASE_URL configured as:', API_BASE_URL);
+console.log('[axiosInstance] Environment variables:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+});
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

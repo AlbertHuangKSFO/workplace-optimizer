@@ -6,14 +6,26 @@ import axiosInstance from './axiosInstance';
  */
 export async function getAvailableModels(): Promise<ModelInfo[]> {
   try {
+    console.log('[modelService] Making request to /models/available');
     const response = await axiosInstance.get<ModelInfo[]>('/models/available');
+    console.log(
+      '[modelService] Response received:',
+      response.status,
+      response.data?.length || 0,
+      'models'
+    );
     return response.data;
   } catch (error) {
-    console.error('Error fetching available models:', error);
-    // In a real app, you might want to throw a more specific error or handle it
-    // For now, return an empty array or throw the original error
-    // throw error;
-    return []; // Return empty array on error to prevent UI breakage, log error for debugging
+    console.error('[modelService] Error fetching available models:', error);
+    if (error.response) {
+      console.error('[modelService] Response status:', error.response.status);
+      console.error('[modelService] Response data:', error.response.data);
+    }
+    if (error.request) {
+      console.error('[modelService] Request details:', error.request);
+    }
+    // For debugging, let's throw the error so we can see it in ModelSelector
+    throw error;
   }
 }
 
