@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
     Dialog,
     DialogContent,
@@ -9,7 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog';
 import { Tool } from '@/constants/tools';
 import React from 'react';
 
