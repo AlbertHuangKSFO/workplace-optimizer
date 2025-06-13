@@ -24,6 +24,9 @@ console.log('[DEBUG] src/routes/index.ts: Mounting /chat routes...');
 // Mount chat routes
 router.use('/chat', chatRoutes);
 
+// Mount image routes
+router.use('/image', imageRoutes);
+
 // Mount other API routes
 // router.use('/communication', communicationRouter);
 // router.use('/translation', translationRouter);
