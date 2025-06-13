@@ -21,13 +21,15 @@ export interface NavCategory {
   label: string;
   icon: React.ElementType;
   children: NavLink[];
+  href?: string;
 }
 
 export const navigationLinks: NavCategory[] = [
   {
-    label: '概览',
+    label: '首页',
     icon: Home,
-    children: [{ href: '/', label: '主页', icon: Home }],
+    href: '/',
+    children: [],
   },
   {
     label: '沟通优化',

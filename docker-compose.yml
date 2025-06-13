@@ -6,56 +6,119 @@ services:
     container_name: workplace-optimizer-frontend-dev
     working_dir: /app
     volumes:
-      - ./frontend:/app # Mount the frontend source code
-      - /app/node_modules # Anonymous volume to prevent local node_modules from overwriting container's
-      - /app/.next # Anonymous volume for Next.js build cache
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
     ports:
-      - '${FRONTEND_PORT:-3000}:3000' # Use .env variable or default to 3000
+      - '${FRONTEND_PORT:-3000}:3000'
     command: sh -c "npm install && npm run dev"
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://backend:8000
-      # Add any other frontend specific env vars here if needed
+      - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT:-8000}
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000/api/health',
+          '||',
+          'exit',
+          '1',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   backend:
     image: node:18-alpine
     container_name: workplace-optimizer-backend-dev
     working_dir: /app
     volumes:
-      - ./backend:/app # Mount the backend source code
-      - /app/node_modules # Anonymous volume
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+      - backend_dist:/app/dist
     ports:
-      - '${BACKEND_PORT:-8000}:8000' # Use .env variable or default to 8000
+      - '${BACKEND_PORT:-8000}:8000'
     command: sh -c "npm install && npm run dev"
     environment:
       - NODE_ENV=development
-      - REDIS_URL=redis://redis:6379 # Connect to the redis service
-      - TS_NODE_CACHE=false # Attempt to disable ts-node caching
+      - REDIS_URL=redis://redis:6379
+      - TS_NODE_CACHE=false
+      - TS_NODE_TRANSPILE_ONLY=true
     env_file:
-      - .env # Load variables from .env
+      - .env
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:8000/health',
+          '||',
+          'exit',
+          '1',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   redis:
     image: redis:alpine
     container_name: workplace-optimizer-redis-dev
     ports:
-      - '6379:6379' # Expose Redis port to host if needed for direct access
+      - '${REDIS_PORT:-6379}:6379'
     volumes:
-      - redis-data:/data # Persist Redis data
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   app-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 volumes:
-  redis-data:
+  frontend_node_modules:
+    driver: local
+  frontend_next:
+    driver: local
+  backend_node_modules:
+    driver: local
+  backend_dist:
+    driver: local
+  redis_data:
     driver: local

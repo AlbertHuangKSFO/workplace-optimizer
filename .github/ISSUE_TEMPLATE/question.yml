@@ -1,0 +1,91 @@
+name: ❓ 问题咨询
+description: 询问使用问题或寻求帮助
+title: '[Question]: '
+labels: ['question', '需要帮助']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提问！我们很乐意帮助你解决使用中遇到的问题。
+
+  - type: textarea
+    id: question
+    attributes:
+      label: ❓ 问题描述
+      description: 清楚地描述你的问题
+      placeholder: 我想了解...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: 📂 问题类型
+      description: 你的问题属于哪个类别？
+      options:
+        - 🚀 安装和部署
+        - 🔧 配置和设置
+        - 💻 功能使用
+        - 🐛 疑似 Bug
+        - 🎨 界面和交互
+        - 🔌 API 和集成
+        - 📱 移动端使用
+        - 🌐 浏览器兼容性
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-tried
+    attributes:
+      label: 🔍 已尝试的方法
+      description: 描述你已经尝试过的解决方法
+      placeholder: 我已经尝试了...
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: ✅ 期望结果
+      description: 描述你期望达到的效果
+      placeholder: 我希望能够...
+
+  - type: textarea
+    id: current-result
+    attributes:
+      label: 📊 当前结果
+      description: 描述目前的情况或遇到的错误
+      placeholder: 目前的情况是...
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ 环境信息
+      description: 提供你的环境信息
+      placeholder: |
+        - 操作系统：
+        - 浏览器：
+        - 部署方式：
+        - Node.js 版本：
+        - 其他相关信息：
+
+  - type: textarea
+    id: screenshots-logs
+    attributes:
+      label: 📸 截图或日志
+      description: 如果有相关截图、错误日志或控制台输出，请在这里分享
+      placeholder: 拖拽图片到这里或粘贴日志内容...
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ 检查清单
+      description: 在提问之前，请确认以下事项
+      options:
+        - label: 我已经阅读了 README 和相关文档
+          required: true
+        - label: 我已经搜索了现有的 Issues
+          required: true
+        - label: 我已经尝试了基本的故障排除步骤
+          required: false

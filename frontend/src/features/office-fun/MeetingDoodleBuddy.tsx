@@ -133,7 +133,7 @@ function MeetingDoodleBuddy(): React.JSX.Element {
                   💡 涂鸦灵感（文字描述）
                 </SelectItem>
                 <SelectItem value="image" className="hover:bg-neutral-700 focus:bg-sky-700">
-                  🎨 AI绘制涂鸦（图片）
+                  🎨 AI绘制涂鸦（图片）- 仅支持OpenAI
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -158,6 +158,14 @@ function MeetingDoodleBuddy(): React.JSX.Element {
             </div>
           )}
         </div>
+        {mode === 'image' && (
+          <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-3 text-sm text-blue-300">
+            <p className="flex items-center">
+              <Image className="w-4 h-4 mr-2" />
+              图片生成功能仅支持 OpenAI DALL-E 模型，需要配置有效的 OpenAI API Key。
+            </p>
+          </div>
+        )}
         <div>
           <Label htmlFor="keywords" className="block text-sm font-medium text-neutral-300 mb-2">
             听到啥"天书"了？把会议里的"魔性"关键词丢进来！(选填)

@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import modelsRouter from './api/models';
 import chatRoutes from './chatRoutes';
 import generationRoutes from './generationRoutes';
+import imageRoutes from './imageRoutes';
 // Import other API route modules here as they are created
 // import communicationRouter from './api/communication';
 // import translationRouter from './api/translation';

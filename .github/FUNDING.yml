@@ -1,0 +1,19 @@
+# GitHub 资助配置
+# 这些是支持的资助平台
+
+github: # 替换为最多4个GitHub用户名，例如：[user1, user2]
+patreon: # 替换为单个Patreon用户名
+open_collective: # 替换为单个Open Collective项目名
+ko_fi: # 替换为单个Ko-fi用户名
+tidelift: # 替换为单个Tidelift平台名/包名
+community_bridge: # 替换为单个Community Bridge项目名
+liberapay: # 替换为单个Liberapay用户名
+issuehunt: # 替换为单个IssueHunt用户名
+otechie: # 替换为单个Otechie用户名
+lfx_crowdfunding: # 替换为单个LFX Crowdfunding项目名
+custom: # 替换为最多4个自定义资助链接，例如：['link1', 'link2']
+
+# 示例配置（请根据实际情况修改）:
+# github: [AlbertHuangKSFO]
+# ko_fi: workplace_optimizer
+# custom: ['https://paypal.me/workplaceoptimizer', 'https://afdian.net/@workplace-optimizer']

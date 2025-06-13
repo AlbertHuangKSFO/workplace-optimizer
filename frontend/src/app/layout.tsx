@@ -3,8 +3,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "职场沟通优化器",
-  description: "您的AI职场沟通助理",
+  title: "打工人必备工具",
+  description: "打工人的AI助手工具箱",
 };
 
 export default function RootLayout({

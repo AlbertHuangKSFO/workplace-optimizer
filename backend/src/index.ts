@@ -44,6 +44,16 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Workplace Optimizer Backend is running!');
 });
 
+// Health check route for Docker
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    service: 'workplace-optimizer-backend',
+  });
+});
+
 // Global error handler (basic example, can be expanded)
 // This should be defined AFTER all other app.use() and routes calls
 app.use((err: any, req: Request, res: Response, next: express.NextFunction) => {

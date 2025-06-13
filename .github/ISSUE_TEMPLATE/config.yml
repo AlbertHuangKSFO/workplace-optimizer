@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 项目文档
+    url: https://github.com/AlbertHuangKSFO/workplace-optimizer/blob/main/README.md
+    about: 查看项目文档和使用说明
+  - name: 💬 讨论区
+    url: https://github.com/AlbertHuangKSFO/workplace-optimizer/discussions
+    about: 参与社区讨论，分享想法和经验
+  - name: 🌐 在线体验
+    url: https://workplace-optimizer.vercel.app
+    about: 在线体验项目功能

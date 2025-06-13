@@ -1,0 +1,136 @@
+# GitHub 标签配置
+# 可以使用 github-label-sync 工具同步这些标签
+
+# 类型标签
+- name: 'bug'
+  color: 'd73a4a'
+  description: "Something isn't working"
+
+- name: 'enhancement'
+  color: 'a2eeef'
+  description: 'New feature or request'
+
+- name: 'question'
+  color: 'd876e3'
+  description: 'Further information is requested'
+
+- name: 'documentation'
+  color: '0075ca'
+  description: 'Improvements or additions to documentation'
+
+- name: 'duplicate'
+  color: 'cfd3d7'
+  description: 'This issue or pull request already exists'
+
+- name: 'invalid'
+  color: 'e4e669'
+  description: "This doesn't seem right"
+
+- name: 'wontfix'
+  color: 'ffffff'
+  description: 'This will not be worked on'
+
+# 优先级标签
+- name: 'priority: high'
+  color: 'b60205'
+  description: 'High priority issue'
+
+- name: 'priority: medium'
+  color: 'fbca04'
+  description: 'Medium priority issue'
+
+- name: 'priority: low'
+  color: '0e8a16'
+  description: 'Low priority issue'
+
+# 状态标签
+- name: '需要确认'
+  color: 'f9d0c4'
+  description: 'Needs confirmation from maintainers'
+
+- name: '需要讨论'
+  color: 'c5def5'
+  description: 'Needs discussion'
+
+- name: '需要帮助'
+  color: '128a0c'
+  description: 'Extra attention is needed'
+
+- name: '进行中'
+  color: '1d76db'
+  description: 'Work in progress'
+
+- name: '等待反馈'
+  color: 'fbca04'
+  description: 'Waiting for feedback'
+
+- name: '已解决'
+  color: '0e8a16'
+  description: 'Issue has been resolved'
+
+# 功能分类标签
+- name: '🗣️ 沟通优化'
+  color: 'ff6b6b'
+  description: 'Communication optimization features'
+
+- name: '🔄 语言转换'
+  color: '4ecdc4'
+  description: 'Language translation features'
+
+- name: '📝 内容生成'
+  color: '45b7d1'
+  description: 'Content generation features'
+
+- name: '🛡️ 危机处理'
+  color: 'f9ca24'
+  description: 'Crisis management features'
+
+- name: '📊 智能分析'
+  color: '6c5ce7'
+  description: 'Intelligent analysis features'
+
+- name: '🎭 摸鱼作乐'
+  color: 'fd79a8'
+  description: 'Entertainment features'
+
+# 技术标签
+- name: 'frontend'
+  color: '1f77b4'
+  description: 'Frontend related'
+
+- name: 'backend'
+  color: 'ff7f0e'
+  description: 'Backend related'
+
+- name: 'docker'
+  color: '2ca02c'
+  description: 'Docker related'
+
+- name: 'ui/ux'
+  color: 'd62728'
+  description: 'User interface and experience'
+
+- name: 'performance'
+  color: '9467bd'
+  description: 'Performance related'
+
+- name: 'security'
+  color: '8c564b'
+  description: 'Security related'
+
+- name: 'accessibility'
+  color: 'e377c2'
+  description: 'Accessibility improvements'
+
+# 贡献者标签
+- name: 'good first issue'
+  color: '7057ff'
+  description: 'Good for newcomers'
+
+- name: 'help wanted'
+  color: '008672'
+  description: 'Extra attention is needed'
+
+- name: 'hacktoberfest'
+  color: 'ff8c00'
+  description: 'Hacktoberfest eligible'

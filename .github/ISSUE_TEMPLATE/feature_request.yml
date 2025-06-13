@@ -1,0 +1,115 @@
+name: 🚀 功能请求
+description: 建议一个新功能或改进
+title: '[Feature]: '
+labels: ['enhancement', '需要讨论']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你的功能建议！我们重视每一个改进建议，请详细描述你的想法。
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 🎯 功能描述
+      description: 清楚简洁地描述你想要的功能
+      placeholder: 我希望能够...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-solution
+    attributes:
+      label: 🤔 解决的问题
+      description: 这个功能解决了什么问题？为什么需要这个功能？
+      placeholder: 目前的问题是...，这个功能可以...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: 💡 建议的解决方案
+      description: 描述你希望如何实现这个功能
+      placeholder: 我建议...
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 替代方案
+      description: 描述你考虑过的任何替代解决方案或功能
+      placeholder: 我也考虑过...
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: 📂 功能分类
+      description: 这个功能属于哪个类别？
+      options:
+        - 🗣️ 沟通优化
+        - 🔄 语言转换
+        - 📝 内容生成
+        - 🛡️ 危机处理
+        - 📊 智能分析
+        - 🎭 摸鱼作乐
+        - 🎨 UI/UX 改进
+        - 🔧 技术优化
+        - 📱 移动端支持
+        - 🌐 国际化
+        - 其他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: ⭐ 优先级
+      description: 你认为这个功能的优先级如何？
+      options:
+        - 🔥 高 - 非常重要，急需
+        - 📈 中 - 重要，希望尽快实现
+        - 💡 低 - 不错的想法，有时间可以考虑
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: 🛠️ 预估复杂度
+      description: 你认为实现这个功能的复杂度如何？
+      options:
+        - 🟢 简单 - 可能几小时就能完成
+        - 🟡 中等 - 可能需要几天时间
+        - 🔴 复杂 - 可能需要几周时间
+        - 🤷 不确定
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 设计稿/原型
+      description: 如果有设计稿、原型图或参考链接，请在这里分享
+      placeholder: 拖拽图片到这里或粘贴链接...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📝 额外信息
+      description: 添加任何其他关于功能请求的上下文信息
+      placeholder: 任何可能有助于理解需求的额外信息...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: ✅ 确认
+      description: 在提交之前，请确认以下事项
+      options:
+        - label: 我已经搜索了现有的 Issues，确认这不是重复请求
+          required: true
+        - label: 我已经查看了项目的功能列表和路线图
+          required: true
+        - label: 这个功能符合项目的定位和目标
+          required: true
+        - label: 我愿意参与讨论和测试这个功能
+          required: false
