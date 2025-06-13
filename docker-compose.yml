@@ -14,34 +14,17 @@ services:
     command: sh -c "npm install && npm run dev"
     environment:
       - NODE_ENV=development
+      - DOCKER_ENV=true
       - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT:-8000}
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true
     env_file:
       - .env
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
       - app-network
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--no-verbose',
-          '--tries=1',
-          '--spider',
-          'http://localhost:3000/api/health',
-          '||',
-          'exit',
-          '1',
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   backend:
     image: node:18-alpine
@@ -62,28 +45,10 @@ services:
     env_file:
       - .env
     depends_on:
-      redis:
-        condition: service_healthy
+      - redis
     networks:
       - app-network
     restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--no-verbose',
-          '--tries=1',
-          '--spider',
-          'http://localhost:8000/health',
-          '||',
-          'exit',
-          '1',
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   redis:
     image: redis:alpine
@@ -97,12 +62,6 @@ services:
     networks:
       - app-network
     restart: unless-stopped
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
 networks:
   app-network:
