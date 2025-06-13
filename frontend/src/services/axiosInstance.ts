@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-// Ensure NEXT_PUBLIC_API_BASE_URL is defined in your frontend/.env.local or environment
-// It should point to your backend API, e.g., http://localhost:8000/api
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+// Support both NEXT_PUBLIC_API_URL (Docker) and NEXT_PUBLIC_API_BASE_URL (local) for backward compatibility
+// In Docker environment, API calls should go to the backend container
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  'http://localhost:8000/api';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
 // Optional: You can add interceptors here if needed in the future

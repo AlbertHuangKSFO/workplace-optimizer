@@ -6,15 +6,17 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://backend:8000/api
+        - NODE_ENV=production
     container_name: workplace-optimizer-frontend-prod
     ports:
       - '${FRONTEND_PORT:-3000}:3000'
     environment:
       - NODE_ENV=production
-      # Ensure any necessary build-time or run-time env vars are passed
-      # For Next.js, public env vars need to be prefixed with NEXT_PUBLIC_
-      # and build-time private env vars can be passed during build.
-      # Run-time private env vars are typically handled by the Node.js server environment.
+      - NEXT_PUBLIC_API_URL=http://backend:8000/api
+    depends_on:
+      - backend
     networks:
       - app-network
     restart: unless-stopped

@@ -38,11 +38,19 @@ COPY --from=builder /app/node_modules ./node_modules
 # Copy package.json (might be needed for some runtimes or utilities)
 COPY --from=builder /app/package.json ./package.json
 
+# Create a placeholder .env file - actual environment variables should be passed via Docker
+# This prevents the app from crashing when trying to load .env from relative paths
+RUN touch .env
+
 # Expose the port the app runs on
 EXPOSE 8000
 
 # Set the Node environment to production
 ENV NODE_ENV=production
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Command to run the application
 # This will execute dist/index.js, which is the compiled output of src/index.ts
