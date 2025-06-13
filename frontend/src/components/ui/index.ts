@@ -1,12 +1,12 @@
 export * from './alert';
-export * from './badge';
-export * from './button';
-export * from './card';
-export * from './dialog';
+export * from './Badge';
+export * from './Button';
+export * from './Card';
+export * from './Dialog';
 export * from './input';
 export * from './label';
-export * from './popover';
-// export * from './progress'; // Requires @radix-ui/react-progress
+export * from './Popover';
+// export * from './Progress'; // Requires @radix-ui/react-progress
 export * from './select';
 export * from './separator';
 export * from './textarea';

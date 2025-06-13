@@ -1,6 +1,7 @@
 'use client';
 
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { toolCategories } from '@/constants/tools';
 import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
