@@ -159,5 +159,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-instruction.md
-PROJECT_INSTRUCTION.md
+./instruction.md
+./PROJECT_INSTRUCTION.md
