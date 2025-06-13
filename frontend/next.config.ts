@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
 
+  // 允许特定域名的跨域请求 (Next.js 15+ 新特性)
+  experimental: {
+    allowedDevOrigins: ['office.mrerhuang.com', 'localhost:3000'],
+  },
+
   async rewrites() {
     // 在Docker环境中，服务器端重写使用容器名
     // 在本地开发中使用localhost

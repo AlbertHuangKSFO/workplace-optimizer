@@ -13,16 +13,16 @@ interface AppConfigType {
   openaiApiKey: string;
   openaiBaseUrl: string;
 
-  // Anthropic (Claude)
-  anthropicApiKey: string;
+  // Anthropic (Claude) - 改为可选
+  anthropicApiKey?: string;
   anthropicBaseUrl: string;
 
-  // Google (Gemini)
-  googleApiKey: string;
+  // Google (Gemini) - 改为可选
+  googleApiKey?: string;
   googleGeminiBaseUrl: string;
 
-  // Alibaba (Qwen)
-  alibabaApiKey: string;
+  // Alibaba (Qwen) - 改为可选
+  alibabaApiKey?: string;
   alibabaBaseUrl: string;
 
   // Smart Router
@@ -98,16 +98,16 @@ export const AppConfig: AppConfigType = {
   openaiApiKey: getEnvOrThrow('OPENAI_API_KEY'),
   openaiBaseUrl: getEnv('OPENAI_BASE_URL', 'https://api.openai.com/v1')!,
 
-  anthropicApiKey: getEnvOrThrow('ANTHROPIC_API_KEY'),
+  anthropicApiKey: getEnv('ANTHROPIC_API_KEY') || undefined,
   anthropicBaseUrl: getEnv('ANTHROPIC_BASE_URL', 'https://api.anthropic.com')!,
 
-  googleApiKey: getEnvOrThrow('GOOGLE_API_KEY'),
+  googleApiKey: getEnv('GOOGLE_API_KEY') || undefined,
   googleGeminiBaseUrl: getEnv(
     'GOOGLE_GEMINI_BASE_URL',
     'https://generativelanguage.googleapis.com'
   )!,
 
-  alibabaApiKey: getEnvOrThrow('ALIBABA_API_KEY'),
+  alibabaApiKey: getEnv('ALIBABA_API_KEY') || undefined,
   alibabaBaseUrl: getEnv('ALIBABA_BASE_URL', 'https://dashscope.aliyuncs.com/api/v1')!,
 
   defaultProvider: getEnv('DEFAULT_PROVIDER', 'openai')!,
