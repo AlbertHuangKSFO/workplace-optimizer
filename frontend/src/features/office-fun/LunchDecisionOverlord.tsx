@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Utensils, Zap } from 'lucide-react'; // Zap for the decision action
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';

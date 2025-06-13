@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Lightbulb, Loader2, Palette, Quote } from 'lucide-react'; // Palette or Lightbulb for ideas
 import React, { useState } from 'react';

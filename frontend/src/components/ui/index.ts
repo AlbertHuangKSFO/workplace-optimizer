@@ -1,7 +1,7 @@
-export * from './Badge';
-export * from './Button';
-export * from './Card';
-export * from './Dialog';
-export * from './Popover';
-export * from './Progress';
+export * from './badge';
+export * from './button';
+export * from './card';
+export * from './dialog';
+export * from './popover';
+export * from './progress';
 // Add other UI components here as they are created
