@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { Heart, Loader2, TrendingUp, Users } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Heart, Loader2, Sparkles, TrendingUp, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -110,29 +111,46 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Users className="w-8 h-8 text-cyan-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">团队氛围检测器</h1>
-        <Heart className="w-8 h-8 text-cyan-400 ml-2" />
+        <Users className="w-8 h-8 text-cyan-500 dark:text-cyan-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">团队氛围检测器</h1>
+        <Heart className="w-8 h-8 text-cyan-500 dark:text-cyan-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="teamSize" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="teamSize" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               团队规模：
             </Label>
             <Select value={teamSize} onValueChange={setTeamSize}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+              )}>
                 <SelectValue placeholder="选择团队规模..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {teamSizes.map(size => (
-                  <SelectItem key={size.value} value={size.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={size.value}
+                    value={size.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-cyan-100 dark:focus:bg-cyan-700/50",
+                      "data-[state=checked]:bg-cyan-200 dark:data-[state=checked]:bg-cyan-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{size.emoji} {size.label}</span>
-                      <span className="text-xs text-neutral-400">{size.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{size.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -140,19 +158,33 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="observationPeriod" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="observationPeriod" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               观察周期：
             </Label>
             <Select value={observationPeriod} onValueChange={setObservationPeriod}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+              )}>
                 <SelectValue placeholder="选择观察周期..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {observationPeriods.map(period => (
-                  <SelectItem key={period.value} value={period.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={period.value}
+                    value={period.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-cyan-100 dark:focus:bg-cyan-700/50",
+                      "data-[state=checked]:bg-cyan-200 dark:data-[state=checked]:bg-cyan-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{period.emoji} {period.label}</span>
-                      <span className="text-xs text-neutral-400">{period.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{period.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -160,19 +192,33 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="analysisType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="analysisType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               分析重点：
             </Label>
             <Select value={analysisType} onValueChange={setAnalysisType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+              )}>
                 <SelectValue placeholder="选择分析重点..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {analysisTypes.map(analysis => (
-                  <SelectItem key={analysis.value} value={analysis.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={analysis.value}
+                    value={analysis.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-cyan-100 dark:focus:bg-cyan-700/50",
+                      "data-[state=checked]:bg-cyan-200 dark:data-[state=checked]:bg-cyan-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{analysis.emoji} {analysis.label}</span>
-                      <span className="text-xs text-neutral-400">{analysis.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{analysis.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -181,7 +227,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           </div>
         </div>
         <div>
-          <Label htmlFor="teamDescription" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="teamDescription" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             团队描述：
           </Label>
           <Textarea
@@ -189,64 +235,97 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
             value={teamDescription}
             onChange={(e) => setTeamDescription(e.target.value)}
             placeholder="描述您的团队基本情况，如部门职能、工作性质、团队组成等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[100px]"
+            className={cn(
+              "w-full min-h-[100px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+            )}
             rows={4}
           />
         </div>
         <div>
-          <Label htmlFor="observedBehaviors" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="observedBehaviors" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             观察到的行为（选填）：
           </Label>
           <Textarea
             id="observedBehaviors"
             value={observedBehaviors}
             onChange={(e) => setObservedBehaviors(e.target.value)}
-            placeholder="描述团队成员的具体行为表现，如沟通方式、工作态度、互动频率等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            placeholder="例如：成员间互动减少、会议效率低下、抱怨增多、加班常态化..."
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+            )}
             rows={3}
           />
         </div>
-        <div>
-          <Label htmlFor="specificConcerns" className="block text-sm font-medium text-neutral-300 mb-2">
-            具体关注点（选填）：
-          </Label>
-          <Textarea
-            id="specificConcerns"
-            value={specificConcerns}
-            onChange={(e) => setSpecificConcerns(e.target.value)}
-            placeholder="您特别关注的问题或担忧，如效率下降、冲突增加、离职率等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="specificConcerns" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              具体关注点（选填）：
+            </Label>
+            <Textarea
+              id="specificConcerns"
+              value={specificConcerns}
+              onChange={(e) => setSpecificConcerns(e.target.value)}
+              placeholder="例如：新项目压力、团队成员流失、领导风格问题..."
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+              )}
+              rows={2}
+            />
+          </div>
+          <div>
+            <Label htmlFor="recentEvents" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              近期重要事件（选填）：
+            </Label>
+            <Textarea
+              id="recentEvents"
+              value={recentEvents}
+              onChange={(e) => setRecentEvents(e.target.value)}
+              placeholder="例如：组织架构调整、重要项目上线、季度绩效考核..."
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+              )}
+              rows={2}
+            />
+          </div>
         </div>
-        <div>
-          <Label htmlFor="recentEvents" className="block text-sm font-medium text-neutral-300 mb-2">
-            近期重要事件（选填）：
-          </Label>
-          <Textarea
-            id="recentEvents"
-            value={recentEvents}
-            onChange={(e) => setRecentEvents(e.target.value)}
-            placeholder="可能影响团队氛围的重要事件，如人员变动、项目变化、政策调整等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
-        </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-cyan-600 hover:bg-cyan-700 text-white dark:bg-cyan-500 dark:hover:bg-cyan-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 团队心理专家正在分析氛围...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 分析中...</>
           ) : (
-            <><TrendingUp className="mr-2 h-4 w-4" /> 开始氛围检测！</>
+            <><Sparkles className="mr-2 h-4 w-4" /> 检测团队氛围</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">氛围分析失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">分析失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -254,19 +333,22 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
 
       {isLoading && !analysisResult && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-cyan-400 mb-4" />
-          <p className="text-neutral-400">AI团队心理专家正在深度分析团队氛围...👥💭</p>
+          <Loader2 className="h-12 w-12 animate-spin text-cyan-500 dark:text-cyan-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">团队心理专家正在深入分析团队氛围...💭</p>
         </div>
       )}
 
       {analysisResult && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-cyan-400 flex items-center">
-              <Users className="w-5 h-5 mr-2" /> 团队氛围分析报告
+            <CardTitle className="text-cyan-600 dark:text-cyan-400 flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2" /> 团队氛围分析报告
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysisResult}</ReactMarkdown>
           </CardContent>
         </Card>

@@ -1,10 +1,13 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Separator } from '@/components/ui/Separator';
 import { Textarea } from '@/components/ui/Textarea';
-import { Gamepad2, RotateCcw, Sparkles, Target, Trophy } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Gamepad2, Loader2, RotateCcw, Sparkles, Target, Trophy } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface BingoCell {
@@ -71,7 +74,6 @@ const defaultBingoWords = [
   "灰度", "内测", "公测", "上线", "下线", "迭代", "版本", "发布"
 ];
 
-
 function MeetingBingoGenerator(): React.JSX.Element {
   const [customWords, setCustomWords] = useState<string>('');
   const [bingoGrid, setBingoGrid] = useState<BingoCell[]>([]);
@@ -81,7 +83,6 @@ function MeetingBingoGenerator(): React.JSX.Element {
   const [showResult, setShowResult] = useState<boolean>(false);
   const [markedCount, setMarkedCount] = useState<number>(0);
 
-  // 生成5x5的宾果网格
   const generateBingoGrid = async () => {
     setIsLoading(true);
     setError('');
@@ -90,14 +91,10 @@ function MeetingBingoGenerator(): React.JSX.Element {
 
     try {
       let wordsToUse = defaultBingoWords;
-
-      // 如果用户输入了自定义词汇，尝试从AI获取更多相关词汇
       if (customWords.trim()) {
         const response = await fetch('/api/chat', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             messages: [{
               role: 'user',
@@ -107,216 +104,154 @@ function MeetingBingoGenerator(): React.JSX.Element {
             language: 'zh'
           }),
         });
-
         if (response.ok) {
           const data = await response.json();
           if (data.assistantMessage) {
-            // 解析AI返回的词汇
             const aiWords = data.assistantMessage
               .split(/[,，\n]/)
               .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0 && word.length <= 8)
+              .filter((word: string) => word.length > 0 && word.length <= 10)
               .slice(0, 25);
-
-            if (aiWords.length >= 20) {
-              wordsToUse = aiWords;
-            }
+            if (aiWords.length >= 20) wordsToUse = aiWords;
           }
         }
       }
-
-      // 随机选择24个词汇（第13个位置是FREE）
       const shuffled = [...wordsToUse].sort(() => Math.random() - 0.5);
       const selectedWords = shuffled.slice(0, 24);
-
-      // 创建5x5网格
       const grid: BingoCell[] = [];
       let wordIndex = 0;
-
       for (let i = 0; i < 25; i++) {
-        if (i === 12) { // 中心位置是FREE
-          grid.push({
-            id: i,
-            text: 'FREE',
-            isMarked: true,
-            isFree: true
-          });
+        if (i === 12) {
+          grid.push({ id: i, text: 'FREE', isMarked: true, isFree: true });
         } else {
-          grid.push({
-            id: i,
-            text: selectedWords[wordIndex] || `词汇${wordIndex + 1}`,
-            isMarked: false,
-            isFree: false
-          });
+          grid.push({ id: i, text: selectedWords[wordIndex] || `词${wordIndex + 1}`, isMarked: false, isFree: false });
           wordIndex++;
         }
       }
-
       setBingoGrid(grid);
       setShowResult(true);
-      setMarkedCount(1); // FREE格子已标记
-    } catch (error) {
-      console.error('Error generating bingo grid:', error);
-      setError('生成BINGO卡片失败，请稍后重试');
+      setMarkedCount(1);
+    } catch (err) {
+      console.error('Error generating bingo grid:', err);
+      setError('生成BINGO卡片失败，请检查自定义词汇或稍后重试');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 切换格子标记状态
   const toggleCell = (cellId: number) => {
     if (hasWon) return;
-
     setBingoGrid(prev => {
       const newGrid = prev.map(cell =>
-        cell.id === cellId && !cell.isFree
-          ? { ...cell, isMarked: !cell.isMarked }
-          : cell
+        cell.id === cellId && !cell.isFree ? { ...cell, isMarked: !cell.isMarked } : cell
       );
-
-      // 计算标记数量
       const marked = newGrid.filter(cell => cell.isMarked).length;
       setMarkedCount(marked);
-
       return newGrid;
     });
   };
 
-  // 检查是否获胜
-  const checkWin = () => {
+  const checkWinCondition = () => {
     if (bingoGrid.length !== 25) return false;
-
-    // 检查行
-    for (let row = 0; row < 5; row++) {
-      let rowComplete = true;
-      for (let col = 0; col < 5; col++) {
-        if (!bingoGrid[row * 5 + col].isMarked) {
-          rowComplete = false;
-          break;
-        }
-      }
-      if (rowComplete) return true;
+    const lines = [
+      // Rows
+      [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+      // Columns
+      [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+      // Diagonals
+      [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+    ];
+    for (const line of lines) {
+      if (line.every(index => bingoGrid[index].isMarked)) return true;
     }
-
-    // 检查列
-    for (let col = 0; col < 5; col++) {
-      let colComplete = true;
-      for (let row = 0; row < 5; row++) {
-        if (!bingoGrid[row * 5 + col].isMarked) {
-          colComplete = false;
-          break;
-        }
-      }
-      if (colComplete) return true;
-    }
-
-    // 检查对角线
-    let diag1Complete = true;
-    let diag2Complete = true;
-    for (let i = 0; i < 5; i++) {
-      if (!bingoGrid[i * 5 + i].isMarked) diag1Complete = false;
-      if (!bingoGrid[i * 5 + (4 - i)].isMarked) diag2Complete = false;
-    }
-
-    return diag1Complete || diag2Complete;
+    return false;
   };
 
-  // 监听网格变化，检查获胜状态
   useEffect(() => {
-    if (bingoGrid.length > 0) {
-      const won = checkWin();
-      setHasWon(won);
+    if (bingoGrid.length === 25) {
+      if (checkWinCondition()) {
+        setHasWon(true);
+      }
     }
   }, [bingoGrid]);
 
   const handleReset = () => {
-    setBingoGrid([]);
+    setShowResult(false);
     setCustomWords('');
+    setBingoGrid([]);
     setError('');
     setHasWon(false);
-    setShowResult(false);
     setMarkedCount(0);
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className={cn("max-w-4xl mx-auto p-4 sm:p-6 space-y-6", "bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100")}>
       {!showResult ? (
         <div className="space-y-6">
-          {/* 标题部分 */}
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-2">
-              <Gamepad2 className="w-8 h-8 text-green-500" />
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                会议BINGO游戏
+              <Gamepad2 className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-cyan-600 dark:from-green-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                会议BINGO生成器
               </h1>
-              <Target className="w-8 h-8 text-green-500" />
             </div>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              将无聊的会议变成刺激的BINGO游戏！听到这些词就划掉，看谁先连成一线！🎯
+            <p className="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
+              输入会议主题或常用词汇（可选），AI将为您量身定制一张会议BINGO卡，让无聊的会议充满乐趣！
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Sparkles className="w-4 h-4" />
-                5x5网格
-              </Badge>
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Trophy className="w-4 h-4" />
-                连线获胜
-              </Badge>
-            </div>
           </div>
 
-          <Separator />
+          <Separator className="bg-neutral-200 dark:bg-neutral-800" />
 
-          {/* 自定义词汇输入 */}
-          <Card className="border-2 hover:border-green-200 transition-colors">
+          <Card className={cn("border-2 hover:border-green-300 dark:hover:border-green-600 transition-colors", "bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800")}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600 font-bold text-sm">
+              <CardTitle className={cn("flex items-center gap-2 text-lg", "text-neutral-800 dark:text-neutral-200")}>
+                <span className={cn("flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm", "bg-green-100 dark:bg-green-800/30 text-green-700 dark:text-green-300")}>
                   1
                 </span>
-                自定义会议主题（可选）
+                自定义会议主题或词汇（可选）
               </CardTitle>
-              <CardDescription>
-                输入您的会议主题或常见词汇，AI将生成相关的BINGO词汇。留空则使用默认词汇。
+              <CardDescription className="text-neutral-600 dark:text-neutral-400">
+                输入一些词语，AI会围绕这些词生成BINGO卡。留空则使用内置的"互联网黑话"词库。
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="words">会议主题或关键词</Label>
-                <Textarea
-                  id="words"
-                  placeholder="例如：产品规划、技术评审、季度总结、团队建设..."
-                  value={customWords}
-                  onChange={(e) => setCustomWords(e.target.value)}
-                  className="min-h-[80px]"
-                />
-              </div>
+              <Label htmlFor="customWords" className="sr-only">自定义会议主题或关键词</Label>
+              <Textarea
+                id="customWords"
+                value={customWords}
+                onChange={(e) => setCustomWords(e.target.value)}
+                placeholder="例如：产品规划、技术评审、季度总结、团队建设、赋能、抓手、颗粒度..."
+                rows={4}
+                className={cn(
+                  "w-full",
+                  "bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                  "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+                )}
+              />
             </CardContent>
           </Card>
 
-          {error && (
-            <Card className="border-red-200 bg-red-50">
-              <CardContent className="pt-6">
-                <p className="text-red-600 text-center">{error}</p>
-              </CardContent>
-            </Card>
-          )}
+          {error && <p className="text-red-600 dark:text-red-400 text-center py-2">{error}</p>}
 
-          <div className="flex justify-center">
+          <div className="flex justify-center pt-4">
             <Button
               onClick={generateBingoGrid}
               disabled={isLoading}
-              className="px-8 py-3 text-lg"
+              className={cn(
+                "w-full max-w-md py-3 text-lg font-semibold text-white rounded-lg shadow-md hover:shadow-lg transition-shadow",
+                "bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-700 hover:to-cyan-700",
+                "dark:from-green-500 dark:to-cyan-500 dark:hover:from-green-600 dark:hover:to-cyan-600",
+                "disabled:from-neutral-400 disabled:to-neutral-500 dark:disabled:from-neutral-600 dark:disabled:to-neutral-700 disabled:text-neutral-300 dark:disabled:text-neutral-400 disabled:shadow-none disabled:cursor-not-allowed"
+              )}
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  正在生成BINGO卡片...
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  正在生成BINGO卡...
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
-                  <Gamepad2 className="w-5 h-5" />
+                <div className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5" />
                   生成BINGO卡片
                 </div>
               )}
@@ -324,105 +259,57 @@ function MeetingBingoGenerator(): React.JSX.Element {
           </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          {/* 游戏状态 */}
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-2">
-              <Gamepad2 className="w-8 h-8 text-green-500" />
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                会议BINGO游戏
+        <div className="space-y-6 flex flex-col items-center">
+          <div className="text-center space-y-2">
+            <div className={cn("flex items-center justify-center gap-2", hasWon ? "text-yellow-500 dark:text-yellow-400" : "text-green-600 dark:text-green-400")}>
+              {hasWon ? <Trophy className="w-8 h-8" /> : <Gamepad2 className="w-8 h-8" />}
+              <h1 className="text-3xl font-bold">
+                {hasWon ? "BINGO! 你赢了!" : "会议BINGO游戏"}
               </h1>
-              {hasWon && <Trophy className="w-8 h-8 text-yellow-500 animate-bounce" />}
             </div>
+            {!hasWon && <p className="text-neutral-600 dark:text-neutral-400">听到词就点一下，看看谁先连成线！</p>}
+          </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <Badge variant={hasWon ? "default" : "outline"} className="flex items-center gap-1">
-                <Target className="w-4 h-4" />
-                已标记: {markedCount}/25
-              </Badge>
-              {hasWon && (
-                <Badge className="bg-yellow-500 text-yellow-900 flex items-center gap-1">
-                  <Trophy className="w-4 h-4" />
-                  BINGO! 🎉
-                </Badge>
+          <div className={cn("grid grid-cols-5 gap-1 sm:gap-2 p-2 rounded-md", "bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700")}>
+            {bingoGrid.map((cell) => (
+              <Button
+                key={cell.id}
+                onClick={() => toggleCell(cell.id)}
+                variant="outline"
+                className={cn(
+                  "aspect-square text-xs sm:text-sm md:text-base p-1 sm:p-2 w-full h-full flex items-center justify-center text-center break-all transition-all duration-200 ease-in-out font-semibold leading-tight",
+                  "border-2",
+                  cell.isFree ?
+                    "bg-yellow-400 dark:bg-yellow-600 border-yellow-500 dark:border-yellow-700 text-white dark:text-neutral-900 cursor-default" :
+                  cell.isMarked ?
+                    "bg-green-500 dark:bg-green-600 border-green-600 dark:border-green-700 text-white dark:text-white transform scale-105 shadow-lg" :
+                    "bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-600",
+                  hasWon && cell.isMarked && !cell.isFree && "animate-pulse"
+                )}
+                disabled={cell.isFree || hasWon}
+              >
+                {cell.text}
+              </Button>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+            <Badge variant="secondary" className={cn("text-sm px-3 py-1.5", "bg-green-100 dark:bg-green-800/30 text-green-700 dark:text-green-300")}>
+              <Target className="w-4 h-4 mr-1.5" /> 已标记: {markedCount} / 25
+            </Badge>
+            <Button
+              onClick={handleReset}
+              className={cn(
+                "py-2 px-6 text-base font-semibold text-white rounded-lg shadow-md hover:shadow-lg transition-shadow",
+                "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600",
+                "dark:from-orange-400 dark:to-red-400 dark:hover:from-orange-500 dark:hover:to-red-500"
               )}
-            </div>
-
-            {hasWon && (
-              <div className="bg-gradient-to-r from-yellow-100 to-green-100 border border-yellow-300 rounded-lg p-4">
-                <p className="text-lg font-bold text-yellow-800">
-                  🎉 恭喜！您获得了BINGO！🎉
-                </p>
-                <p className="text-sm text-yellow-700 mt-1">
-                  您成功连成一线，成为会议BINGO大师！
-                </p>
-              </div>
-            )}
-          </div>
-
-                    {/* BINGO网格 */}
-          <Card className="border-2 border-green-200 bg-neutral-800">
-            <CardHeader>
-              <CardTitle className="text-center text-white">
-                点击听到的词汇来标记 ✓
-              </CardTitle>
-              <CardDescription className="text-center text-gray-300">
-                连成一行、一列或对角线即可获胜！
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-                            <div className="grid grid-cols-5 gap-3 max-w-2xl mx-auto">
-                {bingoGrid.map((cell) => (
-                  <button
-                    key={cell.id}
-                    onClick={() => toggleCell(cell.id)}
-                    disabled={cell.isFree || hasWon}
-                    className={`
-                      w-20 h-20 rounded-lg border-2 text-sm font-semibold transition-all duration-200 flex items-center justify-center
-                      ${cell.isMarked
-                        ? cell.isFree
-                          ? 'bg-yellow-200 border-yellow-400 text-yellow-800'
-                          : 'bg-green-200 border-green-400 text-green-800 line-through'
-                        : 'bg-gray-100 border-gray-400 text-gray-800 hover:border-green-400 hover:bg-green-100'
-                      }
-                      ${hasWon ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'}
-                      ${cell.isFree ? 'cursor-default' : ''}
-                    `}
-                  >
-                    <div className="text-center leading-tight px-1">
-                      {cell.text}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 游戏说明 */}
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="pt-6">
-              <div className="text-sm text-blue-800 space-y-2">
-                <p><strong>游戏规则：</strong></p>
-                <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>在会议中听到网格中的词汇时，点击对应格子标记</li>
-                  <li>连成一行、一列或对角线即可获胜</li>
-                  <li>中心的"FREE"格子默认已标记</li>
-                  <li>标记的格子会显示删除线效果</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-center gap-4">
-            <Button onClick={handleReset} variant="outline" className="px-6">
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
-              重新开始
-            </Button>
-            <Button onClick={generateBingoGrid} className="px-6">
-              <Gamepad2 className="w-4 h-4 mr-2" />
-              生成新卡片
+              {hasWon ? "再来一局" : "重置/换卡"}
             </Button>
           </div>
+          {hasWon && <p className="text-xl font-bold text-yellow-500 dark:text-yellow-400 animate-bounce mt-2">恭喜你，会议划水大师！🎉</p>}
         </div>
       )}
     </div>

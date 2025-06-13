@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, Mail, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -77,16 +78,19 @@ function EmailPolisher(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Mail className="w-8 h-8 text-green-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">邮件润色器</h1>
-        <Mail className="w-8 h-8 text-green-400 ml-2" />
+        <Mail className="w-8 h-8 text-green-600 dark:text-green-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">邮件润色器</h1>
+        <Mail className="w-8 h-8 text-green-600 dark:text-green-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="originalEmail" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="originalEmail" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             输入需要润色的邮件内容：
           </Label>
           <Textarea
@@ -94,28 +98,53 @@ function EmailPolisher(): React.JSX.Element {
             value={originalEmail}
             onChange={(e) => setOriginalEmail(e.target.value)}
             placeholder="例如：Hi，关于那个项目的事情，我想说一下我的想法..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[150px]"
+            className={cn(
+              "w-full min-h-[150px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={6}
           />
         </div>
         <div>
-          <Label htmlFor="emailType" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="emailType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             邮件类型：
           </Label>
           <Select value={emailType} onValueChange={setEmailType}>
-            <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+            <SelectTrigger className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}>
               <SelectValue placeholder="选择邮件类型..." />
             </SelectTrigger>
-            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+            <SelectContent className={cn(
+              "border-neutral-200 dark:border-neutral-700",
+              "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+            )}>
               {emailTypes.map(type => (
-                <SelectItem key={type.value} value={type.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                <SelectItem
+                  key={type.value}
+                  value={type.value}
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   {type.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-green-500 hover:bg-green-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在精心润色...
             </>
@@ -127,11 +156,14 @@ function EmailPolisher(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">润色失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">润色失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -139,15 +171,18 @@ function EmailPolisher(): React.JSX.Element {
 
       {isLoading && !polishedEmail && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-green-400 mb-4" />
-          <p className="text-neutral-400">AI邮件专家正在为您的邮件添加专业光泽...✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-green-600 dark:text-green-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI邮件专家正在为您的邮件添加专业光泽...✨</p>
         </div>
       )}
 
       {polishedEmail && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-green-400 flex items-center">
+            <CardTitle className="text-green-700 dark:text-green-400 flex items-center">
               <Sparkles className="w-5 h-5 mr-2" /> 润色后的邮件：
             </CardTitle>
           </CardHeader>

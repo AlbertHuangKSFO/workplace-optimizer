@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, Mic, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -92,16 +93,19 @@ function MeetingSpeechGenerator(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Users className="w-8 h-8 text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">会议发言生成器</h1>
-        <Users className="w-8 h-8 text-purple-400 ml-2" />
+        <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">会议发言生成器</h1>
+        <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="meetingTopic" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="meetingTopic" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             会议主题：
           </Label>
           <Input
@@ -109,21 +113,39 @@ function MeetingSpeechGenerator(): React.JSX.Element {
             value={meetingTopic}
             onChange={(e) => setMeetingTopic(e.target.value)}
             placeholder="例如：Q4季度业绩回顾、新产品发布计划..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="speechType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="speechType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               发言类型：
             </Label>
             <Select value={speechType} onValueChange={setSpeechType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+              )}>
                 <SelectValue placeholder="选择发言类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {speechTypes.map(type => (
-                  <SelectItem key={type.value} value={type.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={type.value}
+                    value={type.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                      "focus:bg-sky-100 dark:focus:bg-sky-700"
+                    )}
+                  >
                     {type.label}
                   </SelectItem>
                 ))}
@@ -131,16 +153,30 @@ function MeetingSpeechGenerator(): React.JSX.Element {
             </Select>
           </div>
           <div>
-            <Label htmlFor="duration" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="duration" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               发言时长：
             </Label>
             <Select value={duration} onValueChange={setDuration}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+              )}>
                 <SelectValue placeholder="选择发言时长..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {speechDurations.map(dur => (
-                  <SelectItem key={dur.value} value={dur.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={dur.value}
+                    value={dur.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                      "focus:bg-sky-100 dark:focus:bg-sky-700"
+                    )}
+                  >
                     {dur.label}
                   </SelectItem>
                 ))}
@@ -149,7 +185,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
           </div>
         </div>
         <div>
-          <Label htmlFor="additionalInfo" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="additionalInfo" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             补充信息（选填）：
           </Label>
           <Textarea
@@ -157,11 +193,22 @@ function MeetingSpeechGenerator(): React.JSX.Element {
             value={additionalInfo}
             onChange={(e) => setAdditionalInfo(e.target.value)}
             placeholder="例如：需要强调的重点、特殊要求、背景信息等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={3}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-purple-500 hover:bg-purple-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在撰写发言稿...
             </>
@@ -173,11 +220,14 @@ function MeetingSpeechGenerator(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -185,15 +235,18 @@ function MeetingSpeechGenerator(): React.JSX.Element {
 
       {isLoading && !generatedSpeech && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-400 mb-4" />
-          <p className="text-neutral-400">AI演讲大师正在为您量身定制发言稿...🎯</p>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-600 dark:text-purple-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI演讲大师正在为您量身定制发言稿...🎯</p>
         </div>
       )}
 
       {generatedSpeech && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-purple-400 flex items-center">
+            <CardTitle className="text-purple-700 dark:text-purple-400 flex items-center">
               <Mic className="w-5 h-5 mr-2" /> 您的专属发言稿：
             </CardTitle>
           </CardHeader>

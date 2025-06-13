@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Github } from 'lucide-react';
 
 export function Footer() {
@@ -5,7 +6,11 @@ export function Footer() {
   const githubUrl = 'https://github.com/AlbertHuangKSFO/workplace-optimizer';
 
   return (
-    <footer className="py-4 px-6 text-center text-xs text-gray-500 border-t border-gray-700">
+    <footer className={cn(
+      "py-4 px-6 text-center text-xs border-t",
+      "text-neutral-600 dark:text-neutral-400",
+      "border-neutral-200 dark:border-neutral-700"
+    )}>
       <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
         <p>
           &copy; {currentYear} Powered by 二黄 Albert Huang.
@@ -14,7 +19,10 @@ export function Footer() {
           href={githubUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center hover:text-gray-400 transition-colors"
+          className={cn(
+            "flex items-center transition-colors",
+            "hover:text-neutral-800 dark:hover:text-neutral-200"
+          )}
         >
           <Github size={16} className="mr-1" />
           View on GitHub

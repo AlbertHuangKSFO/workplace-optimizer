@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 
@@ -14,8 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className="font-sans antialiased bg-gray-800 text-gray-100">
-        <AppLayout>{children}</AppLayout>
+      <body className="font-sans antialiased">
+        <ThemeProvider>
+          <AppLayout>{children}</AppLayout>
+        </ThemeProvider>
       </body>
     </html>
   );

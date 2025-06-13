@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, Sparkles, Target, User } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -116,29 +117,46 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <User className="w-8 h-8 text-blue-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">职场人设生成器</h1>
-        <Target className="w-8 h-8 text-blue-400 ml-2" />
+        <User className="w-8 h-8 text-blue-500 dark:text-blue-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场人设生成器</h1>
+        <Target className="w-8 h-8 text-blue-500 dark:text-blue-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="careerLevel" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="careerLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               职业层级：
             </Label>
             <Select value={careerLevel} onValueChange={setCareerLevel}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              )}>
                 <SelectValue placeholder="选择职业层级..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {careerLevels.map(level => (
-                  <SelectItem key={level.value} value={level.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={level.value}
+                    value={level.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-blue-100 dark:focus:bg-blue-700/50",
+                      "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{level.emoji} {level.label}</span>
-                      <span className="text-xs text-neutral-400">{level.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{level.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -146,16 +164,30 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="industry" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="industry" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               所属行业：
             </Label>
             <Select value={industry} onValueChange={setIndustry}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              )}>
                 <SelectValue placeholder="选择行业..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {industries.map(ind => (
-                  <SelectItem key={ind.value} value={ind.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={ind.value}
+                    value={ind.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-blue-100 dark:focus:bg-blue-700/50",
+                      "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
+                    )}
+                  >
                     <span>{ind.emoji} {ind.label}</span>
                   </SelectItem>
                 ))}
@@ -163,19 +195,33 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="personaStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="personaStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               人设风格：
             </Label>
             <Select value={personaStyle} onValueChange={setPersonaStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              )}>
                 <SelectValue placeholder="选择风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {personaStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-blue-100 dark:focus:bg-blue-700/50",
+                      "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -185,7 +231,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="currentRole" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="currentRole" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               当前职位：
             </Label>
             <Input
@@ -193,76 +239,111 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
               value={currentRole}
               onChange={(e) => setCurrentRole(e.target.value)}
               placeholder="例如：高级产品经理、技术总监、市场专员..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              )}
             />
           </div>
           <div>
-            <Label htmlFor="targetRole" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="targetRole" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               目标职位（选填）：
             </Label>
             <Input
               id="targetRole"
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
-              placeholder="例如：产品总监、CTO、市场总监..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：产品副总裁、首席架构师、营销总监..."
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              )}
             />
           </div>
         </div>
         <div>
-          <Label htmlFor="keySkills" className="block text-sm font-medium text-neutral-300 mb-2">
-            核心技能（选填）：
+          <Label htmlFor="keySkills" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+            核心技能（选填，逗号分隔）：
           </Label>
           <Textarea
             id="keySkills"
             value={keySkills}
             onChange={(e) => setKeySkills(e.target.value)}
-            placeholder="例如：产品规划、数据分析、团队管理、Python、项目管理..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
+            placeholder="例如：产品管理, 数据分析, 团队领导, Python, React, 市场营销..."
+            className={cn(
+              "w-full min-h-[60px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            )}
+            rows={2}
           />
         </div>
         <div>
-          <Label htmlFor="achievements" className="block text-sm font-medium text-neutral-300 mb-2">
-            主要成就（选填）：
+          <Label htmlFor="achievements" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+            主要成就（选填，简述）：
           </Label>
           <Textarea
             id="achievements"
             value={achievements}
             onChange={(e) => setAchievements(e.target.value)}
-            placeholder="例如：主导产品从0到1、团队规模从5人扩展到20人、年度销售额增长200%..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            placeholder="例如：主导XX产品上线，用户增长XX%；优化XX流程，效率提升XX%..."
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            )}
             rows={3}
           />
         </div>
         <div>
-          <Label htmlFor="personalTraits" className="block text-sm font-medium text-neutral-300 mb-2">
-            个人特质（选填）：
+          <Label htmlFor="personalTraits" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+            个人特质（选填，逗号分隔）：
           </Label>
-          <Textarea
+          <Input
             id="personalTraits"
             value={personalTraits}
             onChange={(e) => setPersonalTraits(e.target.value)}
-            placeholder="例如：善于沟通、注重细节、创新思维、抗压能力强、学习能力强..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
+            placeholder="例如：积极主动, 善于沟通, 结果导向, 抗压能力强, 学习能力强..."
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            )}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 形象设计师正在塑造您的职场人设...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 人设塑造中...</>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 生成职场人设！</>
+            <><Sparkles className="mr-2 h-4 w-4" /> 生成职场人设</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">人设塑造失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -270,19 +351,22 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
 
       {isLoading && !generatedPersona && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-400 mb-4" />
-          <p className="text-neutral-400">AI形象设计师正在为您量身定制职场人设...🎭</p>
+          <Loader2 className="h-12 w-12 animate-spin text-blue-500 dark:text-blue-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">正在为您量身打造职场人设...🎭</p>
         </div>
       )}
 
       {generatedPersona && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-blue-400 flex items-center">
-              <User className="w-5 h-5 mr-2" /> 您的职场人设
+            <CardTitle className="text-blue-600 dark:text-blue-400 flex items-center">
+              <User className="w-5 h-5 mr-2" /> 您的专属职场人设
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedPersona}</ReactMarkdown>
           </CardContent>
         </Card>

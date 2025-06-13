@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Briefcase, FileText, Loader2, LogOut } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -113,29 +114,46 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <LogOut className="w-8 h-8 text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">离职/跳槽文案生成器</h1>
-        <Briefcase className="w-8 h-8 text-purple-400 ml-2" />
+        <LogOut className="w-8 h-8 text-purple-500 dark:text-purple-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">离职/跳槽文案生成器</h1>
+        <Briefcase className="w-8 h-8 text-purple-500 dark:text-purple-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="resignationType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="resignationType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               离职原因：
             </Label>
             <Select value={resignationType} onValueChange={setResignationType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+              )}>
                 <SelectValue placeholder="选择离职原因..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {resignationTypes.map(resignation => (
-                  <SelectItem key={resignation.value} value={resignation.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={resignation.value}
+                    value={resignation.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-purple-100 dark:focus:bg-purple-700/50",
+                      "data-[state=checked]:bg-purple-200 dark:data-[state=checked]:bg-purple-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{resignation.emoji} {resignation.label}</span>
-                      <span className="text-xs text-neutral-400">{resignation.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{resignation.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -143,19 +161,33 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="relationshipLevel" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="relationshipLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               关系状况：
             </Label>
             <Select value={relationshipLevel} onValueChange={setRelationshipLevel}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+              )}>
                 <SelectValue placeholder="选择关系状况..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {relationshipLevels.map(relationship => (
-                  <SelectItem key={relationship.value} value={relationship.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={relationship.value}
+                    value={relationship.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-purple-100 dark:focus:bg-purple-700/50",
+                      "data-[state=checked]:bg-purple-200 dark:data-[state=checked]:bg-purple-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{relationship.emoji} {relationship.label}</span>
-                      <span className="text-xs text-neutral-400">{relationship.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{relationship.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -163,19 +195,33 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="noticeStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="noticeStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               通知风格：
             </Label>
             <Select value={noticeStyle} onValueChange={setNoticeStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+              )}>
                 <SelectValue placeholder="选择通知风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {noticeStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-purple-100 dark:focus:bg-purple-700/50",
+                      "data-[state=checked]:bg-purple-200 dark:data-[state=checked]:bg-purple-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -185,7 +231,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="currentPosition" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="currentPosition" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               当前职位：
             </Label>
             <Input
@@ -193,63 +239,94 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
               value={currentPosition}
               onChange={(e) => setCurrentPosition(e.target.value)}
               placeholder="例如：高级产品经理、技术总监、市场专员..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+              )}
             />
           </div>
           <div>
-            <Label htmlFor="workDuration" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="workDuration" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               工作时长（选填）：
             </Label>
             <Input
               id="workDuration"
               value={workDuration}
               onChange={(e) => setWorkDuration(e.target.value)}
-              placeholder="例如：2年3个月、1.5年、3年..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：3年5个月、2年、10个月..."
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+              )}
             />
           </div>
         </div>
         <div>
-          <Label htmlFor="specificReasons" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="specificReasons" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             具体原因（选填）：
           </Label>
           <Textarea
             id="specificReasons"
             value={specificReasons}
             onChange={(e) => setSpecificReasons(e.target.value)}
-            placeholder="详细说明离职的具体原因，如新机会的吸引力、个人发展需求等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[100px]"
-            rows={4}
+            placeholder="可以更详细地说明离职原因，例如：追求新的职业挑战，个人发展规划等..."
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+            )}
+            rows={3}
           />
         </div>
         <div>
-          <Label htmlFor="handoverPlans" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="handoverPlans" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             交接计划（选填）：
           </Label>
           <Textarea
             id="handoverPlans"
             value={handoverPlans}
             onChange={(e) => setHandoverPlans(e.target.value)}
-            placeholder="描述工作交接的安排，如项目移交、文档整理、培训接替人员等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            placeholder="例如：我将尽力配合完成工作交接，确保项目平稳过渡..."
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+            )}
             rows={3}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-500 dark:hover:bg-purple-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> HR顾问正在制定离职文案...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成文案中...</>
           ) : (
-            <><FileText className="mr-2 h-4 w-4" /> 生成离职文案！</>
+            <><FileText className="mr-2 h-4 w-4" /> 生成离职文案</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">文案生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -257,19 +334,22 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
 
       {isLoading && !generatedTemplate && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-400 mb-4" />
-          <p className="text-neutral-400">AI职业规划师正在为您制定专业的离职文案...💼</p>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-500 dark:text-purple-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">HR顾问正在精心撰写您的离职文案...📝</p>
         </div>
       )}
 
       {generatedTemplate && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-purple-400 flex items-center">
-              <LogOut className="w-5 h-5 mr-2" /> 离职文案模板
+            <CardTitle className="text-purple-600 dark:text-purple-400 flex items-center">
+              <FileText className="w-5 h-5 mr-2" /> 您的离职文案
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedTemplate}</ReactMarkdown>
           </CardContent>
         </Card>

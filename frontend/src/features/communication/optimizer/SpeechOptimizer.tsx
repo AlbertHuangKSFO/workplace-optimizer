@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, MessageSquareText, Wand2 } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -77,16 +78,19 @@ function SpeechOptimizer(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <MessageSquareText className="w-8 h-8 text-blue-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">话术优化器</h1>
-        <MessageSquareText className="w-8 h-8 text-blue-400 ml-2" />
+        <MessageSquareText className="w-8 h-8 text-blue-600 dark:text-blue-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">话术优化器</h1>
+        <MessageSquareText className="w-8 h-8 text-blue-600 dark:text-blue-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="originalText" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="originalText" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             输入需要优化的话术内容：
           </Label>
           <Textarea
@@ -94,28 +98,53 @@ function SpeechOptimizer(): React.JSX.Element {
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
             placeholder="例如：老板，我觉得这个方案不太行..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={5}
           />
         </div>
         <div>
-          <Label htmlFor="optimizationGoal" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="optimizationGoal" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             优化目标：
           </Label>
           <Select value={optimizationGoal} onValueChange={setOptimizationGoal}>
-            <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+            <SelectTrigger className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}>
               <SelectValue placeholder="选择优化方向..." />
             </SelectTrigger>
-            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+            <SelectContent className={cn(
+              "border-neutral-200 dark:border-neutral-700",
+              "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+            )}>
               {optimizationGoals.map(goal => (
-                <SelectItem key={goal.value} value={goal.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                <SelectItem
+                  key={goal.value}
+                  value={goal.value}
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   {goal.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在精雕细琢...
             </>
@@ -127,11 +156,14 @@ function SpeechOptimizer(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">优化失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">优化失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -139,15 +171,18 @@ function SpeechOptimizer(): React.JSX.Element {
 
       {isLoading && !optimizedText && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-400 mb-4" />
-          <p className="text-neutral-400">AI修辞大师正在为您的话术添加魔法...✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600 dark:text-blue-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI修辞大师正在为您的话术添加魔法...✨</p>
         </div>
       )}
 
       {optimizedText && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-blue-400 flex items-center">
+            <CardTitle className="text-blue-700 dark:text-blue-400 flex items-center">
               <Wand2 className="w-5 h-5 mr-2" /> 优化后的话术：
             </CardTitle>
           </CardHeader>

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { CheckSquare, FileText, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -121,29 +122,46 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <FileText className="w-8 h-8 text-indigo-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">会议记录智能整理</h1>
-        <CheckSquare className="w-8 h-8 text-indigo-400 ml-2" />
+        <FileText className="w-8 h-8 text-indigo-500 dark:text-indigo-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">会议记录智能整理</h1>
+        <CheckSquare className="w-8 h-8 text-indigo-500 dark:text-indigo-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="meetingType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="meetingType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               会议类型：
             </Label>
             <Select value={meetingType} onValueChange={setMeetingType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}>
                 <SelectValue placeholder="选择会议类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {meetingTypes.map(meeting => (
-                  <SelectItem key={meeting.value} value={meeting.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={meeting.value}
+                    value={meeting.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-indigo-100 dark:focus:bg-indigo-700/50",
+                      "data-[state=checked]:bg-indigo-200 dark:data-[state=checked]:bg-indigo-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{meeting.emoji} {meeting.label}</span>
-                      <span className="text-xs text-neutral-400">{meeting.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{meeting.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -151,19 +169,33 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="organizationStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="organizationStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               整理风格：
             </Label>
             <Select value={organizationStyle} onValueChange={setOrganizationStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}>
                 <SelectValue placeholder="选择整理风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {organizationStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-indigo-100 dark:focus:bg-indigo-700/50",
+                      "data-[state=checked]:bg-indigo-200 dark:data-[state=checked]:bg-indigo-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -171,19 +203,33 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="outputFormat" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="outputFormat" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               输出格式：
             </Label>
             <Select value={outputFormat} onValueChange={setOutputFormat}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}>
                 <SelectValue placeholder="选择输出格式..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {outputFormats.map(format => (
-                  <SelectItem key={format.value} value={format.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={format.value}
+                    value={format.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-indigo-100 dark:focus:bg-indigo-700/50",
+                      "data-[state=checked]:bg-indigo-200 dark:data-[state=checked]:bg-indigo-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{format.emoji} {format.label}</span>
-                      <span className="text-xs text-neutral-400">{format.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{format.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -193,98 +239,140 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="meetingTitle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="meetingTitle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               会议主题（选填）：
             </Label>
             <Input
               id="meetingTitle"
               value={meetingTitle}
               onChange={(e) => setMeetingTitle(e.target.value)}
-              placeholder="例如：产品规划讨论会、周度项目评审..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：Q3产品规划评审会"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}
             />
           </div>
           <div>
-            <Label htmlFor="meetingDate" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="meetingDate" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               会议时间（选填）：
             </Label>
             <Input
               id="meetingDate"
               value={meetingDate}
               onChange={(e) => setMeetingDate(e.target.value)}
-              placeholder="例如：2024-01-15 14:00-15:30"
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：2023年10月26日 下午2点"
+              type="text"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}
             />
           </div>
           <div>
-            <Label htmlFor="participants" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="participants" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               参会人员（选填）：
             </Label>
             <Input
               id="participants"
               value={participants}
               onChange={(e) => setParticipants(e.target.value)}
-              placeholder="例如：张三、李四、王五..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：张三, 李四, 王五 (用逗号分隔)"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}
             />
           </div>
         </div>
         <div>
-          <Label htmlFor="rawNotes" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="rawNotes" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             原始会议记录：
           </Label>
           <Textarea
             id="rawNotes"
             value={rawNotes}
             onChange={(e) => setRawNotes(e.target.value)}
-            placeholder="粘贴或输入原始的会议记录、讨论内容、语音转文字结果等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[150px]"
+            placeholder="请在此处粘贴或输入您的原始会议记录内容..."
+            className={cn(
+              "w-full min-h-[150px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+            )}
             rows={6}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="keyDecisions" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="keyDecisions" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               关键决策（选填）：
             </Label>
             <Textarea
               id="keyDecisions"
               value={keyDecisions}
               onChange={(e) => setKeyDecisions(e.target.value)}
-              placeholder="会议中做出的重要决策和结论..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-              rows={3}
+              placeholder="会议中做出的重要决定 (AI会尝试自动提取，您也可以手动补充)"
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}
+              rows={2}
             />
           </div>
           <div>
-            <Label htmlFor="actionItems" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="actionItems" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               行动项（选填）：
             </Label>
             <Textarea
               id="actionItems"
               value={actionItems}
               onChange={(e) => setActionItems(e.target.value)}
-              placeholder="需要跟进的任务、责任人、截止时间等..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-              rows={3}
+              placeholder="会议产生的待办事项和负责人 (AI会尝试自动提取，您也可以手动补充)"
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+              )}
+              rows={2}
             />
           </div>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 会议秘书正在整理记录...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 整理中...</>
           ) : (
-            <><CheckSquare className="mr-2 h-4 w-4" /> 开始智能整理！</>
+            <><FileText className="mr-2 h-4 w-4" /> 整理会议记录</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">整理失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">整理失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -292,19 +380,22 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
 
       {isLoading && !organizedNotes && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-indigo-400 mb-4" />
-          <p className="text-neutral-400">AI会议秘书正在智能整理您的会议记录...📝✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-indigo-500 dark:text-indigo-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">会议秘书正在努力整理会议纪要...📝</p>
         </div>
       )}
 
       {organizedNotes && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-indigo-400 flex items-center">
-              <FileText className="w-5 h-5 mr-2" /> 整理后的会议纪要
+            <CardTitle className="text-indigo-600 dark:text-indigo-400 flex items-center">
+              <CheckSquare className="w-5 h-5 mr-2" /> 整理后的会议纪要
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{organizedNotes}</ReactMarkdown>
           </CardContent>
         </Card>

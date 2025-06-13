@@ -1,3 +1,6 @@
+'use client';
+
+import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -59,31 +62,45 @@ function IntroductionToSlacking(): React.JSX.Element {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full overflow-y-auto">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-sky-400">摸鱼学导论</h1>
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full overflow-y-auto",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-sky-600 dark:text-sky-400 text-center">摸鱼学导论</h1>
 
       {isLoading && (
-        <div className="flex flex-col items-center justify-center h-full py-10">
-          <Loader2 className="h-12 w-12 animate-spin text-sky-500 mb-4" />
-          <p className="text-neutral-400">正在加载旷世巨作《摸鱼学导论》...</p>
+        <div className="flex flex-col items-center justify-center h-4/5 py-10">
+          <Loader2 className="h-12 w-12 animate-spin text-sky-500 dark:text-sky-400 mb-4" />
+          <p className="text-neutral-600 dark:text-neutral-400">正在加载旷世巨作《摸鱼学导论》...</p>
         </div>
       )}
 
       {error && (
-        <div className="flex flex-col items-center justify-center h-full py-10">
-          <p className="text-red-400 bg-red-900/50 p-4 rounded-md">加载失败：{error}</p>
-          <p className="text-neutral-500 mt-2 text-sm">（请确保后端服务正常，并且 'introduction-to-slacking' 的 prompt 文件已就绪。）</p>
+        <div className="flex flex-col items-center justify-center h-4/5 py-10 text-center px-4">
+          <p className={cn(
+            "p-4 rounded-md mb-2",
+            "bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700/50",
+            "text-red-700 dark:text-red-400"
+          )}>
+            加载失败：{error}
+          </p>
+          <p className="text-neutral-500 dark:text-neutral-500 mt-2 text-sm">
+            （请确保后端服务正常，并且 'introduction-to-slacking' 的 prompt 文件已就绪。）
+          </p>
         </div>
       )}
 
       {!isLoading && !error && content && (
-        <article className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
+        <article className={cn(
+          "prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words",
+          "text-neutral-800 dark:text-neutral-200"
+        )}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </article>
       )}
        {!isLoading && !error && !content && (
-        <div className="flex flex-col items-center justify-center h-full py-10">
-          <p className="text-neutral-400">未找到《摸鱼学导论》的内容。是不是被哪个大神偷偷藏起来了？🤔</p>
+        <div className="flex flex-col items-center justify-center h-4/5 py-10">
+          <p className="text-neutral-600 dark:text-neutral-400">未找到《摸鱼学导论》的内容。是不是被哪个大神偷偷藏起来了？🤔</p>
         </div>
       )}
     </div>

@@ -1,6 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, Send, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -59,16 +62,19 @@ function AwesomeComplimentGenerator(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Sparkles className="w-8 h-8 text-pink-400 mr-2" />
-        <h1 className="text-2xl sm:text-3xl font-bold text-sky-400">彩虹屁生成器</h1>
-        <Sparkles className="w-8 h-8 text-pink-400 ml-2" />
+        <Sparkles className="w-8 h-8 text-pink-500 dark:text-pink-400 mr-2" />
+        <h1 className="text-2xl sm:text-3xl font-bold text-sky-600 dark:text-sky-400">彩虹屁生成器</h1>
+        <Sparkles className="w-8 h-8 text-pink-500 dark:text-pink-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
-          <label htmlFor="praiseSubject" className="block text-sm font-medium text-neutral-300 mb-2">
+          <label htmlFor="praiseSubject" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             你想对谁（或什么事）发射彩虹屁？尽情吩咐！👇
           </label>
           <Textarea
@@ -76,11 +82,23 @@ function AwesomeComplimentGenerator(): React.JSX.Element {
             value={praiseSubject}
             onChange={(e) => setPraiseSubject(e.target.value)}
             placeholder="例如：我的老板、这个绝妙的PPT、今天下午茶的小蛋糕..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100",
+              "focus:ring-pink-500 focus:border-pink-500 dark:focus:ring-pink-500 dark:focus:border-pink-500"
+            )}
             rows={3}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-pink-500 hover:bg-pink-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-pink-600 hover:bg-pink-700 dark:bg-pink-500 dark:hover:bg-pink-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 正在编织华丽辞藻...
             </>
@@ -92,11 +110,14 @@ function AwesomeComplimentGenerator(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">哎呀，出错了！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">哎呀，出错了！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -104,19 +125,22 @@ function AwesomeComplimentGenerator(): React.JSX.Element {
 
       {isLoading && !compliment && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-pink-400 mb-4" />
-          <p className="text-neutral-400">首席夸夸官正在搜肠刮肚，准备惊艳全场...✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-pink-500 dark:text-pink-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">首席夸夸官正在搜肠刮肚，准备惊艳全场...✨</p>
         </div>
       )}
 
       {compliment && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-pink-400 flex items-center">
+            <CardTitle className="text-pink-600 dark:text-pink-400 flex items-center">
               <Sparkles className="w-5 h-5 mr-2" /> 新鲜出炉的彩虹屁！
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{compliment}</ReactMarkdown>
           </CardContent>
         </Card>

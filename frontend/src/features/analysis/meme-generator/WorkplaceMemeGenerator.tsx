@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { Image, Loader2, Smile, Zap } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Image as ImageIcon, Loader2, Smile, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -164,47 +165,86 @@ Create a humorous, relatable workplace scenario that would make office workers l
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Image className="w-8 h-8 text-yellow-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">职场梗图生成器</h1>
-        <Smile className="w-8 h-8 text-yellow-400 ml-2" />
+        <ImageIcon className="w-8 h-8 text-yellow-500 dark:text-yellow-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场梗图生成器</h1>
+        <Smile className="w-8 h-8 text-yellow-500 dark:text-yellow-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Label htmlFor="mode" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="mode" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               生成模式：
             </Label>
             <Select value={mode} onValueChange={(value: 'text' | 'image') => setMode(value)}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择生成模式..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
-                <SelectItem value="text" className="hover:bg-neutral-700 focus:bg-sky-700">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
+                <SelectItem
+                  value="text"
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                    "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                  )}
+                >
                   📝 文字梗图（文案描述）
                 </SelectItem>
-                <SelectItem value="image" className="hover:bg-neutral-700 focus:bg-sky-700">
-                  🎨 图片梗图（AI生成）- 仅支持OpenAI
+                <SelectItem
+                  value="image"
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                    "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                  )}
+                >
+                  <div className="flex flex-col">
+                    <span>🎨 图片梗图（AI生成）</span>
+                    <span className="text-xs text-orange-600 dark:text-orange-400"> OpenAI Key required</span>
+                  </div>
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label htmlFor="memeCategory" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="memeCategory" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               梗图类别：
             </Label>
             <Select value={memeCategory} onValueChange={setMemeCategory}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择梗图类别..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {memeCategories.map(category => (
-                  <SelectItem key={category.value} value={category.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={category.value}
+                    value={category.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                      "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{category.emoji} {category.label}</span>
-                      <span className="text-xs text-neutral-400">{category.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{category.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -212,19 +252,33 @@ Create a humorous, relatable workplace scenario that would make office workers l
             </Select>
           </div>
           <div>
-            <Label htmlFor="memeStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="memeStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               梗图风格：
             </Label>
             <Select value={memeStyle} onValueChange={setMemeStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择梗图风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {memeStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                      "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -232,19 +286,33 @@ Create a humorous, relatable workplace scenario that would make office workers l
             </Select>
           </div>
           <div>
-            <Label htmlFor="humorLevel" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="humorLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               幽默程度：
             </Label>
             <Select value={humorLevel} onValueChange={setHumorLevel}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择幽默程度..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
-                {humorLevels.map(humor => (
-                  <SelectItem key={humor.value} value={humor.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
+                {humorLevels.map(level => (
+                  <SelectItem
+                    key={level.value}
+                    value={level.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                      "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
-                      <span>{humor.emoji} {humor.label}</span>
-                      <span className="text-xs text-neutral-400">{humor.description}</span>
+                      <span>{level.emoji} {level.label}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{level.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -252,133 +320,170 @@ Create a humorous, relatable workplace scenario that would make office workers l
             </Select>
           </div>
         </div>
-        {mode === 'image' && (
-          <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-3 text-sm text-blue-300">
-            <p className="flex items-center">
-              <Image className="w-4 h-4 mr-2" />
-              图片生成功能仅支持 OpenAI DALL-E 模型，需要配置有效的 OpenAI API Key。
-            </p>
-          </div>
-        )}
         <div>
-          <Label htmlFor="situation" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="situation" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             情况描述：
           </Label>
           <Textarea
             id="situation"
             value={situation}
             onChange={(e) => setSituation(e.target.value)}
-            placeholder="描述要制作梗图的职场情况，如开会时的尴尬瞬间、加班时的心理活动、与同事的搞笑对话等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
-            rows={5}
+            placeholder="例如：周一早上开会，老板突然点名要你发言，但你还没睡醒..."
+            className={cn(
+              "w-full min-h-[100px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+            )}
+            rows={3}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="characters" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="characters" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               涉及角色（选填）：
             </Label>
             <Input
               id="characters"
               value={characters}
               onChange={(e) => setCharacters(e.target.value)}
-              placeholder="例如：老板、同事、产品经理、程序员..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：我，老板，同事小李"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}
             />
           </div>
           <div>
-            <Label htmlFor="targetAudience" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="specificDetails" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              具体细节（选填）：
+            </Label>
+            <Input
+              id="specificDetails"
+              value={specificDetails}
+              onChange={(e) => setSpecificDetails(e.target.value)}
+              placeholder="例如：老板戴着墨镜，会议室很暗"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}
+            />
+          </div>
+          <div>
+            <Label htmlFor="targetAudience" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               目标受众（选填）：
             </Label>
             <Input
               id="targetAudience"
               value={targetAudience}
               onChange={(e) => setTargetAudience(e.target.value)}
-              placeholder="例如：程序员、设计师、产品经理、销售..."
-              className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+              placeholder="例如：程序员，市场部同事"
+              className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}
             />
           </div>
         </div>
-        <div>
-          <Label htmlFor="specificDetails" className="block text-sm font-medium text-neutral-300 mb-2">
-            具体细节（选填）：
-          </Label>
-          <Textarea
-            id="specificDetails"
-            value={specificDetails}
-            onChange={(e) => setSpecificDetails(e.target.value)}
-            placeholder="补充一些具体的细节，如特定的对话、表情、动作等，让梗图更生动..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
-        </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-yellow-500 hover:bg-yellow-600 text-white dark:bg-yellow-400 dark:hover:bg-yellow-500 dark:text-neutral-900",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {mode === 'text' ? '段子手正在创作梗图...' : 'AI画师正在制作梗图...'}
-            </>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成中...</>
           ) : (
-            <>{mode === 'text' ? <><Zap className="mr-2 h-4 w-4" /> 生成搞笑梗图！</> : <><Image className="mr-2 h-4 w-4" /> AI帮我画梗图！</>}
-            </>
+            <><Zap className="mr-2 h-4 w-4" /> 生成梗图</>
           )}
         </Button>
       </form>
 
-      {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
-          <CardHeader>
-            <CardTitle className="text-red-400">梗图生成失败！</CardTitle>
-          </CardHeader>
-          <CardContent className="text-red-300">
-            <p>{error}</p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Wrapper for the entire results/status section */}
+      <div className={cn(
+        "flex-grow mt-4 flex flex-col",
+        "bg-white"
+      )}>
+        {error && (
+          <Card className={cn(
+            "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30",
+            "flex-grow flex flex-col"
+          )}>
+            <CardHeader>
+              <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
+            </CardHeader>
+            <CardContent className="text-red-600 dark:text-red-300 flex-grow">
+              <p>{error}</p>
+            </CardContent>
+          </Card>
+        )}
 
-      {isLoading && !generatedMeme && !generatedImage && (
-        <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-yellow-400 mb-4" />
-          <p className="text-neutral-400">
-            {mode === 'text' ? 'AI段子手正在为您创作搞笑的职场梗图...😂✨' : 'AI画师正在制作专属职场梗图...🎨✨'}
-          </p>
-        </div>
-      )}
+        {!error && isLoading && !generatedMeme && !generatedImage && (
+          <div className="flex-grow flex flex-col items-center justify-center text-center py-10">
+            <Loader2 className="h-12 w-12 animate-spin text-yellow-500 dark:text-yellow-400 mb-4" />
+            <p className="text-neutral-500 dark:text-neutral-400">梗图大师正在冥思苦想...😂</p>
+          </div>
+        )}
 
-      {generatedMeme && !isLoading && mode === 'text' && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
-          <CardHeader>
-            <CardTitle className="text-yellow-400 flex items-center">
-              <Smile className="w-5 h-5 mr-2" /> 您的专属职场梗图（文字版）
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedMeme}</ReactMarkdown>
-          </CardContent>
-        </Card>
-      )}
+        {!error && !isLoading && generatedMeme && mode === 'text' && (
+          <Card className={cn(
+            "flex-grow flex flex-col shadow-inner",
+            "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+          )}>
+            <CardHeader>
+              <CardTitle className="text-yellow-600 dark:text-yellow-400 flex items-center">
+                <Smile className="w-5 h-5 mr-2" /> 你的梗图文案
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedMeme}</ReactMarkdown>
+            </CardContent>
+          </Card>
+        )}
 
-      {generatedImage && !isLoading && mode === 'image' && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
-          <CardHeader>
-            <CardTitle className="text-yellow-400 flex items-center">
-              <Image className="w-5 h-5 mr-2" /> 您的专属职场梗图（图片版）
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-grow flex items-center justify-center p-6">
-            <div className="max-w-full max-h-full">
-              <img
-                src={generatedImage}
-                alt="AI生成的职场梗图"
-                className="max-w-full max-h-96 object-contain rounded-lg shadow-lg"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  setError('图片加载失败，可能是梗图太搞笑服务器都笑懵了！😅');
-                }}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      )}
+        {!error && !isLoading && generatedImage && mode === 'image' && (
+          <div className={cn(
+            "flex-grow flex flex-col items-center justify-center p-4 rounded-lg shadow-inner",
+            "bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
+          )}>
+            <CardHeader className="pb-2 pt-0">
+              <CardTitle className="text-yellow-600 dark:text-yellow-400 flex items-center">
+                <ImageIcon className="w-5 h-5 mr-2" /> 你的梗图图片
+              </CardTitle>
+            </CardHeader>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={generatedImage}
+              alt="Generated Meme"
+              className="max-w-full max-h-[calc(100vh-450px)] object-contain rounded-md shadow-md bg-neutral-200 dark:bg-neutral-700"
+              onError={() => setError('图片加载失败，可能URL无效或已过期。')}
+            />
+            <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">由 AI 生成，如有雷同，纯属巧合！</p>
+          </div>
+        )}
+
+        {/* Fallback for initial empty state */}
+        {!error && !isLoading && !generatedMeme && !generatedImage && (
+           <div className={cn(
+            "flex-grow flex flex-col items-center justify-center p-6 rounded-lg",
+            "bg-neutral-50 border border-dashed border-neutral-300 dark:border-neutral-600"
+          )}>
+            <ImageIcon size={48} className="text-neutral-400 dark:text-neutral-500 mb-3" />
+            <p className="text-sm text-center text-neutral-500 dark:text-neutral-400">
+              填写以上信息，点击"生成梗图"<br />AI 将会在这里展示你的专属职场梗图！
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

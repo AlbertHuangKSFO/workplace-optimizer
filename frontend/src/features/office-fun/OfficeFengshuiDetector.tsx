@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Label } from '@/components/ui/Label';
 import { Separator } from '@/components/ui/Separator';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { CircleDot, Compass, Eye, Sparkles, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -129,44 +129,56 @@ ${problems ? `遇到的问题：${problems}` : ''}
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className={cn(
+      "max-w-4xl mx-auto p-6 space-y-6",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+      )}>
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
-          <Compass className="w-8 h-8 text-purple-500" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <Compass className="w-8 h-8 text-purple-600 dark:text-purple-500" />
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 dark:from-purple-600 dark:to-indigo-600 bg-clip-text text-transparent">
             办公室风水检测器
           </h1>
-          <CircleDot className="w-8 h-8 text-purple-500" />
+          <CircleDot className="w-8 h-8 text-purple-600 dark:text-purple-500" />
         </div>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-neutral-600 dark:text-muted-foreground max-w-2xl mx-auto">
           感觉工位磁场不对劲？让赛博玄学大师为您勘测职场"龙脉"，调理"代码气场"！☯️
         </p>
         <div className="flex items-center justify-center gap-4">
-          <Badge variant="outline" className="flex items-center gap-1">
+          <Badge variant="outline" className={cn(
+            "flex items-center gap-1",
+            "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+            )}>
             <Eye className="w-4 h-4" />
             完成度: {getCompletionRate()}%
           </Badge>
-          <Badge variant="outline" className="flex items-center gap-1">
+          <Badge variant="outline" className={cn(
+            "flex items-center gap-1",
+            "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
+            )}>
             <Sparkles className="w-4 h-4" />
             玄学分析
           </Badge>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-neutral-200 dark:bg-neutral-700"/>
 
       {!result ? (
         <div className="space-y-6">
           {/* 工位布局 */}
-          <Card className="border-2 hover:border-purple-200 transition-colors">
+          <Card className={cn(
+            "border-2 hover:border-purple-300 dark:hover:border-purple-600 transition-colors",
+            "bg-neutral-50 dark:bg-neutral-800/30 border-neutral-200 dark:border-neutral-700"
+            )}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-600 font-bold text-sm">
+              <CardTitle className="flex items-center gap-2 text-lg text-neutral-800 dark:text-neutral-200">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-700 dark:text-purple-300 font-bold text-sm">
                   1
                 </span>
                 您的工位背靠什么？
               </CardTitle>
-              <CardDescription>背后有靠山，工作才稳当</CardDescription>
+              <CardDescription className="text-neutral-600 dark:text-neutral-400">背后有靠山，工作才稳当</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -174,14 +186,19 @@ ${problems ? `遇到的问题：${problems}` : ''}
                   <Button
                     key={option.id}
                     variant={layout === option.id ? "default" : "outline"}
-                    className="h-auto p-4 text-left justify-start"
+                    className={cn(
+                      "h-auto p-4 text-left justify-start",
+                      layout === option.id ?
+                        "bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-500 dark:hover:bg-purple-600" :
+                        "bg-white dark:bg-neutral-700/50 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-600"
+                    )}
                     onClick={() => setLayout(option.id)}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{option.emoji}</span>
                       <div>
                         <div className="text-sm font-medium">{option.label}</div>
-                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                        <div className="text-xs text-neutral-500 dark:text-neutral-400">{option.description}</div>
                       </div>
                     </div>
                   </Button>
@@ -191,30 +208,38 @@ ${problems ? `遇到的问题：${problems}` : ''}
           </Card>
 
           {/* 显示器朝向 */}
-          <Card className="border-2 hover:border-purple-200 transition-colors">
+          <Card className={cn(
+            "border-2 hover:border-purple-300 dark:hover:border-purple-600 transition-colors",
+            "bg-neutral-50 dark:bg-neutral-800/30 border-neutral-200 dark:border-neutral-700"
+            )}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-600 font-bold text-sm">
+              <CardTitle className="flex items-center gap-2 text-lg text-neutral-800 dark:text-neutral-200">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-700 dark:text-purple-300 font-bold text-sm">
                   2
                 </span>
                 显示器朝向哪个方位？
               </CardTitle>
-              <CardDescription>方位决定气场流向</CardDescription>
+              <CardDescription className="text-neutral-600 dark:text-neutral-400">选对方位，思路自来</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {monitorDirections.map((option) => (
                   <Button
                     key={option.id}
                     variant={direction === option.id ? "default" : "outline"}
-                    className="h-auto p-4 text-left justify-start"
+                    className={cn(
+                      "h-auto p-4 text-left justify-start",
+                      direction === option.id ?
+                        "bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-500 dark:hover:bg-purple-600" :
+                        "bg-white dark:bg-neutral-700/50 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-600"
+                    )}
                     onClick={() => setDirection(option.id)}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{option.emoji}</span>
                       <div>
                         <div className="text-sm font-medium">{option.label}</div>
-                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                        <div className="text-xs text-neutral-500 dark:text-neutral-400">{option.description}</div>
                       </div>
                     </div>
                   </Button>
@@ -224,30 +249,38 @@ ${problems ? `遇到的问题：${problems}` : ''}
           </Card>
 
           {/* 桌面物品 */}
-          <Card className="border-2 hover:border-purple-200 transition-colors">
+          <Card className={cn(
+            "border-2 hover:border-purple-300 dark:hover:border-purple-600 transition-colors",
+            "bg-neutral-50 dark:bg-neutral-800/30 border-neutral-200 dark:border-neutral-700"
+            )}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-600 font-bold text-sm">
+              <CardTitle className="flex items-center gap-2 text-lg text-neutral-800 dark:text-neutral-200">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-700 dark:text-purple-300 font-bold text-sm">
                   3
                 </span>
-                桌上摆放了哪些物品？
+                桌面上摆放了哪些开运好物？ (可选)
               </CardTitle>
-              <CardDescription>可多选，每样物品都有其风水寓意</CardDescription>
+              <CardDescription className="text-neutral-600 dark:text-neutral-400">小小物件，大大能量</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {deskItems.map((option) => (
                   <Button
                     key={option.id}
                     variant={items.includes(option.id) ? "default" : "outline"}
-                    className="h-auto p-4 text-left justify-start"
+                    className={cn(
+                      "h-auto p-4 text-left justify-start",
+                      items.includes(option.id) ?
+                        "bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-500 dark:hover:bg-purple-600" :
+                        "bg-white dark:bg-neutral-700/50 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-600"
+                    )}
                     onClick={() => handleItemToggle(option.id)}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{option.emoji}</span>
                       <div>
                         <div className="text-sm font-medium">{option.label}</div>
-                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                        <div className="text-xs text-neutral-500 dark:text-neutral-400">{option.description}</div>
                       </div>
                     </div>
                   </Button>
@@ -257,101 +290,79 @@ ${problems ? `遇到的问题：${problems}` : ''}
           </Card>
 
           {/* 遇到的问题 */}
-          <Card className="border-2 hover:border-purple-200 transition-colors">
+          <Card className={cn(
+            "border-2 hover:border-purple-300 dark:hover:border-purple-600 transition-colors",
+            "bg-neutral-50 dark:bg-neutral-800/30 border-neutral-200 dark:border-neutral-700"
+            )}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-600 font-bold text-sm">
+              <CardTitle className="flex items-center gap-2 text-lg text-neutral-800 dark:text-neutral-200">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 text-purple-700 dark:text-purple-300 font-bold text-sm">
                   4
                 </span>
-                最近遇到什么"不科学"的困扰？
+                最近遇到什么职场难题？ (可选)
               </CardTitle>
-              <CardDescription>比如需求总是变、代码老是bug、同事关系等（可选）</CardDescription>
+              <CardDescription className="text-neutral-600 dark:text-neutral-400">具体描述，精准化解</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="problems">描述您的困扰</Label>
-                <Textarea
-                  id="problems"
-                  placeholder="比如：最近需求像水逆一样天天改，代码总是莫名其妙出bug，或者感觉工位磁场不对劲..."
-                  value={problems}
-                  onChange={(e) => setProblems(e.target.value)}
-                  className="min-h-[100px]"
-                />
-              </div>
+              <Textarea
+                value={problems}
+                onChange={(e) => setProblems(e.target.value)}
+                placeholder="例如：最近总是感觉很疲惫，工作效率不高，和同事沟通不畅..."
+                className={cn(
+                  "min-h-[100px]",
+                  "bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600",
+                  "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
+                  )}
+              />
             </CardContent>
           </Card>
 
-          {error && (
-            <Card className="border-red-200 bg-red-50">
-              <CardContent className="pt-6">
-                <p className="text-red-600 text-center">{error}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="flex justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button
               onClick={handleSubmit}
-              disabled={isLoading || !layout || !direction}
-              className="px-8 py-3 text-lg"
+              disabled={isLoading || (!layout || !direction)}
+              className="w-full sm:w-auto flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  正在勘测风水...
-                </div>
+                <Zap className="w-5 h-5 mr-2 animate-ping" />
               ) : (
-                <div className="flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  开始风水分析
-                </div>
+                <Sparkles className="w-5 h-5 mr-2" />
               )}
+              开始勘测风水！
+            </Button>
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              className={cn(
+                "w-full sm:w-auto",
+                "border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                )}
+            >
+              重新填写
             </Button>
           </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          <Card className="border-2 border-purple-200 bg-neutral-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Compass className="w-6 h-6 text-white" />
-                您的工位风水分析报告
-              </CardTitle>
-              <CardDescription>
-                基于玄学理论的专业分析（纯属娱乐，请勿当真）
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="prose prose-sm max-w-none text-left leading-relaxed space-y-3 text-white">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold mb-4 text-white" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-xl font-semibold mb-3 text-white" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-lg font-medium mb-2 text-white" {...props} />,
-                    p: ({node, ...props}) => <p className="mb-3 text-white leading-relaxed" {...props} />,
-                    strong: ({node, ...props}) => <strong className="font-bold text-white" {...props} />,
-                    em: ({node, ...props}) => <em className="italic text-white" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-3 space-y-1 text-white" {...props} />,
-                    ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-3 space-y-1 text-white" {...props} />,
-                    li: ({node, ...props}) => <li className="text-white" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-purple-300 pl-4 italic text-gray-300" {...props} />,
-                    code: ({node, ...props}) => <code className="bg-gray-700 px-1 py-0.5 rounded text-sm font-mono text-white" {...props} />,
-                    hr: ({node, ...props}) => <hr className="my-4 border-gray-600" {...props} />
-                  }}
-                >
-                  {result}
-                </ReactMarkdown>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-center">
-            <Button onClick={handleReset} variant="outline" className="px-6">
-              重新检测风水
+        <Card className={cn(
+          "border-2 border-purple-300 dark:border-purple-600 shadow-xl",
+          "bg-neutral-50 dark:bg-neutral-800/50"
+          )}>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500">
+              风水勘测报告
+            </CardTitle>
+            <CardDescription className="text-neutral-600 dark:text-neutral-400">您的专属办公室开运指南</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
+            </div>
+            {error && <p className="text-sm text-red-600 dark:text-red-400">错误：{error}</p>}
+            <Button onClick={handleReset} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white">
+              再测一次
             </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

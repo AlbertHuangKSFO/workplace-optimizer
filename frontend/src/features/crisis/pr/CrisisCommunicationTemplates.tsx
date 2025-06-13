@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { AlertCircle, FileText, Loader2, Megaphone } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -114,29 +115,46 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Megaphone className="w-8 h-8 text-red-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">危机公关模板</h1>
-        <AlertCircle className="w-8 h-8 text-red-400 ml-2" />
+        <Megaphone className="w-8 h-8 text-red-500 dark:text-red-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">危机公关模板</h1>
+        <AlertCircle className="w-8 h-8 text-red-500 dark:text-red-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="crisisType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="crisisType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               危机类型：
             </Label>
             <Select value={crisisType} onValueChange={setCrisisType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+              )}>
                 <SelectValue placeholder="选择危机类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {crisisTypes.map(crisis => (
-                  <SelectItem key={crisis.value} value={crisis.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={crisis.value}
+                    value={crisis.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-red-100 dark:focus:bg-red-700/50",
+                      "data-[state=checked]:bg-red-200 dark:data-[state=checked]:bg-red-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{crisis.emoji} {crisis.label}</span>
-                      <span className="text-xs text-neutral-400">{crisis.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{crisis.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -144,19 +162,33 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="communicationChannel" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="communicationChannel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               沟通渠道：
             </Label>
             <Select value={communicationChannel} onValueChange={setCommunicationChannel}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+              )}>
                 <SelectValue placeholder="选择沟通渠道..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {communicationChannels.map(channel => (
-                  <SelectItem key={channel.value} value={channel.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={channel.value}
+                    value={channel.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-red-100 dark:focus:bg-red-700/50",
+                      "data-[state=checked]:bg-red-200 dark:data-[state=checked]:bg-red-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{channel.emoji} {channel.label}</span>
-                      <span className="text-xs text-neutral-400">{channel.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{channel.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -164,19 +196,33 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="toneStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="toneStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               沟通语调：
             </Label>
             <Select value={toneStyle} onValueChange={setToneStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+              )}>
                 <SelectValue placeholder="选择沟通语调..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {toneStyles.map(tone => (
-                  <SelectItem key={tone.value} value={tone.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={tone.value}
+                    value={tone.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-red-100 dark:focus:bg-red-700/50",
+                      "data-[state=checked]:bg-red-200 dark:data-[state=checked]:bg-red-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{tone.emoji} {tone.label}</span>
-                      <span className="text-xs text-neutral-400">{tone.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{tone.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -185,7 +231,7 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
           </div>
         </div>
         <div>
-          <Label htmlFor="crisisDetails" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="crisisDetails" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             危机详情：
           </Label>
           <Textarea
@@ -193,51 +239,79 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
             value={crisisDetails}
             onChange={(e) => setCrisisDetails(e.target.value)}
             placeholder="详细描述危机事件的发生经过、涉及范围、严重程度等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+            )}
             rows={5}
           />
         </div>
-        <div>
-          <Label htmlFor="impactAssessment" className="block text-sm font-medium text-neutral-300 mb-2">
-            影响评估（选填）：
-          </Label>
-          <Textarea
-            id="impactAssessment"
-            value={impactAssessment}
-            onChange={(e) => setImpactAssessment(e.target.value)}
-            placeholder="评估对客户、员工、业务、声誉等方面的影响..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="impactAssessment" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              影响评估（选填）：
+            </Label>
+            <Textarea
+              id="impactAssessment"
+              value={impactAssessment}
+              onChange={(e) => setImpactAssessment(e.target.value)}
+              placeholder="例如：对用户信任、品牌声誉、财务状况等可能造成的影响..."
+              className={cn(
+                "w-full min-h-[80px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+              )}
+              rows={3}
+            />
+          </div>
+          <div>
+            <Label htmlFor="actionsTaken" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              已采取行动（选填）：
+            </Label>
+            <Textarea
+              id="actionsTaken"
+              value={actionsTaken}
+              onChange={(e) => setActionsTaken(e.target.value)}
+              placeholder="例如：已成立应急小组，正在调查原因，暂停相关服务..."
+              className={cn(
+                "w-full min-h-[80px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-red-500 focus:border-red-500 dark:focus:ring-red-500 dark:focus:border-red-500"
+              )}
+              rows={3}
+            />
+          </div>
         </div>
-        <div>
-          <Label htmlFor="actionsTaken" className="block text-sm font-medium text-neutral-300 mb-2">
-            已采取行动（选填）：
-          </Label>
-          <Textarea
-            id="actionsTaken"
-            value={actionsTaken}
-            onChange={(e) => setActionsTaken(e.target.value)}
-            placeholder="描述已经采取的应对措施、补救行动、预防措施等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
-        </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 危机公关专家正在制定沟通策略...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成模板中...</>
           ) : (
-            <><FileText className="mr-2 h-4 w-4" /> 生成公关模板！</>
+            <><FileText className="mr-2 h-4 w-4" /> 生成公关模板</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">模板生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -245,19 +319,22 @@ ${actionsTaken.trim() ? `已采取行动：${actionsTaken}` : ''}
 
       {isLoading && !generatedTemplate && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-red-400 mb-4" />
-          <p className="text-neutral-400">AI危机公关专家正在为您制定专业的沟通模板...📢</p>
+          <Loader2 className="h-12 w-12 animate-spin text-red-500 dark:text-red-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">危机公关专家正在紧急撰写模板...📢</p>
         </div>
       )}
 
       {generatedTemplate && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400 flex items-center">
-              <Megaphone className="w-5 h-5 mr-2" /> 危机公关沟通模板
+            <CardTitle className="text-red-600 dark:text-red-400 flex items-center">
+              <FileText className="w-5 h-5 mr-2" /> 危机沟通模板
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedTemplate}</ReactMarkdown>
           </CardContent>
         </Card>

@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { Image, Lightbulb, Loader2, Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Image as ImageIcon, Lightbulb, Loader2, Quote } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -111,28 +112,50 @@ function MeetingDoodleBuddy(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Quote className="w-8 h-8 text-teal-400 mr-2 transform scale-x-[-1]" /> {/* Flipped Quote for visual balance */}
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">"会议神游"涂鸦伴侣</h1>
-        <Quote className="w-8 h-8 text-teal-400 ml-2" />
+        <Quote className="w-8 h-8 text-teal-600 dark:text-teal-400 mr-2 transform scale-x-[-1]" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">"会议神游"涂鸦伴侣</h1>
+        <Quote className="w-8 h-8 text-teal-600 dark:text-teal-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="mode" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="mode" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               生成模式：
             </Label>
             <Select value={mode} onValueChange={(value: 'idea' | 'image') => setMode(value)}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+              )}>
                 <SelectValue placeholder="选择生成模式..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
-                <SelectItem value="idea" className="hover:bg-neutral-700 focus:bg-sky-700">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
+                <SelectItem
+                  value="idea"
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   💡 涂鸦灵感（文字描述）
                 </SelectItem>
-                <SelectItem value="image" className="hover:bg-neutral-700 focus:bg-sky-700">
+                <SelectItem
+                  value="image"
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   🎨 AI绘制涂鸦（图片）- 仅支持OpenAI
                 </SelectItem>
               </SelectContent>
@@ -140,16 +163,30 @@ function MeetingDoodleBuddy(): React.JSX.Element {
           </div>
           {mode === 'image' && (
             <div>
-              <Label htmlFor="doodleStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+              <Label htmlFor="doodleStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                 涂鸦风格：
               </Label>
               <Select value={doodleStyle} onValueChange={setDoodleStyle}>
-                <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+                <SelectTrigger className={cn(
+                  "w-full",
+                  "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                  "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+                )}>
                   <SelectValue placeholder="选择涂鸦风格..." />
                 </SelectTrigger>
-                <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+                <SelectContent className={cn(
+                  "border-neutral-200 dark:border-neutral-700",
+                  "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                )}>
                   {doodleStyles.map(style => (
-                    <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                    <SelectItem
+                      key={style.value}
+                      value={style.value}
+                      className={cn(
+                        "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                        "focus:bg-sky-100 dark:focus:bg-sky-700"
+                      )}
+                    >
                       {style.label}
                     </SelectItem>
                   ))}
@@ -159,15 +196,18 @@ function MeetingDoodleBuddy(): React.JSX.Element {
           )}
         </div>
         {mode === 'image' && (
-          <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-3 text-sm text-blue-300">
+          <div className={cn(
+            "rounded-lg p-3 text-sm",
+            "bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-500/50 text-blue-700 dark:text-blue-300"
+          )}>
             <p className="flex items-center">
-              <Image className="w-4 h-4 mr-2" />
+              <ImageIcon className="w-4 h-4 mr-2 flex-shrink-0" />
               图片生成功能仅支持 OpenAI DALL-E 模型，需要配置有效的 OpenAI API Key。
             </p>
           </div>
         )}
         <div>
-          <Label htmlFor="keywords" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="keywords" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             听到啥"天书"了？把会议里的"魔性"关键词丢进来！(选填)
           </Label>
           <Textarea
@@ -175,27 +215,41 @@ function MeetingDoodleBuddy(): React.JSX.Element {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             placeholder="例如：赋能、闭环、颗粒度、对齐一下、抓手..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[70px]"
+            className={cn(
+              "w-full min-h-[70px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={2}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-teal-500 hover:bg-teal-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {mode === 'idea' ? '灵感火花正在碰撞...' : 'AI画师正在作画...'}
             </>
           ) : (
-            <>{mode === 'idea' ? <><Lightbulb className="mr-2 h-4 w-4" /> 给我涂鸦灵感！</> : <><Image className="mr-2 h-4 w-4" /> AI帮我画涂鸦！</>}
+            <>{mode === 'idea' ? <><Lightbulb className="mr-2 h-4 w-4" /> 给我涂鸦灵感！</> : <><ImageIcon className="mr-2 h-4 w-4" /> AI帮我画涂鸦！</>}
             </>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">灵感枯竭了！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">灵感枯竭了！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -203,18 +257,21 @@ function MeetingDoodleBuddy(): React.JSX.Element {
 
       {isLoading && !doodleIdea && !generatedImage && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-teal-400 mb-4" />
-          <p className="text-neutral-400">
-            {mode === 'idea' ? 'AI正在连接异次元获取涂鸦灵感...✍️🎨' : 'AI画师正在挥毫泼墨，创作专属涂鸦...🎨✨'}
+          <Loader2 className="h-12 w-12 animate-spin text-teal-600 dark:text-teal-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">
+            {mode === 'idea' ? 'AI涂鸦灵感小助手正在冥想...🧘' : 'AI画师正在挥洒创意...🎨'}
           </p>
         </div>
       )}
 
-      {doodleIdea && !isLoading && mode === 'idea' && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+      {doodleIdea && !isLoading && (
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-teal-400 flex items-center">
-              <Lightbulb className="w-5 h-5 mr-2" /> 涂鸦灵感，请查收！
+            <CardTitle className="text-teal-700 dark:text-teal-400 flex items-center">
+              <Lightbulb className="w-5 h-5 mr-2" /> 涂鸦灵感：
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
@@ -223,25 +280,19 @@ function MeetingDoodleBuddy(): React.JSX.Element {
         </Card>
       )}
 
-      {generatedImage && !isLoading && mode === 'image' && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+      {generatedImage && !isLoading && (
+        <Card className={cn(
+          "flex-grow flex flex-col items-center justify-center shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 p-4"
+        )}>
           <CardHeader>
-            <CardTitle className="text-teal-400 flex items-center">
-              <Image className="w-5 h-5 mr-2" /> AI涂鸦作品，新鲜出炉！
+            <CardTitle className="text-teal-700 dark:text-teal-400 flex items-center">
+              <ImageIcon className="w-5 h-5 mr-2" /> AI创作的涂鸦：
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex-grow flex items-center justify-center p-6">
-            <div className="max-w-full max-h-full">
-              <img
-                src={generatedImage}
-                alt="AI生成的会议涂鸦"
-                className="max-w-full max-h-96 object-contain rounded-lg shadow-lg"
-                onError={(e) => {
-                  console.error('Image failed to load:', generatedImage);
-                  setError('图片加载失败，可能是网络问题或图片链接有误。');
-                }}
-              />
-            </div>
+          <CardContent className="flex-grow flex items-center justify-center w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={generatedImage} alt="AI生成的涂鸦" className="max-w-full max-h-[400px] h-auto rounded-md object-contain" />
           </CardContent>
         </Card>
       )}

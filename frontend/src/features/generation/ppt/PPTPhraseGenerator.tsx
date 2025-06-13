@@ -2,10 +2,11 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { Input } from '@/components/ui/Input';
+import { cn } from '@/lib/utils';
 import { Loader2, Presentation, Sparkles, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -97,16 +98,19 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Presentation className="w-8 h-8 text-yellow-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">PPT金句生成器</h1>
-        <Zap className="w-8 h-8 text-yellow-400 ml-2" />
+        <Presentation className="w-8 h-8 text-yellow-500 dark:text-yellow-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">PPT金句生成器</h1>
+        <Zap className="w-8 h-8 text-yellow-500 dark:text-yellow-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="topic" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="topic" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             PPT主题：
           </Label>
           <Input
@@ -114,11 +118,16 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder="例如：数字化转型战略、产品创新方案、团队管理心得..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+            )}
           />
         </div>
         <div>
-          <Label htmlFor="coreMessage" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="coreMessage" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             核心观点（选填）：
           </Label>
           <Textarea
@@ -126,25 +135,44 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
             value={coreMessage}
             onChange={(e) => setCoreMessage(e.target.value)}
             placeholder="例如：通过数据驱动决策，提升用户体验，实现业务增长..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+            )}
             rows={3}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="presentationStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="presentationStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               演示风格：
             </Label>
             <Select value={presentationStyle} onValueChange={setPresentationStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择演示风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {presentationStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                      "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -152,19 +180,33 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="phraseType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="phraseType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               金句类型：
             </Label>
             <Select value={phraseType} onValueChange={setPhraseType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+              )}>
                 <SelectValue placeholder="选择金句类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {phraseTypes.map(type => (
-                  <SelectItem key={type.value} value={type.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={type.value}
+                    value={type.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-yellow-100 dark:focus:bg-yellow-700/50",
+                      "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{type.label}</span>
-                      <span className="text-xs text-neutral-400">{type.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{type.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -173,7 +215,7 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
           </div>
         </div>
         <div>
-          <Label htmlFor="targetAudience" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="targetAudience" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             目标听众（选填）：
           </Label>
           <Input
@@ -181,10 +223,23 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
             value={targetAudience}
             onChange={(e) => setTargetAudience(e.target.value)}
             placeholder="例如：技术团队、管理层、客户、投资人..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
+            )}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-yellow-500 hover:bg-yellow-600 text-neutral-900 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:text-neutral-900",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 文案大师正在创作金句...</>
           ) : (
@@ -194,31 +249,37 @@ ${targetAudience.trim() ? `目标听众：${targetAudience}` : ''}
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">创作失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">创作失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
       )}
 
       {isLoading && !generatedPhrases && (
-        <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-yellow-400 mb-4" />
-          <p className="text-neutral-400">AI文案大师正在精心雕琢每一个字句...✨</p>
+         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-yellow-500 dark:text-yellow-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">PPT金句打磨中，请稍候...✨</p>
         </div>
       )}
 
       {generatedPhrases && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-yellow-400 flex items-center">
-              <Zap className="w-5 h-5 mr-2" /> PPT金句集锦
+            <CardTitle className="text-yellow-600 dark:text-yellow-400 flex items-center">
+              <Sparkles className="w-5 h-5 mr-2" /> 金句来袭，请查收！
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedPhrases}</ReactMarkdown>
           </CardContent>
         </Card>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { ArrowRight, Building2, Loader2, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -88,46 +89,77 @@ function CrossDepartmentTranslator(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Building2 className="w-8 h-8 text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">跨部门沟通翻译</h1>
-        <Users className="w-8 h-8 text-purple-400 ml-2" />
+        <Building2 className="w-8 h-8 text-purple-600 dark:text-purple-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">跨部门沟通翻译</h1>
+        <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-end">
           <div>
-            <Label htmlFor="sourceDepartment" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="sourceDepartment" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               源部门：
             </Label>
             <Select value={sourceDepartment} onValueChange={setSourceDepartment}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+              )}>
                 <SelectValue placeholder="选择源部门..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {departments.map(dept => (
-                  <SelectItem key={dept.value} value={dept.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={dept.value}
+                    value={dept.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                      "focus:bg-sky-100 dark:focus:bg-sky-700"
+                    )}
+                  >
                     {dept.emoji} {dept.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="flex justify-center">
-            <ArrowRight className="w-6 h-6 text-purple-400" />
+          <div className="flex justify-center items-center h-full pb-2 md:pb-0 md:h-auto md:self-end">
+            <ArrowRight className="w-6 h-6 text-purple-600 dark:text-purple-400" />
           </div>
           <div>
-            <Label htmlFor="targetDepartment" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="targetDepartment" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
               目标部门：
             </Label>
             <Select value={targetDepartment} onValueChange={setTargetDepartment}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+              )}>
                 <SelectValue placeholder="选择目标部门..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {departments.map(dept => (
-                  <SelectItem key={dept.value} value={dept.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={dept.value}
+                    value={dept.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                      "focus:bg-sky-100 dark:focus:bg-sky-700"
+                    )}
+                  >
                     {dept.emoji} {dept.label}
                   </SelectItem>
                 ))}
@@ -136,7 +168,7 @@ function CrossDepartmentTranslator(): React.JSX.Element {
           </div>
         </div>
         <div>
-          <Label htmlFor="originalText" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="originalText" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             输入需要翻译的内容：
           </Label>
           <Textarea
@@ -144,11 +176,22 @@ function CrossDepartmentTranslator(): React.JSX.Element {
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
             placeholder="例如：我们需要重构整个架构，优化性能瓶颈，提升系统稳定性..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={5}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-purple-500 hover:bg-purple-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 翻译官正在努力破译部门黑话...</>
           ) : (
@@ -158,11 +201,14 @@ function CrossDepartmentTranslator(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">翻译失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">翻译失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -170,15 +216,18 @@ function CrossDepartmentTranslator(): React.JSX.Element {
 
       {isLoading && !translatedText && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-400 mb-4" />
-          <p className="text-neutral-400">AI翻译官正在学习各部门的"方言"，请稍候...🌐</p>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-600 dark:text-purple-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI翻译官正在学习各部门的"方言"，请稍候...🌐</p>
         </div>
       )}
 
       {translatedText && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-purple-400 flex items-center">
+            <CardTitle className="text-purple-700 dark:text-purple-400 flex items-center">
               <Users className="w-5 h-5 mr-2" /> 跨部门翻译结果
             </CardTitle>
           </CardHeader>

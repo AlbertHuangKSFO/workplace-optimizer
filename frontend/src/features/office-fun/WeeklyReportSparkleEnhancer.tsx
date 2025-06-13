@@ -1,6 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Loader2, VenetianMask, Zap } from 'lucide-react'; // Zap for sparkle/enhance action
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -59,16 +62,19 @@ function WeeklyReportSparkleEnhancer(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <VenetianMask className="w-8 h-8 text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">"这周干了啥"亮点包装器</h1>
-        <VenetianMask className="w-8 h-8 text-purple-400 ml-2" />
+        <VenetianMask className="w-8 h-8 text-purple-600 dark:text-purple-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">"这周干了啥"亮点包装器</h1>
+        <VenetianMask className="w-8 h-8 text-purple-600 dark:text-purple-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
-          <label htmlFor="reportContent" className="block text-sm font-medium text-neutral-300 mb-2">
+          <label htmlFor="reportContent" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             把你这周平平无奇的工作内容粘贴进来，AI来帮你点石成金！✨
           </label>
           <Textarea
@@ -76,11 +82,22 @@ function WeeklyReportSparkleEnhancer(): React.JSX.Element {
             value={reportContent}
             onChange={(e) => setReportContent(e.target.value)}
             placeholder="例如：\n- 开了5个会\n- 回了50封邮件\n- 写了500行代码\n- 和产品经理沟通了5次..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={5}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-purple-500 hover:bg-purple-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 亮点提取 & 魔法包装中...
             </>
@@ -92,11 +109,14 @@ function WeeklyReportSparkleEnhancer(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">包装出错了！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">包装出错了！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -104,19 +124,22 @@ function WeeklyReportSparkleEnhancer(): React.JSX.Element {
 
       {isLoading && !enhancedReport && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-purple-400 mb-4" />
-          <p className="text-neutral-400">AI正在精心打磨您的周报，力求惊艳老板...✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-purple-500 dark:text-purple-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI正在精心打磨您的周报，力求惊艳老板...✨</p>
         </div>
       )}
 
       {enhancedReport && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-purple-400 flex items-center">
+            <CardTitle className="text-purple-700 dark:text-purple-400 flex items-center">
               <VenetianMask className="w-5 h-5 mr-2" /> 周报亮点闪亮登场！
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{enhancedReport}</ReactMarkdown>
           </CardContent>
         </Card>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { BarChart3, Loader2, Sparkles, TrendingUp } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -111,29 +112,46 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <BarChart3 className="w-8 h-8 text-green-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">汇报数据美化器</h1>
-        <TrendingUp className="w-8 h-8 text-green-400 ml-2" />
+        <BarChart3 className="w-8 h-8 text-green-500 dark:text-green-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">汇报数据美化器</h1>
+        <TrendingUp className="w-8 h-8 text-green-500 dark:text-green-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="reportType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="reportType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               汇报类型：
             </Label>
             <Select value={reportType} onValueChange={setReportType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+              )}>
                 <SelectValue placeholder="选择汇报类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {reportTypes.map(type => (
-                  <SelectItem key={type.value} value={type.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={type.value}
+                    value={type.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-green-100 dark:focus:bg-green-700/50",
+                      "data-[state=checked]:bg-green-200 dark:data-[state=checked]:bg-green-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{type.emoji} {type.label}</span>
-                      <span className="text-xs text-neutral-400">{type.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{type.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -141,19 +159,33 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="audienceType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="audienceType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               目标受众：
             </Label>
             <Select value={audienceType} onValueChange={setAudienceType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+              )}>
                 <SelectValue placeholder="选择目标受众..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {audienceTypes.map(audience => (
-                  <SelectItem key={audience.value} value={audience.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={audience.value}
+                    value={audience.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-green-100 dark:focus:bg-green-700/50",
+                      "data-[state=checked]:bg-green-200 dark:data-[state=checked]:bg-green-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{audience.emoji} {audience.label}</span>
-                      <span className="text-xs text-neutral-400">{audience.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{audience.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -161,19 +193,33 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="beautifyStyle" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="beautifyStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               美化风格：
             </Label>
             <Select value={beautifyStyle} onValueChange={setBeautifyStyle}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+              )}>
                 <SelectValue placeholder="选择美化风格..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {beautifyStyles.map(style => (
-                  <SelectItem key={style.value} value={style.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={style.value}
+                    value={style.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-green-100 dark:focus:bg-green-700/50",
+                      "data-[state=checked]:bg-green-200 dark:data-[state=checked]:bg-green-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-400">{style.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -182,7 +228,7 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
           </div>
         </div>
         <div>
-          <Label htmlFor="rawData" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="rawData" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             原始数据：
           </Label>
           <Textarea
@@ -190,51 +236,77 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
             value={rawData}
             onChange={(e) => setRawData(e.target.value)}
             placeholder="例如：本月销售额1200万，同比增长15%，用户活跃度85%，客户满意度4.2分..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+            )}
             rows={5}
           />
         </div>
         <div>
-          <Label htmlFor="context" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="context" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             背景信息（选填）：
           </Label>
           <Textarea
             id="context"
             value={context}
             onChange={(e) => setContext(e.target.value)}
-            placeholder="例如：市场环境、项目背景、团队情况、挑战困难等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
+            placeholder="例如：市场竞争激烈，团队面临人员调整，新产品推广初期..."
+            className={cn(
+              "w-full min-h-[60px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+            )}
+            rows={2}
           />
         </div>
         <div>
-          <Label htmlFor="goals" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="goals" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             汇报目标（选填）：
           </Label>
           <Textarea
             id="goals"
             value={goals}
             onChange={(e) => setGoals(e.target.value)}
-            placeholder="例如：争取更多资源、展示团队价值、获得认可支持、推动项目进展..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
+            placeholder="例如：争取更多资源支持，展示团队成果，提升个人绩效评价..."
+            className={cn(
+              "w-full min-h-[60px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-500 dark:focus:border-green-500"
+            )}
+            rows={2}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-green-600 hover:bg-green-700 text-white dark:bg-green-500 dark:hover:bg-green-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 数据分析师正在美化您的数据...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 数据美化中...</>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 美化数据！</>
+            <><Sparkles className="mr-2 h-4 w-4" /> 美化数据</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">数据美化失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">美化失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -242,19 +314,22 @@ ${goals.trim() ? `汇报目标：${goals}` : ''}
 
       {isLoading && !beautifiedData && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-green-400 mb-4" />
-          <p className="text-neutral-400">AI数据分析师正在为您的数据增添魅力...📊✨</p>
+          <Loader2 className="h-12 w-12 animate-spin text-green-500 dark:text-green-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">正在分析数据，赋予其语言魅力...📊</p>
         </div>
       )}
 
       {beautifiedData && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-green-400 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2" /> 美化后的数据描述
+            <CardTitle className="text-green-600 dark:text-green-400 flex items-center">
+              <Sparkles className="w-5 h-5 mr-2" /> 数据美化结果
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{beautifiedData}</ReactMarkdown>
           </CardContent>
         </Card>

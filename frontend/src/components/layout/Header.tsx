@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Github, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -54,9 +55,12 @@ export function Header() {
   };
 
   return (
-    <header className="h-14 flex items-center justify-between bg-neutral-800 px-6 border-b border-neutral-700 flex-shrink-0">
+    <header className={cn(
+      "h-14 flex items-center justify-between px-6 border-b flex-shrink-0",
+      "bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+    )}>
       <div>
-        <h1 className="text-md font-medium text-neutral-200">{getPageTitle()}</h1>
+        <h1 className="text-md font-medium text-neutral-800 dark:text-neutral-200">{getPageTitle()}</h1>
       </div>
       <div className="flex items-center space-x-4">
         <ModelSelector
@@ -67,7 +71,11 @@ export function Header() {
         <Link
           href="/"
           title="返回首页"
-          className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors"
+          className={cn(
+            "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
+            "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
+            "hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+          )}
         >
           <Home size={20} />
         </Link>
@@ -76,13 +84,21 @@ export function Header() {
           target="_blank"
           rel="noopener noreferrer"
           title="View on GitHub"
-          className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors"
+          className={cn(
+            "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
+            "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
+            "hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+          )}
         >
           <Github size={20} />
         </a>
         <button
           title="User Profile"
-          className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors"
+          className={cn(
+            "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
+            "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
+            "hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+          )}
         >
           <User size={20} />
         </button>

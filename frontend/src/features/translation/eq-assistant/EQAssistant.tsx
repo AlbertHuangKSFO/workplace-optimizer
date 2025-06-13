@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/lib/utils';
 import { Brain, Heart, Loader2, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -85,28 +86,45 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Heart className="w-8 h-8 text-pink-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">职场情商助手</h1>
-        <Brain className="w-8 h-8 text-pink-400 ml-2" />
+        <Heart className="w-8 h-8 text-pink-600 dark:text-pink-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场情商助手</h1>
+        <Brain className="w-8 h-8 text-pink-600 dark:text-pink-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="scenario" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="scenario" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             沟通场景：
           </Label>
           <Select value={scenario} onValueChange={setScenario}>
-            <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+            <SelectTrigger className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}>
               <SelectValue placeholder="选择沟通场景..." />
             </SelectTrigger>
-            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+            <SelectContent className={cn(
+              "border-neutral-200 dark:border-neutral-700",
+              "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+            )}>
               {communicationScenarios.map(scene => (
-                <SelectItem key={scene.value} value={scene.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                <SelectItem
+                  key={scene.value}
+                  value={scene.value}
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   <div className="flex flex-col">
                     <span>{scene.emoji} {scene.label}</span>
-                    <span className="text-xs text-neutral-400">{scene.description}</span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">{scene.description}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -114,7 +132,7 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
           </Select>
         </div>
         <div>
-          <Label htmlFor="situationDescription" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="situationDescription" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             具体情况描述：
           </Label>
           <Textarea
@@ -122,12 +140,16 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
             value={situationDescription}
             onChange={(e) => setSituationDescription(e.target.value)}
             placeholder="例如：需要向老板汇报项目延期，但担心被批评，希望能获得更多资源支持..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
+            className={cn(
+              "w-full min-h-[120px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={5}
           />
         </div>
         <div>
-          <Label htmlFor="communicationGoal" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="communicationGoal" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
             沟通目标（选填）：
           </Label>
           <Textarea
@@ -135,11 +157,22 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
             value={communicationGoal}
             onChange={(e) => setCommunicationGoal(e.target.value)}
             placeholder="例如：获得理解和支持，争取更多时间或人力资源..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
+            className={cn(
+              "w-full min-h-[80px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
             rows={3}
           />
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-pink-500 hover:bg-pink-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-pink-600 hover:bg-pink-700 dark:bg-pink-500 dark:hover:bg-pink-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 情商大师正在分析人际关系...</>
           ) : (
@@ -149,11 +182,14 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">情商充值失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">情商充值失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -161,15 +197,18 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
 
       {isLoading && !eqAdvice && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-pink-400 mb-4" />
-          <p className="text-neutral-400">AI情商导师正在分析人际动态，制定沟通策略...💝</p>
+          <Loader2 className="h-12 w-12 animate-spin text-pink-600 dark:text-pink-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI情商导师正在分析人际动态，制定沟通策略...💝</p>
         </div>
       )}
 
       {eqAdvice && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-pink-400 flex items-center">
+            <CardTitle className="text-pink-700 dark:text-pink-400 flex items-center">
               <Heart className="w-5 h-5 mr-2" /> 高情商沟通建议
             </CardTitle>
           </CardHeader>

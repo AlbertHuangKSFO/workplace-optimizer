@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
-import { AlertTriangle, Loader2, Shield, Target } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { AlertTriangle, Loader2, Shield, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -114,15 +115,21 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <Shield className="w-8 h-8 text-orange-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">甩锅/背锅话术</h1>
-        <AlertTriangle className="w-8 h-8 text-orange-400 ml-2" />
+        <Shield className="w-8 h-8 text-orange-500 dark:text-orange-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">甩锅/背锅话术</h1>
+        <AlertTriangle className="w-8 h-8 text-orange-500 dark:text-orange-400 ml-2" />
       </div>
 
-      <div className="mb-4 p-3 bg-amber-900/30 border border-amber-500/50 rounded-lg">
-        <p className="text-amber-200 text-sm">
+      <div className={cn(
+        "mb-4 p-3 rounded-lg",
+        "bg-amber-50 border border-amber-300 dark:bg-amber-900/40 dark:border-amber-500/50"
+      )}>
+        <p className={cn("text-sm", "text-amber-700 dark:text-amber-200")}>
           ⚠️ <strong>使用提醒：</strong>本工具旨在提供职场沟通策略，请在合法合规的前提下使用，保持职业操守和道德底线。
         </p>
       </div>
@@ -130,19 +137,33 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="tacticType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="tacticType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               策略类型：
             </Label>
             <Select value={tacticType} onValueChange={setTacticType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              )}>
                 <SelectValue placeholder="选择策略类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {tacticTypes.map(tactic => (
-                  <SelectItem key={tactic.value} value={tactic.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={tactic.value}
+                    value={tactic.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-orange-100 dark:focus:bg-orange-700/50",
+                      "data-[state=checked]:bg-orange-200 dark:data-[state=checked]:bg-orange-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{tactic.emoji} {tactic.label}</span>
-                      <span className="text-xs text-neutral-400">{tactic.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{tactic.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -150,19 +171,33 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="situationType" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="situationType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               问题类型：
             </Label>
             <Select value={situationType} onValueChange={setSituationType}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              )}>
                 <SelectValue placeholder="选择问题类型..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {situationTypes.map(situation => (
-                  <SelectItem key={situation.value} value={situation.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={situation.value}
+                    value={situation.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-orange-100 dark:focus:bg-orange-700/50",
+                      "data-[state=checked]:bg-orange-200 dark:data-[state=checked]:bg-orange-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{situation.emoji} {situation.label}</span>
-                      <span className="text-xs text-neutral-400">{situation.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{situation.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -170,19 +205,33 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
             </Select>
           </div>
           <div>
-            <Label htmlFor="audienceLevel" className="block text-sm font-medium text-neutral-300 mb-2">
+            <Label htmlFor="audienceLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
               沟通对象：
             </Label>
             <Select value={audienceLevel} onValueChange={setAudienceLevel}>
-              <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+              <SelectTrigger className={cn(
+                "w-full",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
+                "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              )}>
                 <SelectValue placeholder="选择沟通对象..." />
               </SelectTrigger>
-              <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+              <SelectContent className={cn(
+                "border-neutral-200 dark:border-neutral-700",
+                "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+              )}>
                 {audienceLevels.map(audience => (
-                  <SelectItem key={audience.value} value={audience.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                  <SelectItem
+                    key={audience.value}
+                    value={audience.value}
+                    className={cn(
+                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-orange-100 dark:focus:bg-orange-700/50",
+                      "data-[state=checked]:bg-orange-200 dark:data-[state=checked]:bg-orange-600/50"
+                    )}
+                  >
                     <div className="flex flex-col">
                       <span>{audience.emoji} {audience.label}</span>
-                      <span className="text-xs text-neutral-400">{audience.description}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{audience.description}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -191,59 +240,87 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
           </div>
         </div>
         <div>
-          <Label htmlFor="problemDescription" className="block text-sm font-medium text-neutral-300 mb-2">
+          <Label htmlFor="problemDescription" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
             问题描述：
           </Label>
           <Textarea
             id="problemDescription"
             value={problemDescription}
             onChange={(e) => setProblemDescription(e.target.value)}
-            placeholder="详细描述遇到的问题情况，包括背景、原因、影响等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[120px]"
-            rows={5}
+            placeholder="请具体描述您遇到的问题或挑战..."
+            className={cn(
+              "w-full min-h-[100px]",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+              "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+            )}
+            rows={4}
           />
         </div>
-        <div>
-          <Label htmlFor="currentSituation" className="block text-sm font-medium text-neutral-300 mb-2">
-            当前状况（选填）：
-          </Label>
-          <Textarea
-            id="currentSituation"
-            value={currentSituation}
-            onChange={(e) => setCurrentSituation(e.target.value)}
-            placeholder="描述目前的处境、压力、时间限制等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="currentSituation" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              当前状况（选填）：
+            </Label>
+            <Textarea
+              id="currentSituation"
+              value={currentSituation}
+              onChange={(e) => setCurrentSituation(e.target.value)}
+              placeholder="例如：项目已延期X天，客户非常不满..."
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              )}
+              rows={2}
+            />
+          </div>
+          <div>
+            <Label htmlFor="desiredOutcome" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              期望结果（选填）：
+            </Label>
+            <Textarea
+              id="desiredOutcome"
+              value={desiredOutcome}
+              onChange={(e) => setDesiredOutcome(e.target.value)}
+              placeholder="例如：争取理解，避免处罚，获得支持..."
+              className={cn(
+                "w-full min-h-[60px]",
+                "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+                "text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500",
+                "focus:ring-orange-500 focus:border-orange-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              )}
+              rows={2}
+            />
+          </div>
         </div>
-        <div>
-          <Label htmlFor="desiredOutcome" className="block text-sm font-medium text-neutral-300 mb-2">
-            期望结果（选填）：
-          </Label>
-          <Textarea
-            id="desiredOutcome"
-            value={desiredOutcome}
-            onChange={(e) => setDesiredOutcome(e.target.value)}
-            placeholder="希望达到什么效果，如减少责任、获得理解、保持关系等..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500 min-h-[80px]"
-            rows={3}
-          />
-        </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full font-semibold",
+            "bg-orange-500 hover:bg-orange-600 text-white dark:bg-orange-500 dark:hover:bg-orange-600 dark:text-white",
+            "disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 dark:disabled:text-neutral-400"
+          )}
+        >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 危机公关专家正在制定策略...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成话术...</>
           ) : (
-            <><Target className="mr-2 h-4 w-4" /> 生成应对话术！</>
+            <><Sparkles className="mr-2 h-4 w-4" /> 获取应对策略</>
           )}
         </Button>
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">话术生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -251,19 +328,22 @@ ${desiredOutcome.trim() ? `期望结果：${desiredOutcome}` : ''}
 
       {isLoading && !generatedTactics && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-orange-400 mb-4" />
-          <p className="text-neutral-400">AI危机公关专家正在为您制定应对策略...🛡️</p>
+          <Loader2 className="h-12 w-12 animate-spin text-orange-500 dark:text-orange-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">危机公关专家正在火速制定策略...🛡️</p>
         </div>
       )}
 
       {generatedTactics && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-orange-400 flex items-center">
-              <Shield className="w-5 h-5 mr-2" /> 应对策略与话术
+            <CardTitle className="text-orange-600 dark:text-orange-400 flex items-center">
+              <Shield className="w-5 h-5 mr-2" /> 应对策略与话术建议
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedTactics}</ReactMarkdown>
           </CardContent>
         </Card>

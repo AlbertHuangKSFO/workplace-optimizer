@@ -1,3 +1,6 @@
+'use client';
+
+import { cn } from '@/lib/utils';
 import React, { useCallback, useEffect, useState } from 'react';
 
 const WORK_SESSION_MINUTES = 45;
@@ -103,19 +106,25 @@ function ProSlackersTimeManager(): React.JSX.Element {
   }, [calculateSlackingTimes]);
 
   return (
-    <div className="p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-sky-400 text-center">摸鱼时钟 Pro</h1>
+    <div className={cn(
+      "p-6 rounded-lg shadow-xl max-w-md mx-auto",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
+      <h1 className="text-3xl font-bold mb-6 text-sky-600 dark:text-sky-400 text-center">摸鱼时钟 Pro</h1>
 
-      <div className="text-center mb-8 p-4 bg-neutral-800 rounded-lg">
-        <p className="text-sm text-neutral-400 mb-1">当前时间</p>
-        <p className="text-5xl font-mono font-bold text-emerald-400 tracking-wider">
+      <div className={cn(
+        "text-center mb-8 p-4 rounded-lg",
+        "bg-neutral-100 dark:bg-neutral-800"
+      )}>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">当前时间</p>
+        <p className="text-5xl font-mono font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">
           {formatTime(currentTime)}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-neutral-800 p-3 rounded-md">
-          <label htmlFor="workStartTime" className="block text-xs font-medium text-neutral-400 mb-1">
+        <div className={cn("p-3 rounded-md", "bg-neutral-100 dark:bg-neutral-800")}>
+          <label htmlFor="workStartTime" className="block text-xs font-medium text-neutral-700 dark:text-neutral-400 mb-1">
             上班时间
           </label>
           <input
@@ -123,11 +132,16 @@ function ProSlackersTimeManager(): React.JSX.Element {
             id="workStartTime"
             value={workStartTime}
             onChange={(e) => setWorkStartTime(e.target.value)}
-            className="w-full p-2 rounded-md bg-neutral-700 text-neutral-100 border border-neutral-600 focus:ring-sky-500 focus:border-sky-500 text-sm"
+            className={cn(
+              "w-full p-2 rounded-md border text-sm",
+              "bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100",
+              "border-neutral-300 dark:border-neutral-600",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
           />
         </div>
-        <div className="bg-neutral-800 p-3 rounded-md">
-          <label htmlFor="workEndTime" className="block text-xs font-medium text-neutral-400 mb-1">
+        <div className={cn("p-3 rounded-md", "bg-neutral-100 dark:bg-neutral-800")}>
+          <label htmlFor="workEndTime" className="block text-xs font-medium text-neutral-700 dark:text-neutral-400 mb-1">
             下班时间
           </label>
           <input
@@ -135,32 +149,46 @@ function ProSlackersTimeManager(): React.JSX.Element {
             id="workEndTime"
             value={workEndTime}
             onChange={(e) => setWorkEndTime(e.target.value)}
-            className="w-full p-2 rounded-md bg-neutral-700 text-neutral-100 border border-neutral-600 focus:ring-sky-500 focus:border-sky-500 text-sm"
+            className={cn(
+              "w-full p-2 rounded-md border text-sm",
+              "bg-white dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100",
+              "border-neutral-300 dark:border-neutral-600",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
           />
         </div>
       </div>
 
-      <div className={`p-6 rounded-lg text-center mb-6 ${nextSlackingPeriod?.isSlackingNow ? 'bg-green-700/30' : 'bg-neutral-800'}`}>
-        <h2 className="text-lg font-semibold text-sky-300 mb-2">下一个摸鱼时段</h2>
+      <div className={cn(
+        "p-6 rounded-lg text-center mb-6",
+        nextSlackingPeriod?.isSlackingNow ? "bg-green-100 dark:bg-green-700/30" : "bg-neutral-100 dark:bg-neutral-800"
+      )}>
+        <h2 className="text-lg font-semibold text-sky-700 dark:text-sky-300 mb-2">下一个摸鱼时段</h2>
         {nextSlackingPeriod ? (
-          <p className="text-2xl font-mono text-amber-300">
+          <p className="text-2xl font-mono text-amber-600 dark:text-amber-300">
             {formatTime(nextSlackingPeriod.start)} - {formatTime(nextSlackingPeriod.end)}
           </p>
         ) : (
-          <p className="text-neutral-400 text-sm">根据您的工作时间表规划中...</p>
+          <p className="text-neutral-500 dark:text-neutral-400 text-sm">根据您的工作时间表规划中...</p>
         )}
       </div>
 
-      <div className={`p-6 rounded-lg text-center ${nextSlackingPeriod?.isSlackingNow ? 'animate-pulse' : ''}`}>
-        <h2 className={`text-lg font-semibold mb-2 ${nextSlackingPeriod?.isSlackingNow ? 'text-green-300' : 'text-sky-300'}`}>
+      <div className={cn("p-6 rounded-lg text-center", nextSlackingPeriod?.isSlackingNow ? 'animate-pulse' : '')}>
+        <h2 className={cn(
+          "text-lg font-semibold mb-2",
+          nextSlackingPeriod?.isSlackingNow ? "text-green-700 dark:text-green-300" : "text-sky-700 dark:text-sky-300"
+        )}>
           {nextSlackingPeriod?.isSlackingNow ? '正在摸鱼' : '距离下次摸鱼'}
         </h2>
-        <p className={`text-3xl font-mono ${nextSlackingPeriod?.isSlackingNow ? 'text-green-300' : 'text-pink-300'}`}>
+        <p className={cn(
+          "text-3xl font-mono",
+          nextSlackingPeriod?.isSlackingNow ? "text-green-700 dark:text-green-300" : "text-pink-600 dark:text-pink-300"
+        )}>
           {timeToNextSlacking}
         </p>
       </div>
 
-      <div className="mt-8 text-center text-xs text-neutral-500">
+      <div className="mt-8 text-center text-xs text-neutral-600 dark:text-neutral-500">
         <p>工作 {WORK_SESSION_MINUTES} 分钟，摸鱼 {SLACK_SESSION_MINUTES} 分钟。劳逸结合，效率更高！</p>
       </div>
     </div>

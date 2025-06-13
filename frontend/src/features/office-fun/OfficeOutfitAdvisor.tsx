@@ -1,8 +1,11 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { cn } from '@/lib/utils';
 import { Loader2, ShieldCheck, Wand2 } from 'lucide-react'; // Wand2 for generating magic advice
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -71,52 +74,84 @@ function OfficeOutfitAdvisor(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4 sm:p-6 bg-neutral-900 text-neutral-100 rounded-lg shadow-xl h-full flex flex-col">
+    <div className={cn(
+      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
+    )}>
       <div className="flex items-center justify-center mb-6 text-center">
-        <ShieldCheck className="w-8 h-8 text-cyan-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-400">"今天穿什么？"职场版</h1>
-        <ShieldCheck className="w-8 h-8 text-cyan-400 ml-2" />
+        <ShieldCheck className="w-8 h-8 text-cyan-600 dark:text-cyan-400 mr-2" />
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">"今天穿什么？"职场版</h1>
+        <ShieldCheck className="w-8 h-8 text-cyan-600 dark:text-cyan-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
-          <Label htmlFor="weather" className="block text-sm font-medium text-neutral-300 mb-1">今天天气如何？(选填)</Label>
+          <Label htmlFor="weather" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">今天天气如何？(选填)</Label>
           <Input
             type="text"
             id="weather"
             value={weather}
             onChange={(e) => setWeather(e.target.value)}
             placeholder="例如：晴朗，25度；阴雨绵绵；冷风飕飕..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
           />
         </div>
         <div>
-          <Label htmlFor="meetingContext" className="block text-sm font-medium text-neutral-300 mb-1">有啥重要会议或场合吗？(选填)</Label>
+          <Label htmlFor="meetingContext" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">有啥重要会议或场合吗？(选填)</Label>
           <Input
             type="text"
             id="meetingContext"
             value={meetingContext}
             onChange={(e) => setMeetingContext(e.target.value)}
             placeholder="例如：见客户；内部头脑风暴；普通搬砖日..."
-            className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
+            className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}
           />
         </div>
         <div>
-          <Label htmlFor="chillLevel" className="block text-sm font-medium text-neutral-300 mb-1">今日"职场精致/躺平指数"？</Label>
+          <Label htmlFor="chillLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">今日"职场精致/躺平指数"？</Label>
           <Select value={chillLevel} onValueChange={setChillLevel}>
-            <SelectTrigger className="w-full bg-neutral-800 border-neutral-700 focus:ring-sky-500 focus:border-sky-500">
+            <SelectTrigger className={cn(
+              "w-full",
+              "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
+              "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
+            )}>
               <SelectValue placeholder="选择你的状态..." />
             </SelectTrigger>
-            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-100">
+            <SelectContent className={cn(
+              "border-neutral-200 dark:border-neutral-700",
+              "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+            )}>
               {chillLevels.map(level => (
-                <SelectItem key={level.value} value={level.value} className="hover:bg-neutral-700 focus:bg-sky-700">
+                <SelectItem
+                  key={level.value}
+                  value={level.value}
+                  className={cn(
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+                    "focus:bg-sky-100 dark:focus:bg-sky-700"
+                  )}
+                >
                   {level.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            "w-full text-white",
+            "bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600"
+          )}
+        >
           {isLoading ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 时尚顾问搭配中...
             </>
@@ -128,11 +163,14 @@ function OfficeOutfitAdvisor(): React.JSX.Element {
       </form>
 
       {error && (
-        <Card className="mb-6 border-red-500/50 bg-red-900/30">
+        <Card className={cn(
+          "mb-6",
+          "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
+        )}>
           <CardHeader>
-            <CardTitle className="text-red-400">穿搭建议获取失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">穿搭建议获取失败！</CardTitle>
           </CardHeader>
-          <CardContent className="text-red-300">
+          <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
           </CardContent>
         </Card>
@@ -140,15 +178,18 @@ function OfficeOutfitAdvisor(): React.JSX.Element {
 
       {isLoading && !outfitAdvice && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-cyan-400 mb-4" />
-          <p className="text-neutral-400">AI时尚顾问正在翻箱倒柜，寻找最佳搭配...👗</p>
+          <Loader2 className="h-12 w-12 animate-spin text-cyan-600 dark:text-cyan-400 mb-4" />
+          <p className="text-neutral-500 dark:text-neutral-400">AI时尚顾问正在翻箱倒柜，寻找最佳搭配...👗</p>
         </div>
       )}
 
       {outfitAdvice && !isLoading && (
-        <Card className="flex-grow flex flex-col bg-neutral-800 border-neutral-700 shadow-inner">
+        <Card className={cn(
+          "flex-grow flex flex-col shadow-inner",
+          "bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700"
+        )}>
           <CardHeader>
-            <CardTitle className="text-cyan-400 flex items-center">
+            <CardTitle className="text-cyan-700 dark:text-cyan-400 flex items-center">
               <ShieldCheck className="w-5 h-5 mr-2" /> 今日穿搭指南，请过目！
             </CardTitle>
           </CardHeader>
