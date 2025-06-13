@@ -13,6 +13,11 @@ import { ModelManager } from './services/ai/ModelManager';
 dotenv.config(); // AppConfig already does this, but doesn't hurt
 
 const app = express();
+
+// Initialize and set ModelManager instance
+const modelManagerInstance = ModelManager.getInstance();
+app.set('modelManager', modelManagerInstance);
+
 const port = AppConfig.backendPort || 8000;
 
 // Middleware

@@ -33,7 +33,7 @@ services:
       - REDIS_URL=redis://redis:6379 # Connect to the redis service
       - TS_NODE_CACHE=false # Attempt to disable ts-node caching
     env_file:
-      - .env.example # Load variables from .env.example (or .env if it exists)
+      - .env # Load variables from .env
     depends_on:
       - redis
     networks:

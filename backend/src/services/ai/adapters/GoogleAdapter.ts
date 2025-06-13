@@ -31,10 +31,12 @@ export class GoogleAdapter implements AIAdapter {
   async generateText(prompt: string, options?: GenerateOptions): Promise<string> {
     try {
       const modelId = options?.modelId || 'gemini-1.5-pro-latest'; // Default model
+      const systemPromptString = options?.systemPrompt;
+
       const modelInstance = this.genAI.getGenerativeModel({
         model: modelId,
-        // System instructions can be passed if the model/SDK version supports it
-        // systemInstruction: options?.systemPrompt, // Check SDK for exact way to pass system prompt
+        // Pass systemInstruction if provided in options
+        ...(systemPromptString && { systemInstruction: systemPromptString }),
       });
 
       const generationConfig = {

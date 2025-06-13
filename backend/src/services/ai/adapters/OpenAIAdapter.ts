@@ -27,13 +27,18 @@ export class OpenAIAdapter implements AIAdapter {
   async generateText(prompt: string, options?: GenerateOptions): Promise<string> {
     try {
       const modelId = options?.modelId || 'gpt-3.5-turbo'; // Default model
-      const systemPrompt = options?.systemPrompt; // Get system prompt from options
+      const systemPromptContent = options?.systemPrompt;
+
+      const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [];
+      if (systemPromptContent) {
+        messages.push({ role: 'system', content: systemPromptContent });
+      }
+      messages.push({ role: 'user', content: prompt });
 
       if (options?.stream) {
         const stream = await this.client.chat.completions.create({
           model: modelId,
-          messages: [{ role: 'user', content: prompt }],
-          ...(systemPrompt && { system_prompt: systemPrompt }), // Add system prompt if it exists
+          messages: messages, // Use the constructed messages array
           max_tokens: options?.maxTokens || 1500,
           temperature: options?.temperature || 0.7,
           top_p: options?.topP || 1,
@@ -48,8 +53,7 @@ export class OpenAIAdapter implements AIAdapter {
       } else {
         const completion = await this.client.chat.completions.create({
           model: modelId,
-          messages: [{ role: 'user', content: prompt }],
-          ...(systemPrompt && { system_prompt: systemPrompt }), // Add system prompt if it exists
+          messages: messages, // Use the constructed messages array
           max_tokens: options?.maxTokens || 1500,
           temperature: options?.temperature || 0.7,
           top_p: options?.topP || 1,

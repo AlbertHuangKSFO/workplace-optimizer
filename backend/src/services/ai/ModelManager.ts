@@ -109,6 +109,30 @@ export class ModelManager {
     );
   }
 
+  public getAdapterForModel(modelId: string): AIAdapter | undefined {
+    const modelInfo = this.getAvailableModels().find((m) => m.id === modelId);
+    if (modelInfo && modelInfo.provider) {
+      return this.getAdapter(modelInfo.provider);
+    }
+    // Fallback: try to infer provider from modelId prefix if not in availableModels (e.g. cache miss or new model)
+    // This is a basic inference and might need to be more robust
+    if (modelId.startsWith('gpt-') || modelId.includes('openai')) {
+      // A bit broad for openai
+      return this.getAdapter('openai');
+    }
+    if (modelId.startsWith('claude-')) {
+      return this.getAdapter('anthropic');
+    }
+    if (modelId.startsWith('gemini-')) {
+      return this.getAdapter('google');
+    }
+    // Add more specific inferences if needed or rely solely on availableModels lookup
+    console.warn(
+      `[ModelManager] Could not determine provider for modelId: ${modelId} from available models or direct inference.`
+    );
+    return undefined;
+  }
+
   public async primeCache(): Promise<void> {
     await this.loadModels(true);
   }

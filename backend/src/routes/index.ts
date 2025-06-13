@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import modelsRouter from './api/models';
+import generationRoutes from './generationRoutes';
 // Import other API route modules here as they are created
 // import communicationRouter from './api/communication';
 // import translationRouter from './api/translation';
@@ -14,6 +15,9 @@ router.get('/health', (req, res) => {
 
 // Mount model routes
 router.use('/models', modelsRouter);
+
+// Mount generation routes under /v1 prefix
+router.use('/v1', generationRoutes);
 
 // Mount other API routes
 // router.use('/communication', communicationRouter);

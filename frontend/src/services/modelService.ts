@@ -1,14 +1,12 @@
-import axios from 'axios';
 import { ModelInfo } from '../types/model'; // Assuming types are in ../types
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+import axiosInstance from './axiosInstance';
 
 /**
  * Fetches the list of available AI models from the backend.
  */
 export async function getAvailableModels(): Promise<ModelInfo[]> {
   try {
-    const response = await axios.get<ModelInfo[]>(`${API_BASE_URL}/models/available`);
+    const response = await axiosInstance.get<ModelInfo[]>('/models/available');
     return response.data;
   } catch (error) {
     console.error('Error fetching available models:', error);
@@ -24,7 +22,7 @@ export async function getAvailableModels(): Promise<ModelInfo[]> {
  */
 export async function getModelsHealth(): Promise<Record<string, boolean>> {
   try {
-    const response = await axios.get<Record<string, boolean>>(`${API_BASE_URL}/models/health`);
+    const response = await axiosInstance.get<Record<string, boolean>>('/models/health');
     return response.data;
   } catch (error) {
     console.error('Error fetching models health:', error);
