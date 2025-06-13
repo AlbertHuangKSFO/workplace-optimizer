@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { getAvailableModels } from '@/services/modelService';
 import { ModelInfo } from '@/types/model';
 import { ChevronDown, Loader2 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface ModelSelectorProps {
   selectedModelId: string;
@@ -23,13 +23,28 @@ export function ModelSelector({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasInitialized = useRef(false);
 
-  console.log('[ModelSelector] Component rendered. Props:', { selectedModelId, hasOnModelSelect: !!onModelSelect, hasOnModelInitialized: !!onModelInitialized });
+  console.log('[ModelSelector] Component rendered. Props:', {
+    selectedModelId,
+    hasOnModelSelect: !!onModelSelect,
+    hasOnModelInitialized: !!onModelInitialized,
+    hasInitialized: hasInitialized.current
+  });
 
+  // 强制执行的 useEffect，使用 useRef 确保只执行一次
   useEffect(() => {
-    console.log('[ModelSelector] useEffect triggered!');
+    console.log('[ModelSelector] useEffect triggered! hasInitialized:', hasInitialized.current);
 
-    let isMounted = true; // 防止组件卸载后的状态更新
+    if (hasInitialized.current) {
+      console.log('[ModelSelector] Already initialized, skipping');
+      return;
+    }
+
+    hasInitialized.current = true;
+    console.log('[ModelSelector] Starting initialization...');
+
+    let isMounted = true;
 
     async function fetchModels() {
       console.log('[ModelSelector] fetchModels started');
@@ -40,6 +55,7 @@ export function ModelSelector({
       }
 
       try {
+        console.log('[ModelSelector] Setting loading state...');
         setIsLoading(true);
         setError(null);
 
@@ -52,6 +68,7 @@ export function ModelSelector({
           return;
         }
 
+        console.log('[ModelSelector] Setting models state...');
         setAvailableModels(models || []);
 
         if (models && models.length > 0) {
@@ -84,6 +101,7 @@ export function ModelSelector({
         setError(`Failed to load models: ${err?.message || 'Unknown error'}`);
       } finally {
         if (isMounted) {
+          console.log('[ModelSelector] Setting loading to false...');
           setIsLoading(false);
           console.log('[ModelSelector] fetchModels completed');
         }
@@ -91,6 +109,7 @@ export function ModelSelector({
     }
 
     // 立即调用
+    console.log('[ModelSelector] Calling fetchModels...');
     fetchModels();
 
     // 清理函数
@@ -98,7 +117,7 @@ export function ModelSelector({
       console.log('[ModelSelector] useEffect cleanup');
       isMounted = false;
     };
-  }, []); // 空依赖数组，只在组件挂载时执行一次
+  }, []); // 空依赖数组
 
   const currentSelectedModel = useMemo(() => {
     const model = availableModels.find(m => m.id === selectedModelId);
@@ -113,7 +132,13 @@ export function ModelSelector({
   };
 
   const displayName = currentSelectedModel?.name || selectedModelId || 'Select Model';
-  console.log('[ModelSelector] Rendering with state:', { displayName, isLoading, error: !!error, modelsCount: availableModels.length });
+  console.log('[ModelSelector] Rendering with state:', {
+    displayName,
+    isLoading,
+    error: !!error,
+    modelsCount: availableModels.length,
+    hasInitialized: hasInitialized.current
+  });
 
   if (isLoading) {
     return (
