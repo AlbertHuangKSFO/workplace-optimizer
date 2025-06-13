@@ -19,7 +19,9 @@
 
 职场优化器是一个基于 AI 的综合性职场工具平台，旨在帮助职场人士提升工作效率、优化沟通技巧、应对职场挑战。无论你是初入职场的新人，还是经验丰富的老手，这里都有适合你的工具。
 
-![Homepage](./img/homepage.jpg)
+![Homepage](./img/homepage.gif)
+
+![Function Demo](./img/function.gif)
 
 ### 🎯 核心理念
 
@@ -54,7 +56,8 @@ cp .env.example .env
 # 编辑环境变量，添加你的AI API密钥
 nano .env
 ```
-3. 启动docker
+
+3. 启动 docker
 
 ```bash
 # 方式一：使用启动脚本
@@ -103,7 +106,6 @@ make prod
   - 平行宇宙工作模拟：如果选择了另一个职业会怎样
   - 电子木鱼：敲一敲消除工作烦恼
   - 办公室鬼故事：上班族专属恐怖故事
-
 
 ## 🤝 贡献指南
 
