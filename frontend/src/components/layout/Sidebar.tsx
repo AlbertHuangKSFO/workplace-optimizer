@@ -1,13 +1,13 @@
 'use client';
 
-import { navigationLinks } from '@/constants/navigation';
+import { FeatureConfig, homeNavigationLink, toolCategories, ToolCategoryConfig } from '@/constants/navigation';
 import { useTheme } from '@/contexts/ThemeContext';
-import { cn } from '@/lib/utils'; // Assuming shadcn/ui utils for cn
+import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 // Logo component with actual logo image
 const Logo = ({ collapsed }: { collapsed: boolean }) => (
@@ -47,15 +47,23 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [openCategories, setOpenCategories] = useState<string[]>([]);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null); // Added for hover effect
+  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
+  const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
-  const toggleCategory = (label: string) => {
-    setOpenCategories(prev =>
-      prev.includes(label) ? prev.filter(l => l !== label) : [...prev, label]
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategoryIds(prev =>
+      prev.includes(categoryId) ? prev.filter(id => id !== categoryId) : [...prev, categoryId]
     );
   };
+
+  // Memoize live features for performance if categories/features become very large
+  const memoizedToolCategories = useMemo(() => {
+    return toolCategories.map(category => ({
+      ...category,
+      features: category.features.filter(feature => feature.status === 'live'),
+    })).filter(category => category.features.length > 0); // Only keep categories with live features
+  }, []); // Dependencies: toolCategories (if it could change dynamically, otherwise empty array is fine)
 
   return (
     <aside
@@ -68,107 +76,109 @@ export function Sidebar({ className }: SidebarProps) {
     >
       <Logo collapsed={isCollapsed} />
       <nav className="flex-grow px-3 py-4 space-y-1 overflow-y-auto">
-        {navigationLinks.map((category) => {
-          const categoryId = `submenu-${category.label.replace(/\\s+/g, '-').toLowerCase()}`;
-          // 如果有直接链接，渲染为链接而不是分类
-          if (category.href) {
-            return (
-              <Link
-                key={category.label}
-                href={category.href}
-                className={cn(
-                  'flex items-center w-full p-2.5 rounded-md text-sm font-medium transition-colors duration-150',
-                  'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100', // Theme-aware hover
-                  {
-                    'justify-center': isCollapsed,
-                    'bg-sky-500 dark:bg-sky-600 text-white': pathname === category.href, // Active link
-                  }
-                )}
-                aria-label={isCollapsed ? category.label : undefined}
-              >
-                <category.icon className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
-                {!isCollapsed && <span className="flex-1 text-left whitespace-nowrap">{category.label}</span>}
-              </Link>
-            );
-          }
+        {/* Home Link */}
+        <Link
+          key={homeNavigationLink.id}
+          href={homeNavigationLink.path}
+          className={cn(
+            'flex items-center w-full p-2.5 rounded-md text-sm font-medium transition-colors duration-150',
+            'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100',
+            {
+              'justify-center': isCollapsed,
+              'bg-sky-500 dark:bg-sky-600 text-white': pathname === homeNavigationLink.path,
+            }
+          )}
+          aria-label={isCollapsed ? homeNavigationLink.name : undefined}
+        >
+          <homeNavigationLink.icon className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+          {!isCollapsed && <span className="flex-1 text-left whitespace-nowrap">{homeNavigationLink.name}</span>}
+        </Link>
 
-          // 原有的分类逻辑
+        {/* Tool Categories */}
+        {memoizedToolCategories.map((category: ToolCategoryConfig) => {
+          const categorySubmenuId = `submenu-${category.id}`;
+          const isOpen = openCategoryIds.includes(category.id);
+          const isHovered = hoveredCategoryId === category.id;
+
           return (
             <div
-              key={category.label}
-              className="relative" // For positioning the pop-out menu
+              key={category.id}
+              className="relative"
               onMouseEnter={() => {
-                if (isCollapsed && category.children && category.children.length > 0) {
-                  setHoveredCategory(category.label);
+                if (isCollapsed && category.features.length > 0) {
+                  setHoveredCategoryId(category.id);
                 }
               }}
               onMouseLeave={() => {
                 if (isCollapsed) {
-                  setHoveredCategory(null);
+                  setHoveredCategoryId(null);
                 }
               }}
             >
               <button
-                onClick={() => toggleCategory(category.label)}
-                aria-expanded={!isCollapsed ? openCategories.includes(category.label) : (hoveredCategory === category.label)}
-                aria-controls={(!isCollapsed && category.children && category.children.length > 0) ? categoryId : undefined}
-                aria-haspopup={isCollapsed && category.children && category.children.length > 0 ? "menu" : undefined}
-                aria-label={isCollapsed ? category.label : undefined}
+                onClick={() => toggleCategory(category.id)}
+                aria-expanded={!isCollapsed ? isOpen : isHovered}
+                aria-controls={(!isCollapsed && category.features.length > 0) ? categorySubmenuId : undefined}
+                aria-haspopup={isCollapsed && category.features.length > 0 ? "menu" : undefined}
+                aria-label={isCollapsed ? category.name : undefined}
                 className={cn(
                   'flex items-center w-full p-2.5 rounded-md text-sm font-medium transition-colors duration-150',
-                  'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100', // Theme-aware hover
+                  'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100',
                   {
                     'justify-center': isCollapsed,
-                    'text-neutral-900 dark:text-neutral-100 bg-neutral-200 dark:bg-neutral-700': openCategories.includes(category.label) && !isCollapsed, // Open category
+                    'text-neutral-900 dark:text-neutral-100 bg-neutral-200 dark:bg-neutral-700': isOpen && !isCollapsed,
                   }
                 )}
               >
                 <category.icon className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
-                {!isCollapsed && <span className="flex-1 text-left whitespace-nowrap">{category.label}</span>}
-                {!isCollapsed && category.children && category.children.length > 0 && (openCategories.includes(category.label) ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
+                {!isCollapsed && <span className="flex-1 text-left whitespace-nowrap">{category.name}</span>}
+                {!isCollapsed && category.features.length > 0 && (isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />)}
               </button>
+
               {/* Submenu for EXPANDED sidebar with animation */}
-              {(!isCollapsed && category.children && category.children.length > 0) && (
+              {(!isCollapsed && category.features.length > 0) && (
                 <ul
-                  id={categoryId}
+                  id={categorySubmenuId}
                   className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out mt-1 pl-4 space-y-1",
-                    openCategories.includes(category.label) ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                   )}
                 >
-                  {category.children.map((link) => (
-                    <li key={link.href}>
+                  {category.features.map((feature: FeatureConfig) => (
+                    <li key={feature.id}>
                       <Link
-                        href={link.href}
+                        href={feature.path}
                         className={cn(
                           'flex items-center p-2.5 pl-5 rounded-md text-sm transition-colors duration-150',
-                          'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100', // Theme-aware hover
-                          pathname === link.href ? 'bg-sky-500 dark:bg-sky-600 text-white font-semibold' : 'text-neutral-500 dark:text-neutral-400', // Active & default text
+                          'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100',
+                          pathname === feature.path ? 'bg-sky-500 dark:bg-sky-600 text-white font-semibold' : 'text-neutral-500 dark:text-neutral-400',
                         )}
                         role="menuitem"
                       >
-                        <link.icon className="h-4 w-4 mr-3 flex-shrink-0" />
-                        <span className="whitespace-nowrap">{link.label}</span>
+                        <feature.icon className="h-4 w-4 mr-3 flex-shrink-0" />
+                        <span className="whitespace-nowrap">{feature.shortName || feature.name}</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
               )}
+
               {/* Pop-out submenu for COLLAPSED sidebar on hover */}
-              {isCollapsed && hoveredCategory === category.label && category.children && category.children.length > 0 && (
+              {isCollapsed && isHovered && category.features.length > 0 && (
                    <div
-                    className="absolute left-full top-0 ml-2 z-20 w-48 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg py-1"
+                    className="absolute left-full top-0 ml-2 z-20 w-52 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md shadow-lg py-1"
                     role="menu"
-                    aria-label={category.label}
+                    aria-label={category.name}
                    >
-                      {category.children.map((link) => (
+                      {category.features.map((feature: FeatureConfig) => (
                         <Link
-                          key={link.href}
-                          href={link.href}
-                          className="block px-3 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+                          key={feature.id}
+                          href={feature.path}
+                          className="block px-3 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-600 w-full text-left"
                           role="menuitem"
                         >
-                          {link.label}
+                          <feature.icon className="h-4 w-4 mr-2 inline-block align-middle" />
+                          <span className="align-middle">{feature.shortName || feature.name}</span>
                         </Link>
                       ))}
                     </div>
@@ -186,11 +196,11 @@ export function Sidebar({ className }: SidebarProps) {
         )}>
         <button
           onClick={toggleTheme}
-          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-          aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          title={theme === 'dark' ? '切换亮色' : '切换暗色'}
+          aria-label={theme === 'dark' ? '切换亮色' : '切换暗色'}
           className={cn(
             'w-full flex items-center p-2.5 rounded-md text-sm font-medium',
-            'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100', // Theme-aware hover
+            'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100',
             isCollapsed && 'justify-center'
           )}
         >
@@ -199,17 +209,16 @@ export function Sidebar({ className }: SidebarProps) {
         </button>
          <button
           onClick={toggleSidebar}
-          title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+          title={isCollapsed ? '展开侧边栏' : '收起侧边栏'}
+          aria-label={isCollapsed ? '展开侧边栏' : '收起侧边栏'}
           className={cn(
             'w-full flex items-center p-2.5 rounded-md text-sm font-medium',
-            'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100', // Theme-aware hover
-             isCollapsed && 'justify-center',
-             !isCollapsed && 'mt-auto' // Push to bottom when expanded
+            'hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100',
+            isCollapsed && 'justify-center'
           )}
         >
-          {isCollapsed ? <ChevronsRight className="h-5 w-5 mx-auto" /> : <ChevronsLeft className="h-5 w-5 mr-3" />}
-          {!isCollapsed && '收起侧栏'}
+          {isCollapsed ? <ChevronsRight className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} /> : <ChevronsLeft className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />}
+          {!isCollapsed && (isCollapsed ? '展开侧栏' : '收起侧栏')}
         </button>
       </div>
     </aside>
