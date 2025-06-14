@@ -39,11 +39,12 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
     [
       'ppt-phrase-generator',
       'professional-persona-generator',
-      'data-beautifier', // Assuming data-beautifier is more about generation
-      'nickname-generator', // ADDED nickname-generator to content-creation category
+      'data-beautifier',
+      'nickname-generator',
+      'worker-meme-generator',
     ].includes(toolId)
   ) {
-    category = 'content-creation'; // Changed from 'generation' to 'content-creation' for clarity
+    category = 'content'; // Changed 'content-creation' to 'content' to match dir
   } else if (
     ['blame-tactics', 'crisis-communication-templates', 'resignation-templates'].includes(toolId)
   ) {
@@ -61,6 +62,7 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
   ) {
     category = 'analysis';
   }
+  // Note: parallel-universe-work-simulator uses default 'office-fun' category
 
   const filePath = path.join(PROMPTS_DIR, language, category, `${toolId}.yaml`);
   try {
@@ -100,8 +102,20 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   const lastUserMessage = messages.filter((m) => m.role === 'user').pop()?.content;
-  if (!lastUserMessage) {
+  if (
+    !lastUserMessage &&
+    toolId !== 'introduction-to-slacking' &&
+    toolId !== 'bullshit-fortune-telling' &&
+    toolId !== 'daily-slacking-almanac'
+  ) {
+    // Allow some tools to not require user message
     res.status(400).json({ error: 'No user message found in the messages array.' });
+    return;
+  }
+
+  // Ensure lastUserMessage is defined before using it, for tools that require it
+  if (!lastUserMessage && (toolId === 'weather-mood-link' || toolId === 'nickname-generator')) {
+    res.status(400).json({ error: 'User message content is required for this tool.' });
     return;
   }
 
@@ -222,9 +236,99 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
       res.status(404).json({ error: `Content for tool '${toolId}' not found or failed to load.` });
     }
     return;
-  }
+  } else if (toolId === 'nickname-generator') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    try {
+      const payload = JSON.parse(lastUserMessage!); // lastUserMessage is guaranteed by check above
+      const { description, style, purpose } = payload;
 
-  if (toolId === 'bullshit-fortune-telling' || toolId === 'daily-slacking-almanac') {
+      if (!description) {
+        console.error('[ChatController][nickname-generator] Description not found in payload.');
+        res.status(400).json({ error: 'Description is required for nickname generator.' });
+        return;
+      }
+
+      const systemPrompt = loadSystemPrompt(toolId, language);
+      if (!systemPrompt) {
+        console.error(
+          `[ChatController][nickname-generator] System prompt for tool '${toolId}' could not be loaded.`
+        );
+        res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+        return;
+      }
+
+      // Construct the AI user message based on the prompt's expectations
+      let aiUserMessage = `Description: ${description}\\n`;
+      if (style) {
+        aiUserMessage += `Style: ${style}\\n`;
+      }
+      if (purpose) {
+        aiUserMessage += `Purpose: ${purpose}\\n`;
+      }
+
+      console.log(
+        `[ChatController][nickname-generator] AI User Message: ${aiUserMessage.substring(
+          0,
+          300
+        )}...`
+      );
+
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        // Prefer a default model if specified, otherwise the first available
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error('[ChatController][nickname-generator] No available/default models found.');
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][nickname-generator] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(`[ChatController][nickname-generator] Using model '${finalModelId}'.`);
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(aiUserMessage.trim(), options);
+      console.log('[ChatController][nickname-generator] AI response generated.');
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
+    } catch (error: any) {
+      console.error(
+        `[ChatController][nickname-generator] Error processing tool '${toolId}':`,
+        error.message
+      );
+      if (error.stack) console.error(error.stack);
+      if (error instanceof SyntaxError) {
+        res.status(400).json({ error: 'Invalid JSON payload in user message.' });
+        return;
+      }
+      res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+      return;
+    }
+  } else if (toolId === 'bullshit-fortune-telling' || toolId === 'daily-slacking-almanac') {
     const systemPrompt = loadSystemPrompt('daily-slacking-almanac', language);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -272,6 +376,105 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
       if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  } else if (toolId === 'worker-meme-generator') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    try {
+      // lastUserMessage is guaranteed to be a string here due to earlier checks.
+      const payload = JSON.parse(lastUserMessage!);
+      const { scenario, mood } = payload;
+
+      if (!scenario) {
+        console.error('[ChatController][worker-meme-generator] Scenario not found in payload.');
+        res.status(400).json({ error: 'Scenario is required for meme generator.' });
+        return;
+      }
+
+      const systemPrompt = loadSystemPrompt(toolId, language);
+      if (!systemPrompt) {
+        console.error(
+          `[ChatController][worker-meme-generator] System prompt for tool '${toolId}' could not be loaded.`
+        );
+        res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+        return;
+      }
+
+      const aiUserMessageParts = [`Scenario: ${scenario}`];
+      if (mood) aiUserMessageParts.push(`Mood: ${mood}`);
+      const aiUserMessage = aiUserMessageParts.join('\n');
+
+      console.log(
+        `[ChatController][worker-meme-generator] AI User Message: ${aiUserMessage.substring(
+          0,
+          300
+        )}...`
+      );
+
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel && defaultModel.id) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(
+            '[ChatController][worker-meme-generator] No available/default models found or default model has no ID.'
+          );
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][worker-meme-generator] Could not find adapter or model ID.`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(`[ChatController][worker-meme-generator] Using model '${finalModelId}'.`);
+      const options: GenerateOptions = { modelId: finalModelId, systemPrompt: systemPrompt };
+      const assistantJsonResponse = await adapter.generateText(aiUserMessage, options);
+      console.log(
+        '[ChatController][worker-meme-generator] AI response generated (expected JSON string).'
+      );
+
+      try {
+        JSON.parse(assistantJsonResponse);
+      } catch (jsonError) {
+        console.error(
+          '[ChatController][worker-meme-generator] AI did not return a valid JSON string:',
+          assistantJsonResponse,
+          jsonError
+        );
+        res.status(500).json({
+          error: 'AI response was not in the expected JSON format. Please try again.',
+          details: assistantJsonResponse,
+        });
+        return;
+      }
+
+      res.status(200).json({ assistantMessage: assistantJsonResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(
+        `[ChatController][worker-meme-generator] Error processing tool '${toolId}':`,
+        error.message
+      );
+      if (error.stack) console.error(error.stack);
+      if (error instanceof SyntaxError && error.message.includes('JSON.parse')) {
+        // This SyntaxError is from parsing lastUserMessageContent (payload), not the AI response
+        res.status(400).json({ error: 'Invalid JSON payload in user message for meme generator.' });
+        return;
+      }
       res
         .status(500)
         .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
@@ -1326,6 +1529,180 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Soup Switcher
   if (toolId === 'soup-switcher') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input: ${lastUserMessage}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  }
+
+  // Handler for Parallel Universe Work Simulator
+  if (toolId === 'parallel-universe-work-simulator') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input: ${lastUserMessage}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  }
+
+  // Handler for Office Ghost Stories
+  if (toolId === 'office-ghost-stories') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input: ${lastUserMessage}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  }
+
+  // Handler for Work Time Machine
+  if (toolId === 'work-time-machine') {
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
