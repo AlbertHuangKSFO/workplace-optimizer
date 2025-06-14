@@ -12,15 +12,15 @@ import {
   CheckCircle2,
   ClipboardList, // 摸鱼作乐
   Clock,
-  CloudCog,
+  CloudSun, // Added for WeatherMoodLink
   Coffee,
+  Compass,
   Sparkle as ComplimentIcon,
   CookingPot, // 内容创作
   Dice5,
   Drama, // 时间效率 features (CalendarClock for Workday Countdown)
   Dumbbell,
   Edit,
-  Eraser,
   FileSignature,
   FileWarning,
   Fish,
@@ -32,8 +32,8 @@ import {
   ImagePlus, // 摸鱼作乐 features (Sparkle as ComplimentIcon)
   IterationCcw,
   Landmark,
-  Languages,
-  LocateFixed, // Generic WIP icon if needed
+  Languages, // Generic WIP icon if needed
+  Lightbulb,
   LucideIcon, // 身心健康
   MailCheck,
   MessageCircleHeart,
@@ -44,6 +44,7 @@ import {
   Presentation,
   Quote,
   Repeat,
+  ScanLine,
   ScrollText, // 智能分析 features (UsersSearchIcon for Colleague Persona)
   ShieldBan, // 智能分析
   ShieldCheck,
@@ -52,7 +53,7 @@ import {
   SlidersHorizontal, // 职场生存
   Sparkles,
   TimerOff,
-  TrendingUp, // 职场生存 features (LocateFixed for Boss Radar)
+  TrendingUp,
   UserCog,
   Users,
   UserSquare,
@@ -220,18 +221,19 @@ export const toolCategories: ToolCategoryConfig[] = [
       {
         id: 'weather-mood-link',
         name: '天气心情关联',
-        description: '根据天气预测工作状态 (需OpenWeather)',
-        path: '/tools/wip',
-        icon: CloudCog,
-        status: 'wip',
+        description: '根据实时天气预测工作状态和心情',
+        path: '/tools/weather-mood-link',
+        icon: CloudSun,
+        status: 'live',
       },
       {
-        id: 'career-forecaster',
-        name: '职场命运预测',
-        description: '基于大数据算法预测您的职业走向',
-        path: '/tools/wip',
-        icon: TrendingUp,
-        status: 'wip',
+        id: 'career-path-forecaster',
+        name: '职场命运预测器',
+        shortName: '职场预测',
+        description: 'AI为你分析潜在职业发展路径、机遇与挑战。',
+        path: '/tools/career-path-forecaster',
+        icon: Compass,
+        status: 'live',
       },
     ],
   },
@@ -251,11 +253,12 @@ export const toolCategories: ToolCategoryConfig[] = [
         status: 'live',
       },
       {
-        id: 'blame-tactics',
+        id: 'blame-game-master',
         name: '甩锅/背锅话术',
+        shortName: '甩锅话术',
         description: '提供不同场景下的沟通话术',
-        path: '/tools/blame-tactics',
-        icon: Eraser,
+        path: '/tools/blame-game-master',
+        icon: Repeat,
         status: 'live',
       },
       {
@@ -269,12 +272,30 @@ export const toolCategories: ToolCategoryConfig[] = [
       },
       {
         id: 'boss-radar',
-        name: '危险系数监测',
+        name: '老板雷达 / 危险系数监测',
         shortName: '老板雷达',
-        description: '根据老板位置提醒摸鱼风险',
-        path: '/tools/wip',
-        icon: LocateFixed,
-        status: 'wip',
+        description: '模拟监测办公室危险等级，助您安全摸鱼。',
+        path: '/tools/boss-radar',
+        icon: ScanLine,
+        status: 'live',
+      },
+      {
+        id: 'side-hustle-assessor',
+        name: '副业潜力评估器',
+        shortName: '副业评估',
+        description: 'AI为你评估副业潜力，发掘隐藏的赚钱机会。',
+        path: '/tools/side-hustle-assessor',
+        icon: Lightbulb,
+        status: 'live',
+      },
+      {
+        id: 'career-leveling-system',
+        name: '职场等级系统',
+        shortName: '职场升级',
+        description: '模拟从菜鸟到CEO的职场晋升之路，体验升级打怪的乐趣。',
+        path: '/tools/career-leveling-system',
+        icon: TrendingUp,
+        status: 'live',
       },
       {
         id: 'side-hustle-potential',

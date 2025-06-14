@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import path from 'path';
 import { AppConfig } from './config/app'; // Import AppConfig to ensure it's loaded
 import apiRoutes from './routes'; // Import the main API router
+import weatherRoutes from './routes/weatherRoutes'; // Import weather routes
 // Ensure ModelManager is initialized (it self-initializes on import, but good to have a clear dependency chain if needed later)
 import { ModelManager } from './services/ai/ModelManager';
 
@@ -38,6 +39,23 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Mount API routes
 app.use('/api', apiRoutes);
+
+// DEBUGGING LOG FOR WEATHER ROUTES
+app.use('/api/weather', (req, res, next) => {
+  console.log(
+    `[DEBUG] Attempting to route for /api/weather path. Request: ${req.method} ${req.originalUrl}`
+  );
+  // 查看是否有 /api/weather/meizu 这样的子路径
+  if (req.originalUrl.startsWith('/api/weather/meizu')) {
+    console.log(`[DEBUG] Request IS for /api/weather/meizu. Continuing to weatherRoutes.`);
+  } else {
+    console.log(`[DEBUG] Request is for /api/weather but NOT /meizu. Path: ${req.path}`);
+  }
+  next(); // 重要：确保将请求传递给下一个中间件或路由处理器
+});
+// END DEBUGGING LOG
+
+app.use('/api/weather', weatherRoutes); // Mount weather proxy routes
 
 // Simple root route (optional, can be removed or used for basic health check)
 app.get('/', (req: Request, res: Response) => {

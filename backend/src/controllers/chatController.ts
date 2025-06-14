@@ -1,3 +1,4 @@
+import axios, { AxiosError } from 'axios';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import yaml from 'js-yaml';
@@ -14,6 +15,9 @@ interface ChatRequestBody {
 
 // Path to the prompts directory
 const PROMPTS_DIR = path.join(__dirname, '../../src/data/prompts');
+
+// Added Meizu Weather API URL
+const MEIZU_WEATHER_API_URL = 'https://aider.meizu.com/app/weather/listWeather';
 
 function loadSystemPrompt(toolId: string, language: string = 'zh'): string | null {
   // Determine the category based on toolId
@@ -45,6 +49,9 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
       'meeting-notes-organizer',
       'workplace-meme-generator',
       'colleague-persona-analyzer',
+      'weather-mood-link',
+      'career-path-forecaster',
+      'side-hustle-assessor',
     ].includes(toolId)
   ) {
     category = 'analysis';
@@ -92,7 +99,112 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     return;
   }
 
-  if (toolId === 'introduction-to-slacking') {
+  if (toolId === 'weather-mood-link') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const cityId = lastUserMessage; // Assuming lastUserMessage IS the cityId
+
+    if (!cityId) {
+      console.error('[ChatController][weather-mood-link] CityId not found in user message.');
+      return res.status(400).json({ error: 'CityId is required for weather-mood link analysis.' });
+    }
+    console.log(`[ChatController][weather-mood-link] Processing for cityId: ${cityId}`);
+
+    try {
+      let weatherData;
+      try {
+        console.log(`[ChatController][weather-mood-link] Fetching weather for cityId: ${cityId}`);
+        const weatherApiResponse = await axios.get(MEIZU_WEATHER_API_URL, {
+          params: { cityIds: cityId },
+          timeout: 7000, // Increased timeout slightly
+        });
+        weatherData = weatherApiResponse.data;
+        console.log(
+          '[ChatController][weather-mood-link] Weather data fetched successfully.',
+          weatherData
+        );
+      } catch (error) {
+        console.error(
+          `[ChatController][weather-mood-link] Error fetching weather data for cityId ${cityId}:`,
+          error
+        );
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError;
+          return res.status(axiosError.response?.status || 502).json({
+            error: 'Failed to fetch weather data from Meizu API.',
+            details: axiosError.message,
+            upstreamError: axiosError.response?.data,
+          });
+        }
+        return res
+          .status(502)
+          .json({ error: 'Failed to fetch weather data due to an unexpected error.' });
+      }
+
+      const systemPrompt = loadSystemPrompt(toolId, language);
+      if (!systemPrompt) {
+        console.error(
+          `[ChatController][weather-mood-link] System prompt for tool '${toolId}' could not be loaded.`
+        );
+        return res
+          .status(500)
+          .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      }
+
+      const aiUserMessage = `The weather data for city ID ${cityId} is: ${JSON.stringify(
+        weatherData
+      )}. Based on this weather information, please provide an analysis of the potential link between the current weather and general mood. Consider common psychological responses to different weather conditions.`;
+      console.log(
+        `[ChatController][weather-mood-link] AI User Message: ${aiUserMessage.substring(0, 200)}...`
+      );
+
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error('[ChatController][weather-mood-link] No available/default models found.');
+          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][weather-mood-link] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+      }
+
+      console.info(`[ChatController][weather-mood-link] Using model '${finalModelId}'.`);
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+        // You might want to adjust maxTokens or temperature for this specific task if needed
+      };
+
+      const assistantResponse = await adapter.generateText(aiUserMessage, options);
+      console.log('[ChatController][weather-mood-link] AI response generated.');
+      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(
+        `[ChatController][weather-mood-link] Error processing tool '${toolId}':`,
+        error.message
+      );
+      if (error.stack) console.error(error.stack);
+      return res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+    }
+  } else if (toolId === 'introduction-to-slacking') {
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (systemPrompt) {
       res.status(200).json({ assistantMessage: systemPrompt });
@@ -1318,8 +1430,140 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     return;
   }
 
-  // Handler for Colleague Persona Analyzer
-  if (toolId === 'colleague-persona-analyzer') {
+  // ADDING HANDLER FOR CAREER PATH FORECASTER
+  // This should be placed before the generic analysis tools handler if it exists,
+  // or alongside other specific tool handlers.
+  else if (toolId === 'career-path-forecaster') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
+      return res
+        .status(500)
+        .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController][${toolId}] No available/default models found.`);
+          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+      }
+
+      console.info(
+        `[ChatController][${toolId}] Using model '${finalModelId}'. User input: ${lastUserMessage?.substring(
+          0,
+          100
+        )}...`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      console.log(`[ChatController][${toolId}] AI response generated.`);
+      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
+      if (error.stack) console.error(error.stack);
+      return res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+    }
+  }
+
+  // ADDING HANDLER FOR SIDE HUSTLE ASSESSOR
+  else if (toolId === 'side-hustle-assessor') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
+      return res
+        .status(500)
+        .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController][${toolId}] No available/default models found.`);
+          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+      }
+
+      console.info(
+        `[ChatController][${toolId}] Using model '${finalModelId}'. User input: ${lastUserMessage?.substring(
+          0,
+          100
+        )}...`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      console.log(`[ChatController][${toolId}] AI response generated.`);
+      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
+      if (error.stack) console.error(error.stack);
+      return res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+    }
+  }
+
+  // Generic handler for some analysis tools (and potentially others if not caught earlier)
+  // Ensure 'side-hustle-assessor' is handled before this or this group is adjusted
+  else if (
+    toolId === 'data-beautifier' ||
+    toolId === 'team-mood-detector' ||
+    toolId === 'meeting-notes-organizer' ||
+    toolId === 'workplace-meme-generator'
+  ) {
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -1356,7 +1600,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
       }
 
       console.info(
-        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input length: ${lastUserMessage?.length}`
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input: ${lastUserMessage}`
       );
 
       const options: GenerateOptions = {
