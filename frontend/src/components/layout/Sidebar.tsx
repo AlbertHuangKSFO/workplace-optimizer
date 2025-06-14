@@ -75,7 +75,7 @@ export function Sidebar({ className }: SidebarProps) {
       )}
     >
       <Logo collapsed={isCollapsed} />
-      <nav className="flex-grow px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-grow px-3 pt-4 pb-12 space-y-1 overflow-y-auto">
         {/* Home Link */}
         <Link
           key={homeNavigationLink.id}
@@ -140,8 +140,10 @@ export function Sidebar({ className }: SidebarProps) {
                 <ul
                   id={categorySubmenuId}
                   className={cn(
-                    "overflow-hidden transition-all duration-300 ease-in-out mt-1 pl-4 space-y-1",
-                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    "transition-all duration-300 ease-in-out mt-1 pl-4 space-y-1",
+                    isOpen
+                      ? "max-h-96 opacity-100 overflow-y-auto pb-4"
+                      : "max-h-0 opacity-0 overflow-hidden"
                   )}
                 >
                   {category.features.map((feature: FeatureConfig) => (

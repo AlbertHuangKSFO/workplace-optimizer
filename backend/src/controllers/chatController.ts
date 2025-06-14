@@ -18,7 +18,14 @@ const PROMPTS_DIR = path.join(__dirname, '../../src/data/prompts');
 function loadSystemPrompt(toolId: string, language: string = 'zh'): string | null {
   // Determine the category based on toolId
   let category = 'office-fun'; // default
-  if (['speech-optimizer', 'email-polisher', 'meeting-speech-generator'].includes(toolId)) {
+  if (
+    [
+      'speech-optimizer',
+      'email-polisher',
+      'meeting-speech-generator',
+      'meeting-nonsense-translator',
+    ].includes(toolId)
+  ) {
     category = 'communication';
   } else if (
     ['jargon-translator', 'cross-department-translator', 'eq-assistant'].includes(toolId)
@@ -33,7 +40,12 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
   ) {
     category = 'crisis';
   } else if (
-    ['team-mood-detector', 'meeting-notes-organizer', 'workplace-meme-generator'].includes(toolId)
+    [
+      'team-mood-detector',
+      'meeting-notes-organizer',
+      'workplace-meme-generator',
+      'colleague-persona-analyzer',
+    ].includes(toolId)
   ) {
     category = 'analysis';
   }
@@ -1190,17 +1202,192 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     return;
   }
 
-  if (toolId) {
-    console.warn(`[ChatController] Received request for unhandled toolId: ${toolId}`);
-    res
-      .status(501)
-      .json({ error: `Tool '${toolId}' is not yet implemented for the chat endpoint.` });
-  } else {
-    console.warn(
-      '[ChatController] Received general chat request without toolId. Not yet implemented.'
-    );
-    res
-      .status(501)
-      .json({ error: 'General chat functionality without a toolId is not yet implemented.' });
+  // Handler for Soup Switcher
+  if (toolId === 'soup-switcher') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input: ${lastUserMessage}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
   }
+
+  // Handler for Meeting Nonsense Translator
+  if (toolId === 'meeting-nonsense-translator') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input length: ${lastUserMessage?.length}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  }
+
+  // Handler for Colleague Persona Analyzer
+  if (toolId === 'colleague-persona-analyzer') {
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController] No available/default models found for ${toolId}.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController] Could not find adapter or model ID for tool '${toolId}'. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController] Using model '${finalModelId}' for tool '${toolId}'. User input length: ${lastUserMessage?.length}`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+    } catch (error: any) {
+      console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res
+        .status(500)
+        .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
+    }
+    return;
+  }
+
+  // Definitive fallback for unhandled toolIds or missing toolId
+  // This code is reached ONLY if no specific toolId handler above was matched and returned.
+  console.log(`[ChatController] Entering fallback logic for toolId: '${toolId}'.`);
+
+  if (toolId) {
+    // A toolId was provided, but it wasn't one of the recognized/implemented ones.
+    console.warn(`[ChatController] Unhandled toolId: '${toolId}'. Returning 501.`);
+    res.status(501).json({ error: `Tool with id '${toolId}' is not implemented.` });
+  } else {
+    // No toolId was provided in the request at all.
+    console.warn('[ChatController] Chat request received without a toolId. Returning 501.');
+    res.status(501).json({ error: 'Chat requests must include a toolId.' });
+  }
+  return; // Explicitly return to ensure no further code in this function is executed.
 }
