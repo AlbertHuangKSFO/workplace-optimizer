@@ -36,9 +36,14 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
   ) {
     category = 'translation';
   } else if (
-    ['ppt-phrase-generator', 'professional-persona-generator', 'data-beautifier'].includes(toolId)
+    [
+      'ppt-phrase-generator',
+      'professional-persona-generator',
+      'data-beautifier', // Assuming data-beautifier is more about generation
+      'nickname-generator', // ADDED nickname-generator to content-creation category
+    ].includes(toolId)
   ) {
-    category = 'generation';
+    category = 'content-creation'; // Changed from 'generation' to 'content-creation' for clarity
   } else if (
     ['blame-tactics', 'crisis-communication-templates', 'resignation-templates'].includes(toolId)
   ) {
@@ -73,6 +78,7 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
 }
 
 export async function handleChatRequest(req: Request, res: Response): Promise<void> {
+  console.log('[SUPER DEBUG] Received req.body:', JSON.stringify(req.body, null, 2));
   console.log('[DEBUG] src/controllers/chatController.ts: handleChatRequest INVOKED.');
   const {
     toolId,
@@ -105,7 +111,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
     if (!cityId) {
       console.error('[ChatController][weather-mood-link] CityId not found in user message.');
-      return res.status(400).json({ error: 'CityId is required for weather-mood link analysis.' });
+      res.status(400).json({ error: 'CityId is required for weather-mood link analysis.' });
+      return;
     }
     console.log(`[ChatController][weather-mood-link] Processing for cityId: ${cityId}`);
 
@@ -129,15 +136,15 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         );
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError;
-          return res.status(axiosError.response?.status || 502).json({
+          res.status(axiosError.response?.status || 502).json({
             error: 'Failed to fetch weather data from Meizu API.',
             details: axiosError.message,
             upstreamError: axiosError.response?.data,
           });
+          return;
         }
-        return res
-          .status(502)
-          .json({ error: 'Failed to fetch weather data due to an unexpected error.' });
+        res.status(502).json({ error: 'Failed to fetch weather data due to an unexpected error.' });
+        return;
       }
 
       const systemPrompt = loadSystemPrompt(toolId, language);
@@ -145,9 +152,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         console.error(
           `[ChatController][weather-mood-link] System prompt for tool '${toolId}' could not be loaded.`
         );
-        return res
-          .status(500)
-          .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+        res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+        return;
       }
 
       const aiUserMessage = `The weather data for city ID ${cityId} is: ${JSON.stringify(
@@ -172,7 +178,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
           adapter = modelManager.getAdapterForModel(finalModelId);
         } else {
           console.error('[ChatController][weather-mood-link] No available/default models found.');
-          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
         }
       }
 
@@ -180,7 +187,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         console.error(
           `[ChatController][weather-mood-link] Could not find adapter or model ID. Attempted model: ${finalModelId}`
         );
-        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
       }
 
       console.info(`[ChatController][weather-mood-link] Using model '${finalModelId}'.`);
@@ -193,16 +201,18 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
       const assistantResponse = await adapter.generateText(aiUserMessage, options);
       console.log('[ChatController][weather-mood-link] AI response generated.');
-      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
     } catch (error: any) {
       console.error(
         `[ChatController][weather-mood-link] Error processing tool '${toolId}':`,
         error.message
       );
       if (error.stack) console.error(error.stack);
-      return res.status(500).json({
+      res.status(500).json({
         error: `Failed to generate content for '${toolId}': ${error.message}`,
       });
+      return;
     }
   } else if (toolId === 'introduction-to-slacking') {
     const systemPrompt = loadSystemPrompt(toolId, language);
@@ -1438,9 +1448,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
-      return res
-        .status(500)
-        .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
     }
 
     try {
@@ -1459,7 +1468,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
           adapter = modelManager.getAdapterForModel(finalModelId);
         } else {
           console.error(`[ChatController][${toolId}] No available/default models found.`);
-          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
         }
       }
 
@@ -1467,7 +1477,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         console.error(
           `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
         );
-        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
       }
 
       console.info(
@@ -1484,13 +1495,15 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
       const assistantResponse = await adapter.generateText(lastUserMessage, options);
       console.log(`[ChatController][${toolId}] AI response generated.`);
-      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
     } catch (error: any) {
       console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
       if (error.stack) console.error(error.stack);
-      return res.status(500).json({
+      res.status(500).json({
         error: `Failed to generate content for '${toolId}': ${error.message}`,
       });
+      return;
     }
   }
 
@@ -1500,9 +1513,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
-      return res
-        .status(500)
-        .json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
     }
 
     try {
@@ -1521,7 +1533,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
           adapter = modelManager.getAdapterForModel(finalModelId);
         } else {
           console.error(`[ChatController][${toolId}] No available/default models found.`);
-          return res.status(500).json({ error: 'No AI models available to handle the request.' });
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
         }
       }
 
@@ -1529,7 +1542,8 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         console.error(
           `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
         );
-        return res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
       }
 
       console.info(
@@ -1546,13 +1560,80 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
       const assistantResponse = await adapter.generateText(lastUserMessage, options);
       console.log(`[ChatController][${toolId}] AI response generated.`);
-      return res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
     } catch (error: any) {
       console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
       if (error.stack) console.error(error.stack);
-      return res.status(500).json({
+      res.status(500).json({
         error: `Failed to generate content for '${toolId}': ${error.message}`,
       });
+      return;
+    }
+  }
+
+  // ADDING HANDLER FOR NICKNAME GENERATOR
+  else if (toolId === 'nickname-generator') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController][${toolId}] No available/default models found.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController][${toolId}] Using model '${finalModelId}'. User input: ${lastUserMessage?.substring(
+          0,
+          100
+        )}...`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      console.log(`[ChatController][${toolId}] AI response generated.`);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
+    } catch (error: any) {
+      console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+      return;
     }
   }
 
