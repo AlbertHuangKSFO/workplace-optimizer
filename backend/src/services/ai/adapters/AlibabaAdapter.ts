@@ -42,10 +42,11 @@ export class AlibabaAdapter implements AIAdapter {
   constructor(apiKey?: string, baseUrl?: string) {
     console.log('AlibabaAdapter constructor invoked - VERSION_CHECK_POINT_07_JULY_B'); // Unique log
 
-    this.apiKey = apiKey || AppConfig.alibabaApiKey;
-    if (!this.apiKey) {
+    const providedApiKey = apiKey || AppConfig.alibabaApiKey;
+    if (!providedApiKey) {
       throw new Error('Alibaba API key (DashScope) is not configured.');
     }
+    this.apiKey = providedApiKey;
 
     const potentialBaseUrl = baseUrl || AppConfig.alibabaBaseUrl;
     if (!potentialBaseUrl) {

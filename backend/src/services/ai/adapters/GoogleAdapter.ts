@@ -21,10 +21,11 @@ export class GoogleAdapter implements AIAdapter {
   // Google SDK typically does not require a base URL as it's embedded.
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || AppConfig.googleApiKey;
-    if (!this.apiKey) {
+    const providedApiKey = apiKey || AppConfig.googleApiKey;
+    if (!providedApiKey) {
       throw new Error('Google API key is not configured.');
     }
+    this.apiKey = providedApiKey;
     this.genAI = new GoogleGenerativeAI(this.apiKey);
   }
 

@@ -384,7 +384,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -456,7 +456,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
       console.info(`[ChatController][worker-meme-generator] Using model '${finalModelId}'.`);
       const options: GenerateOptions = { modelId: finalModelId, systemPrompt: systemPrompt };
-      const assistantJsonResponse = await adapter.generateText(aiUserMessage, options);
+      const assistantJsonResponse = await adapter.generateText(aiUserMessage || '', options);
       console.log(
         '[ChatController][worker-meme-generator] AI response generated (expected JSON string).'
       );
@@ -542,7 +542,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -604,7 +604,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -666,7 +666,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -728,7 +728,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -790,7 +790,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -852,7 +852,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -914,7 +914,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -971,7 +971,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1045,7 +1045,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       console.log(`[APA_DEBUG] Response from adapter for anti-pua-assistant: OK`);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
@@ -1104,7 +1104,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1161,7 +1161,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1218,7 +1218,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1280,7 +1280,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1342,7 +1342,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1404,7 +1404,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1466,7 +1466,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1531,7 +1531,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1589,7 +1589,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1647,7 +1647,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1705,7 +1705,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1763,7 +1763,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1821,7 +1821,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1879,7 +1879,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1937,7 +1937,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -1995,7 +1995,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -2053,7 +2053,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -2111,7 +2111,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);
@@ -2176,7 +2176,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       console.log(`[ChatController][${toolId}] AI response generated.`);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
       return;
@@ -2241,7 +2241,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       console.log(`[ChatController][${toolId}] AI response generated.`);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
       return;
@@ -2306,7 +2306,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       console.log(`[ChatController][${toolId}] AI response generated.`);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
       return;
@@ -2375,7 +2375,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         systemPrompt: systemPrompt,
       };
 
-      const assistantResponse = await adapter.generateText(lastUserMessage, options);
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
       res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(`[ChatController] Error processing tool '${toolId}' with LLM:`, error.message);

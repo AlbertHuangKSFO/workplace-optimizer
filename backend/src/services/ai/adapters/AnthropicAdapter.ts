@@ -90,10 +90,11 @@ export class AnthropicAdapter implements AIAdapter {
   private apiKey: string;
 
   constructor(apiKey?: string, baseUrl?: string) {
-    this.apiKey = apiKey || AppConfig.anthropicApiKey;
-    if (!this.apiKey) {
+    const providedApiKey = apiKey || AppConfig.anthropicApiKey;
+    if (!providedApiKey) {
       throw new Error('Anthropic API key is not configured.');
     }
+    this.apiKey = providedApiKey;
 
     const potentialBaseUrl = baseUrl || AppConfig.anthropicBaseUrl;
     let confirmedBaseUrl: string | undefined = undefined;
