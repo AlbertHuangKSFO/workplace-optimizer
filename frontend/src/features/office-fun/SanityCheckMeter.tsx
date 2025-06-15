@@ -1,9 +1,9 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Separator } from '@/components/ui/Separator';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Brain, Clock, Coffee, Lightbulb, RefreshCcw, Zap } from 'lucide-react';
 import React, { useState } from 'react';

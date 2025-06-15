@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input'; // Added Input for current job
-import { Label } from '@/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Textarea } from '@/components/ui/Textarea';
+import { Input } from '@/components/ui/input'; // Added Input for current job
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Lightbulb, Loader2, Sparkles, TrendingUp } from 'lucide-react'; // Using Lightbulb or TrendingUp
 import React, { useCallback, useState } from 'react';
@@ -196,7 +196,7 @@ ${expectations.trim() ? `- 我对副业的期望：${expectations}` : ''}
             <h3 className="text-xl font-semibold mb-3 text-center text-yellow-700 dark:text-yellow-300 flex-shrink-0">
               <Sparkles className="inline-block w-6 h-6 mr-2" /> AI的副业洞察：
             </h3>
-            <div className="relative p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow min-h-[450px]">
+            <div className="relative p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto min-h-[450px]">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{assessment}</ReactMarkdown>
             </div>
           </div>

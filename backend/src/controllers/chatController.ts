@@ -36,16 +36,13 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
   ) {
     category = 'translation';
   } else if (
-    [
-      'ppt-phrase-generator',
-      'professional-persona-generator',
-      'data-beautifier',
-      'nickname-generator',
-      'worker-meme-generator',
-      'worker-meme-generator-pro',
-    ].includes(toolId)
+    ['nickname-generator', 'worker-meme-generator', 'worker-meme-generator-pro'].includes(toolId)
   ) {
     category = 'content'; // Changed 'content-creation' to 'content' to match dir
+  } else if (
+    ['ppt-phrase-generator', 'professional-persona-generator', 'data-beautifier'].includes(toolId)
+  ) {
+    category = 'generation';
   } else if (
     ['blame-tactics', 'crisis-communication-templates', 'resignation-templates'].includes(toolId)
   ) {
@@ -66,6 +63,17 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
     ['office-yoga-guide', 'stealth-spending-log', 'caffeine-dependency-index'].includes(toolId)
   ) {
     category = 'health-wellness';
+  } else if (
+    [
+      'workday-countdown',
+      'slacking-index-calculator',
+      'salary-ticker',
+      'fire-countdown',
+      'procrastination-buster',
+      'pro-slackers-time-manager',
+    ].includes(toolId)
+  ) {
+    category = 'time-efficiency';
   }
   // Note: parallel-universe-work-simulator uses default 'office-fun' category
 
@@ -386,7 +394,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         .json({ error: `Failed to generate content for '${toolId}': ${error.message}` });
     }
     return;
-  } else if (toolId === 'worker-meme-generator') {
+  } else if (toolId === 'worker-meme-generator' || toolId === 'worker-meme-generator-pro') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
     try {
       // lastUserMessage is guaranteed to be a string here due to earlier checks.
@@ -1474,7 +1482,10 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   if (
     toolId === 'team-mood-detector' ||
     toolId === 'meeting-notes-organizer' ||
-    toolId === 'workplace-meme-generator'
+    toolId === 'workplace-meme-generator' ||
+    toolId === 'colleague-persona-analyzer' ||
+    toolId === 'career-path-forecaster' ||
+    toolId === 'side-hustle-assessor'
   ) {
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {

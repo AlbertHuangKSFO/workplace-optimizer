@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Textarea } from '@/components/ui/Textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Loader2, Sparkles, Target, User } from 'lucide-react';
 import React, { useState } from 'react';
@@ -118,7 +118,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
 
   return (
     <div className={cn(
-      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "p-4 sm:p-6 rounded-lg shadow-xl flex flex-col",
       "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
@@ -366,7 +366,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
               <User className="w-5 h-5 mr-2" /> 您的专属职场人设
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{generatedPersona}</ReactMarkdown>
           </CardContent>
         </Card>

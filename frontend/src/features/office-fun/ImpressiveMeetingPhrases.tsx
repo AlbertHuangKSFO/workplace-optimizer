@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Label } from '@/components/ui/Label';
-import { Separator } from '@/components/ui/Separator';
-import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { Briefcase, Lightbulb, RotateCcw, Target, Users, Zap } from 'lucide-react';
 import React, { useState } from 'react';

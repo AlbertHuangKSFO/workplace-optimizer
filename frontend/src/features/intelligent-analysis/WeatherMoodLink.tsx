@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import {
     Command,
     CommandEmpty,
@@ -14,7 +14,7 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/Popover";
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Check, ChevronsUpDown, Loader2, Sparkles } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';

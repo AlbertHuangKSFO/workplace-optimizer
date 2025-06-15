@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/Button';
 import {
     Card,
@@ -10,9 +10,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/Card';
-import { Label } from '@/components/ui/Label';
-import { Separator } from '@/components/ui/Separator';
-import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { ShieldAlert, Terminal } from 'lucide-react';
 import React, { useState } from 'react';

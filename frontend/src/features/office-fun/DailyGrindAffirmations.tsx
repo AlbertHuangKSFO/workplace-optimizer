@@ -125,7 +125,7 @@ function DailyGrindAffirmations(): React.JSX.Element {
               <KanbanSquare className="w-6 h-6 mr-2" /> 今日份"人间清醒"已送达：
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-6 leading-relaxed text-neutral-800 dark:text-neutral-200">
+          <CardContent className="prose dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-6 leading-relaxed text-neutral-800 dark:text-neutral-200">
             <div className="text-left space-y-3">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{affirmation}</ReactMarkdown>
             </div>

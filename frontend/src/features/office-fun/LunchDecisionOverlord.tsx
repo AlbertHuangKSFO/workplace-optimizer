@@ -117,7 +117,7 @@ function LunchDecisionOverlord(): React.JSX.Element {
               <Utensils className="w-6 h-6 mr-2" /> 本霸主钦定：今日午餐！
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
+          <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{lunchSuggestion}</ReactMarkdown>
           </CardContent>
         </Card>

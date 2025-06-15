@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Label } from '@/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Compass, Loader2, Sparkles } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
@@ -195,7 +195,7 @@ ${preferences.trim() ? `- 工作偏好：${preferences}` : ''}
             <h3 className="text-xl font-semibold mb-3 text-center text-sky-700 dark:text-sky-300 flex-shrink-0">
               <Compass className="inline-block w-6 h-6 mr-2" /> AI的职业洞察：
             </h3>
-            <div className="relative p-4 rounded-lg bg-sky-50 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words overflow-y-auto flex-grow min-h-0">
+            <div className="relative p-4 rounded-lg bg-sky-50 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto min-h-0">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{forecast}</ReactMarkdown>
             </div>
           </div>

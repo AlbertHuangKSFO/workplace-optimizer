@@ -1,8 +1,8 @@
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Separator } from '@/components/ui/Separator';
-import { Textarea } from '@/components/ui/Textarea';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { CircleDot, Compass, Eye, Sparkles, Zap } from 'lucide-react';
 import React, { useState } from 'react';

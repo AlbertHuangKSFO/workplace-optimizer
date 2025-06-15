@@ -66,7 +66,7 @@ function DailySlackingAlmanac(): React.JSX.Element {
 
   return (
     <div className={cn(
-      "p-4 sm:p-6 rounded-lg shadow-xl h-full flex flex-col",
+      "p-4 sm:p-6 rounded-lg shadow-xl flex flex-col",
       "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100"
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
@@ -137,7 +137,7 @@ function DailySlackingAlmanac(): React.JSX.Element {
               <Calendar className="w-6 h-6 mr-2" /> 今日黄历指引：
             </CardTitle>
           </CardHeader>
-          <CardContent className="prose dark:prose-invert max-w-none break-words overflow-y-auto flex-grow p-6 leading-relaxed text-neutral-800 dark:text-neutral-200">
+          <CardContent className="prose dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-6 leading-relaxed text-neutral-800 dark:text-neutral-200">
             <div className="text-left space-y-3">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{almanacContent}</ReactMarkdown>
             </div>
