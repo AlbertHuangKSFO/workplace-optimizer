@@ -56,8 +56,11 @@ export interface Tool {
   tags?: string[];
 }
 
-export interface ToolCategory extends NavCategory {
+export interface ToolCategory {
   key: ToolCategoryKey;
+  label: string;
+  icon: React.ElementType;
+  children: any[];
   tools: Tool[];
 }
 

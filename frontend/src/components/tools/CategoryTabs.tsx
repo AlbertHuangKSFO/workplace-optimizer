@@ -25,21 +25,24 @@ export function CategoryTabs({ selectedCategory, onSelectCategory, className }: 
         >
           全部工具
         </button>
-        {toolCategories.map((category) => (
-          <button
-            key={category.key}
-            onClick={() => onSelectCategory(category.key)}
-            className={cn(
-              "flex items-center px-4 py-2.5 text-sm font-medium whitespace-nowrap -mb-px border-b-2 transition-colors duration-150",
-              selectedCategory === category.key
-                ? 'border-sky-500 text-sky-400'
-                : 'border-transparent text-neutral-400 hover:text-neutral-200 hover:border-neutral-500'
-            )}
-          >
-            <category.icon className="h-4 w-4 mr-2" />
-            {category.label}
-          </button>
-        ))}
+        {toolCategories.map((category) => {
+          const Icon = category.icon;
+          return (
+            <button
+              key={category.key}
+              onClick={() => onSelectCategory(category.key)}
+              className={cn(
+                "flex items-center px-4 py-2.5 text-sm font-medium whitespace-nowrap -mb-px border-b-2 transition-colors duration-150",
+                selectedCategory === category.key
+                  ? 'border-sky-500 text-sky-400'
+                  : 'border-transparent text-neutral-400 hover:text-neutral-200 hover:border-neutral-500'
+              )}
+            >
+              <Icon className="h-4 w-4 mr-2" />
+              {category.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
