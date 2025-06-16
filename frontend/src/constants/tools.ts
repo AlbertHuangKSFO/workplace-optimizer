@@ -33,7 +33,6 @@ import {
   VenetianMask,
   Waypoints,
 } from 'lucide-react';
-import { NavCategory } from './navigation';
 
 export type ToolCategoryKey =
   | 'communication'

@@ -7,8 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Terminal } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
+
+// Added local type definition for CodeProps
+type CodeProps = React.ComponentPropsWithoutRef<'code'> & {
+  node?: any;
+  inline?: boolean;
+};
 
 const NicknameGenerator = () => {
   const [description, setDescription] = useState("");
@@ -148,8 +154,8 @@ const NicknameGenerator = () => {
                   ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1" {...props} />,
                   li: ({node, ...props}) => <li className="mb-1" {...props} />,
                   p: ({node, ...props}) => <p className="mb-2" {...props} />,
-                  code: ({node, inline, className, children, ...props}) => {
-                    const match = /language-(\w+)/.exec(className || '')
+                  code: ({node, inline, className, children, ...props}: CodeProps) => {
+                    const match = /language-(\\w+)/.exec(className || '')
                     return !inline && match ? (
                       <div className="my-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-sm overflow-x-auto">
                         <code className={className} {...props}>

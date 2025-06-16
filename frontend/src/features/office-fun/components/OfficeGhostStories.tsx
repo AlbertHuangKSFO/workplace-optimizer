@@ -6,8 +6,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Ghost, Loader2, Terminal } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
+
+// Added local type definition for CodeProps
+type CodeProps = React.ComponentPropsWithoutRef<'code'> & {
+  node?: any;
+  inline?: boolean;
+};
 
 const OfficeGhostStories = () => {
   const [storyRequest, setStoryRequest] = useState("");
@@ -134,7 +140,7 @@ const OfficeGhostStories = () => {
                   strong: ({node, ...props}) => <strong className="font-semibold text-red-600 dark:text-red-400" {...props} />,
                   em: ({node, ...props}) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
                   hr: ({node, ...props}) => <hr className="my-4 border-gray-300 dark:border-gray-600" {...props} />,
-                  code: ({node, inline, className, children, ...props}) => {
+                  code: ({node, inline, className, children, ...props}: CodeProps) => {
                     const match = /language-(\w+)/.exec(className || '')
                     return !inline && match ? (
                       <div className="my-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-sm overflow-x-auto">

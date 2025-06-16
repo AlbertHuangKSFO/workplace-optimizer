@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'; // Import AxiosError
 import { ModelInfo } from '../types/model'; // Assuming types are in ../types
 import axiosInstance from './axiosInstance';
 
@@ -17,12 +18,14 @@ export async function getAvailableModels(): Promise<ModelInfo[]> {
     return response.data;
   } catch (error) {
     console.error('[modelService] Error fetching available models:', error);
-    if (error.response) {
+    // Check if error is an AxiosError and has a response property
+    if (error instanceof AxiosError && error.response) {
       console.error('[modelService] Response status:', error.response.status);
       console.error('[modelService] Response data:', error.response.data);
-    }
-    if (error.request) {
-      console.error('[modelService] Request details:', error.request);
+    } else if (error instanceof Error && 'request' in error) {
+      // Check for request property for non-Axios errors with request info
+      // Type assertion needed for error.request as it's not standard on Error
+      console.error('[modelService] Request details:', (error as any).request);
     }
     // For debugging, let's throw the error so we can see it in ModelSelector
     throw error;
@@ -38,6 +41,11 @@ export async function getModelsHealth(): Promise<Record<string, boolean>> {
     return response.data;
   } catch (error) {
     console.error('Error fetching models health:', error);
+    // Similar check for getModelsHealth if accessing error.response or error.request
+    if (error instanceof AxiosError && error.response) {
+      // console.error('[modelService] Health check response status:', error.response.status);
+      // console.error('[modelService] Health check response data:', error.response.data);
+    }
     return {}; // Return empty object on error
   }
 }

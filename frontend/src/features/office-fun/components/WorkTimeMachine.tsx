@@ -6,8 +6,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Clock, Loader2, Terminal } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
+
+// Added local type definition for CodeProps
+type CodeProps = React.ComponentPropsWithoutRef<'code'> & {
+  node?: any;
+  inline?: boolean;
+};
 
 const WorkTimeMachine = () => {
   const [currentWork, setCurrentWork] = useState("");
@@ -119,7 +125,7 @@ const WorkTimeMachine = () => {
                   p: ({node, ...props}) => <p className="mb-2 leading-relaxed" {...props} />,
                   strong: ({node, ...props}) => <strong className="font-semibold text-blue-600 dark:text-blue-400" {...props} />,
                   em: ({node, ...props}) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
-                  code: ({node, inline, className, children, ...props}) => {
+                  code: ({node, inline, className, children, ...props}: CodeProps) => {
                     const match = /language-(\w+)/.exec(className || '')
                     return !inline && match ? (
                       <div className="my-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-sm overflow-x-auto">
