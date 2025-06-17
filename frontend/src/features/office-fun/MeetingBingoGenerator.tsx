@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Gamepad2, Loader2, RotateCcw, Sparkles, Target, Trophy } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -15,6 +17,10 @@ interface BingoCell {
   text: string;
   isMarked: boolean;
   isFree?: boolean;
+}
+
+interface MeetingBingoGeneratorProps {
+  locale?: ValidLocale;
 }
 
 const defaultBingoWords = [
@@ -74,7 +80,41 @@ const defaultBingoWords = [
   "灰度", "内测", "公测", "上线", "下线", "迭代", "版本", "发布"
 ];
 
-function MeetingBingoGenerator(): React.JSX.Element {
+const defaultEnglishBingoWords = [
+  // Business buzzwords
+  "synergy", "leverage", "paradigm", "disrupt", "innovate", "optimize", "streamline", "scalable",
+  "actionable", "deliverable", "bandwidth", "circle back", "touch base", "deep dive", "drill down", "pivot",
+  "ideate", "iterate", "onboard", "offboard", "upskill", "reskill", "rightsizing", "best practice",
+
+  // Strategy & Planning
+  "roadmap", "milestone", "KPI", "ROI", "stakeholder", "buy-in", "alignment", "visibility",
+  "transparency", "accountability", "ownership", "empowerment", "engagement", "enablement", "transformation", "optimization",
+  "integration", "collaboration", "coordination", "synchronization", "standardization", "automation", "digitization", "modernization",
+
+  // Execution & Operations
+  "execute", "implement", "deploy", "rollout", "launch", "deliver", "operationalize", "productionize",
+  "monitor", "track", "measure", "analyze", "evaluate", "assess", "review", "audit",
+  "troubleshoot", "debug", "resolve", "escalate", "prioritize", "triage", "backlog", "sprint",
+
+  // Data & Analytics
+  "metrics", "analytics", "insights", "intelligence", "dashboard", "reporting", "visualization", "modeling",
+  "baseline", "benchmark", "threshold", "target", "forecast", "projection", "trend", "pattern",
+  "correlation", "causation", "variance", "deviation", "outlier", "anomaly", "signal", "noise",
+
+  // Technology & Innovation
+  "architecture", "framework", "platform", "ecosystem", "infrastructure", "microservices", "API", "SDK",
+  "cloud-native", "containerization", "orchestration", "automation", "CI/CD", "DevOps", "agile", "scrum",
+  "MVP", "POC", "prototype", "beta", "alpha", "production", "staging", "development",
+
+  // Business & Market
+  "market fit", "value prop", "competitive advantage", "differentiation", "positioning", "segmentation", "targeting", "personalization",
+  "customer journey", "user experience", "touchpoint", "conversion", "retention", "acquisition", "churn", "lifetime value",
+  "growth hacking", "viral coefficient", "network effect", "moat", "disruption", "blue ocean", "red ocean", "whitespace"
+];
+
+function MeetingBingoGenerator({ locale = 'zh-CN' }: MeetingBingoGeneratorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [customWords, setCustomWords] = useState<string>('');
   const [bingoGrid, setBingoGrid] = useState<BingoCell[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -90,18 +130,19 @@ function MeetingBingoGenerator(): React.JSX.Element {
     setMarkedCount(0);
 
     try {
-      let wordsToUse = defaultBingoWords;
+      let wordsToUse = locale === 'en-US' ? defaultEnglishBingoWords : defaultBingoWords;
       if (customWords.trim()) {
+        const aiPrompt = t('meetingBingoGenerator.aiPrompt').replace('{topics}', customWords.trim());
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             messages: [{
               role: 'user',
-              content: `请基于这些主题生成25个适合会议BINGO的词汇或短语：${customWords.trim()}。请只返回词汇列表，用逗号分隔，不要其他解释。`
+              content: aiPrompt
             }],
             toolId: 'meeting-bingo-generator',
-            language: 'zh'
+            language: locale === 'en-US' ? 'en' : 'zh'
           }),
         });
         if (response.ok) {
@@ -122,9 +163,9 @@ function MeetingBingoGenerator(): React.JSX.Element {
       let wordIndex = 0;
       for (let i = 0; i < 25; i++) {
         if (i === 12) {
-          grid.push({ id: i, text: 'FREE', isMarked: true, isFree: true });
+          grid.push({ id: i, text: t('meetingBingoGenerator.freeCell'), isMarked: true, isFree: true });
         } else {
-          grid.push({ id: i, text: selectedWords[wordIndex] || `词${wordIndex + 1}`, isMarked: false, isFree: false });
+          grid.push({ id: i, text: selectedWords[wordIndex] || `${locale === 'en-US' ? 'Word' : '词'}${wordIndex + 1}`, isMarked: false, isFree: false });
           wordIndex++;
         }
       }
@@ -133,7 +174,7 @@ function MeetingBingoGenerator(): React.JSX.Element {
       setMarkedCount(1);
     } catch (err) {
       console.error('Error generating bingo grid:', err);
-      setError('生成BINGO卡片失败，请检查自定义词汇或稍后重试');
+      setError(t('meetingBingoGenerator.errorMessage'));
     } finally {
       setIsLoading(false);
     }
@@ -184,6 +225,17 @@ function MeetingBingoGenerator(): React.JSX.Element {
     setMarkedCount(0);
   };
 
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("max-w-4xl mx-auto p-4 sm:p-6 space-y-6", "bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100")}>
       {!showResult ? (
@@ -192,11 +244,11 @@ function MeetingBingoGenerator(): React.JSX.Element {
             <div className="flex items-center justify-center gap-2">
               <Gamepad2 className="w-8 h-8 text-green-600 dark:text-green-400" />
               <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-cyan-600 dark:from-green-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                会议BINGO生成器
+                {t('meetingBingoGenerator.title')}
               </h1>
             </div>
             <p className="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
-              输入会议主题或常用词汇（可选），AI将为您量身定制一张会议BINGO卡，让无聊的会议充满乐趣！
+              {t('meetingBingoGenerator.description')}
             </p>
           </div>
 
@@ -208,10 +260,10 @@ function MeetingBingoGenerator(): React.JSX.Element {
                 <span className={cn("flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm", "bg-green-100 dark:bg-green-800/30 text-green-700 dark:text-green-300")}>
                   1
                 </span>
-                自定义会议主题或词汇（可选）
+                {t('meetingBingoGenerator.customWordsTitle')}
               </CardTitle>
               <CardDescription className="text-neutral-600 dark:text-neutral-400">
-                输入一些词语，AI会围绕这些词生成BINGO卡。留空则使用内置的"互联网黑话"词库。
+                {t('meetingBingoGenerator.customWordsDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -220,7 +272,7 @@ function MeetingBingoGenerator(): React.JSX.Element {
                 id="customWords"
                 value={customWords}
                 onChange={(e) => setCustomWords(e.target.value)}
-                placeholder="例如：产品规划、技术评审、季度总结、团队建设、赋能、抓手、颗粒度..."
+                placeholder={t('meetingBingoGenerator.customWordsPlaceholder')}
                 rows={4}
                 className={cn(
                   "w-full",
@@ -247,12 +299,12 @@ function MeetingBingoGenerator(): React.JSX.Element {
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  正在生成BINGO卡...
+                  {t('meetingBingoGenerator.generating')}
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-2">
                   <Sparkles className="w-5 h-5" />
-                  生成BINGO卡片
+                  {t('meetingBingoGenerator.generateButton')}
                 </div>
               )}
             </Button>
@@ -264,10 +316,10 @@ function MeetingBingoGenerator(): React.JSX.Element {
             <div className={cn("flex items-center justify-center gap-2", hasWon ? "text-yellow-500 dark:text-yellow-400" : "text-green-600 dark:text-green-400")}>
               {hasWon ? <Trophy className="w-8 h-8" /> : <Gamepad2 className="w-8 h-8" />}
               <h1 className="text-3xl font-bold">
-                {hasWon ? "BINGO! 你赢了!" : "会议BINGO游戏"}
+                {hasWon ? t('meetingBingoGenerator.winTitle') : t('meetingBingoGenerator.gameTitle')}
               </h1>
             </div>
-            {!hasWon && <p className="text-neutral-600 dark:text-neutral-400">听到词就点一下，看看谁先连成线！</p>}
+            {!hasWon && <p className="text-neutral-600 dark:text-neutral-400">{t('meetingBingoGenerator.gameDescription')}</p>}
           </div>
 
           <div className={cn("grid grid-cols-5 gap-1 sm:gap-2 p-2 rounded-md", "bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-neutral-700")}>
@@ -295,7 +347,7 @@ function MeetingBingoGenerator(): React.JSX.Element {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
             <Badge variant="secondary" className={cn("text-sm px-3 py-1.5", "bg-green-100 dark:bg-green-800/30 text-green-700 dark:text-green-300")}>
-              <Target className="w-4 h-4 mr-1.5" /> 已标记: {markedCount} / 25
+              <Target className="w-4 h-4 mr-1.5" /> {t('meetingBingoGenerator.markedCount')} {markedCount} / 25
             </Badge>
             <Button
               onClick={handleReset}
@@ -306,10 +358,10 @@ function MeetingBingoGenerator(): React.JSX.Element {
               )}
             >
               <RotateCcw className="w-4 h-4 mr-2" />
-              {hasWon ? "再来一局" : "重置/换卡"}
+              {hasWon ? t('meetingBingoGenerator.playAgainButton') : t('meetingBingoGenerator.resetButton')}
             </Button>
           </div>
-          {hasWon && <p className="text-xl font-bold text-yellow-500 dark:text-yellow-400 animate-bounce mt-2">恭喜你，会议划水大师！🎉</p>}
+          {hasWon && <p className="text-xl font-bold text-yellow-500 dark:text-yellow-400 animate-bounce mt-2">{t('meetingBingoGenerator.winMessage')}</p>}
         </div>
       )}
     </div>

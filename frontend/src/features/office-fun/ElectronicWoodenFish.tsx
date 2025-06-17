@@ -1,8 +1,15 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+interface ElectronicWoodenFishProps {
+  locale?: ValidLocale;
+}
 
 const LOCAL_STORAGE_KEYS = {
   TODAY_MERIT: 'electronicWoodenFish_todayMerit',
@@ -10,31 +17,34 @@ const LOCAL_STORAGE_KEYS = {
   LAST_RECORDED_DATE: 'electronicWoodenFish_lastRecordedDate',
 };
 
-const feedbackMessages = [
-  { text: "功德 +1", type: "positive" },
-  { text: "财富 +1", type: "positive" },
-  { text: "智慧 +1", type: "positive" },
-  { text: "灵感 +1", type: "positive" },
-  { text: "Bug -1", type: "neutral" },
-  { text: "摸鱼成功", type: "positive" },
-  { text: "霉运退散", type: "special" },
-  { text: "烦恼 -1", type: "neutral" },
-  { text: "代码一次过", type: "positive" },
-  { text: "需求不变", type: "positive" },
-];
+const ElectronicWoodenFish: React.FC<ElectronicWoodenFishProps> = ({ locale = 'zh-CN' }) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-const ElectronicWoodenFish: React.FC = () => {
   const [sessionMerit, setSessionMerit] = useState(0);
   const [todayMerit, setTodayMerit] = useState(0);
   const [historicalMerit, setHistoricalMerit] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [feedbackText, setFeedbackText] = useState(feedbackMessages[0].text); // Default feedback
-  const [feedbackType, setFeedbackType] = useState(feedbackMessages[0].type);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackType, setFeedbackType] = useState('positive');
   const [isAnimating, setIsAnimating] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const woodenFishSound = '/sounds/wooden_fish_tap.mp3';
   const woodenFishImage = '/tools_muyu.png';
+
+  // 使用翻译的反馈消息
+  const feedbackMessages = React.useMemo(() => [
+    { text: t('electronicWoodenFish.feedbackMessages.merit'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.wealth'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.wisdom'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.inspiration'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.bugFix'), type: "neutral" },
+    { text: t('electronicWoodenFish.feedbackMessages.slackingSuccess'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.badLuckAway'), type: "special" },
+    { text: t('electronicWoodenFish.feedbackMessages.worryReduction'), type: "neutral" },
+    { text: t('electronicWoodenFish.feedbackMessages.codeSuccess'), type: "positive" },
+    { text: t('electronicWoodenFish.feedbackMessages.noRequirementChange'), type: "positive" },
+  ], [t, translationsLoading]);
 
   useEffect(() => {
     const todayStr = new Date().toLocaleDateString();
@@ -51,6 +61,8 @@ const ElectronicWoodenFish: React.FC = () => {
   }, []);
 
   const handleClick = useCallback(() => {
+    if (translationsLoading || feedbackMessages.length === 0) return;
+
     setSessionMerit(prev => prev + 1);
     const newTodayMerit = todayMerit + 1;
     setTodayMerit(newTodayMerit);
@@ -73,7 +85,7 @@ const ElectronicWoodenFish: React.FC = () => {
     setTimeout(() => setIsAnimating(false), 150);
     setShowFeedback(true);
     setTimeout(() => setShowFeedback(false), 700);
-  }, [todayMerit, historicalMerit]);
+  }, [todayMerit, historicalMerit, feedbackMessages, translationsLoading]);
 
   const getFeedbackTextColor = () => {
     switch (feedbackType) {
@@ -88,15 +100,26 @@ const ElectronicWoodenFish: React.FC = () => {
     }
   };
 
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-md mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-md mx-auto select-none">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="meditating person" className="mr-2 text-4xl">🧘</span>
-          电子木鱼
+          {t('electronicWoodenFish.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          轻轻一敲，功德+1，烦恼-1。每一次敲击，都是一份赛博能量！
+          {t('electronicWoodenFish.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6 pt-2">
@@ -123,13 +146,13 @@ const ElectronicWoodenFish: React.FC = () => {
         </div>
         <div className="text-center space-y-2">
           <p className="text-lg">
-            本次功德：<span className="font-bold text-blue-600">{sessionMerit}</span>
+            {t('electronicWoodenFish.sessionMerit')}<span className="font-bold text-blue-600">{sessionMerit}</span>
           </p>
           <p className="text-lg">
-            今日功德：<span className="font-bold text-green-600">{todayMerit}</span>
+            {t('electronicWoodenFish.todayMerit')}<span className="font-bold text-green-600">{todayMerit}</span>
           </p>
           <p className="text-lg">
-            累计功德：<span className="font-bold text-purple-600">{historicalMerit}</span>
+            {t('electronicWoodenFish.historicalMerit')}<span className="font-bold text-purple-600">{historicalMerit}</span>
           </p>
         </div>
         <audio ref={audioRef} src={woodenFishSound} preload="auto" />

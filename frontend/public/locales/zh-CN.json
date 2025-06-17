@@ -22,11 +22,9 @@
     "office-fun-recreation": "摸鱼作乐",
     "office-fun-recreation-description": "提供轻松有趣的办公室娱乐工具",
     "time-efficiency": "时间效率",
-    "time-efficiency-description": "优化时间管理，提升工作效率",
-    "health-wellness": "身心健康",
-    "health-wellness-description": "关注身心健康，平衡工作生活",
+    "time-efficiency-description": "管理时间、提升效率、规划个人目标",
     "well-being-health": "身心健康",
-    "well-being-health-description": "关注身心健康，平衡工作生活"
+    "well-being-health-description": "关注职场人的身心健康"
   },
   "common": {
     "wip": "开发中",
@@ -420,6 +418,145 @@
     "unexpectedError": "返回的彩虹屁格式有点奇怪，我消化不良了...🌀",
     "unknownError": "生成彩虹屁时发生未知错误，我的赞美引擎过热了！🔥"
   },
+  "electronicWoodenFish": {
+    "title": "电子木鱼",
+    "description": "轻轻一敲，功德+1，烦恼-1。每一次敲击，都是一份赛博能量！",
+    "sessionMerit": "本次功德：",
+    "todayMerit": "今日功德：",
+    "historicalMerit": "累计功德：",
+    "feedbackMessages": {
+      "merit": "功德 +1",
+      "wealth": "财富 +1",
+      "wisdom": "智慧 +1",
+      "inspiration": "灵感 +1",
+      "bugFix": "Bug -1",
+      "slackingSuccess": "摸鱼成功",
+      "badLuckAway": "霉运退散",
+      "worryReduction": "烦恼 -1",
+      "codeSuccess": "代码一次过",
+      "noRequirementChange": "需求不变"
+    }
+  },
+  "meetingBingoGenerator": {
+    "title": "会议BINGO生成器",
+    "description": "输入会议主题或常用词汇（可选），AI将为您量身定制一张会议BINGO卡，让无聊的会议充满乐趣！",
+    "customWordsTitle": "自定义会议主题或词汇（可选）",
+    "customWordsDescription": "输入一些词语，AI会围绕这些词生成BINGO卡。留空则使用内置的\"互联网黑话\"词库。",
+    "customWordsPlaceholder": "例如：产品规划、技术评审、季度总结、团队建设、赋能、抓手、颗粒度...",
+    "generateButton": "生成BINGO卡片",
+    "generating": "正在生成BINGO卡...",
+    "gameTitle": "会议BINGO游戏",
+    "gameDescription": "听到词就点一下，看看谁先连成线！",
+    "winTitle": "BINGO! 你赢了!",
+    "winMessage": "恭喜你，会议划水大师！🎉",
+    "markedCount": "已标记:",
+    "resetButton": "重置/换卡",
+    "playAgainButton": "再来一局",
+    "freeCell": "FREE",
+    "errorMessage": "生成BINGO卡片失败，请检查自定义词汇或稍后重试",
+    "aiPrompt": "请基于这些主题生成25个适合会议BINGO的词汇或短语：{topics}。请只返回词汇列表，用逗号分隔，不要其他解释。"
+  },
+  "pptPhraseGenerator": {
+    "title": "PPT金句生成器",
+    "topicLabel": "PPT主题：",
+    "topicPlaceholder": "例如：数字化转型战略、产品创新方案、团队管理心得...",
+    "coreMessageLabel": "核心观点（选填）：",
+    "coreMessagePlaceholder": "例如：通过数据驱动决策，提升用户体验，实现业务增长...",
+    "presentationStyleLabel": "演示风格：",
+    "presentationStylePlaceholder": "选择演示风格...",
+    "phraseTypeLabel": "金句类型：",
+    "phraseTypePlaceholder": "选择金句类型...",
+    "targetAudienceLabel": "目标听众（选填）：",
+    "targetAudiencePlaceholder": "例如：技术团队、管理层、客户、投资人...",
+    "generateButton": "生成PPT金句！",
+    "generating": "文案大师正在创作金句...",
+    "errorTitle": "创作失败！",
+    "loadingMessage": "PPT金句打磨中，请稍候...✨",
+    "resultTitle": "金句来袭，请查收！",
+    "topicRequired": "请输入PPT主题！",
+    "apiError": "金句生成失败，可能是文案大师在思考更好的表达。",
+    "formatError": "AI返回的金句格式有误，文案大师可能在酝酿更好的创意...✨",
+    "unknownError": "生成金句时发生未知错误，灵感可能暂时枯竭了！💡",
+    "presentationStyles": {
+      "inspiring": {
+        "label": "激励人心",
+        "description": "充满激情，鼓舞士气"
+      },
+      "analytical": {
+        "label": "理性分析",
+        "description": "数据驱动，逻辑清晰"
+      },
+      "humorous": {
+        "label": "幽默诙谐",
+        "description": "轻松有趣，寓教于乐"
+      },
+      "professional": {
+        "label": "专业严谨",
+        "description": "正式专业，权威可信"
+      },
+      "innovative": {
+        "label": "创新前瞻",
+        "description": "前沿思维，引领潮流"
+      },
+      "storytelling": {
+        "label": "故事叙述",
+        "description": "情节生动，引人入胜"
+      }
+    },
+    "phraseTypes": {
+      "title": {
+        "label": "标题金句",
+        "description": "适合作为章节标题或重点强调"
+      },
+      "opening": {
+        "label": "开场白",
+        "description": "演示开头，抓住注意力"
+      },
+      "transition": {
+        "label": "过渡语",
+        "description": "连接不同部分，承上启下"
+      },
+      "conclusion": {
+        "label": "总结语",
+        "description": "结尾升华，留下深刻印象"
+      },
+      "highlight": {
+        "label": "亮点句",
+        "description": "突出重点，画龙点睛"
+      }
+    },
+    "aiPrompt": "PPT主题：{topic}\n{coreMessage}演示风格：{style}\n金句类型：{type}\n{audience}\n\n请为我的PPT生成多个精彩的金句，要求言简意赅、富有冲击力、易于记忆。"
+  },
+  "careerPathForecaster": {
+    "title": "职场命运预测器",
+    "description": "输入你的职业信息，让AI为你分析潜在发展路径、机遇与挑战，洞见未来！",
+    "currentRoleLabel": "当前职位/行业",
+    "currentRolePlaceholder": "例如：软件工程师 / 互联网，市场专员 / 快消品",
+    "skillsLabel": "核心技能",
+    "skillsPlaceholder": "例如：JavaScript, Python, 项目管理, 数据分析, 沟通能力 (请用逗号分隔)",
+    "experienceLabel": "工作年限",
+    "experiencePlaceholder": "选择工作年限...",
+    "experienceLevels": {
+      "0": "实习生/应届生 (少于1年)",
+      "1-3": "初级 (1-3年)",
+      "3-5": "中级 (3-5年)",
+      "5-10": "高级 (5-10年)",
+      "10+": "专家/资深 (10年以上)"
+    },
+    "aspirationsLabel": "职业目标/期望",
+    "aspirationsPlaceholder": "例如：成为技术专家，晋升管理层，创业，转换到更有意义的行业",
+    "preferencesLabel": "工作偏好 (可选)",
+    "preferencesPlaceholder": "例如：远程工作，弹性时间，注重创新的团队文化，工作生活平衡",
+    "predictButton": "预测我的职场命运",
+    "predicting": "正在预测您的职业命运...",
+    "resultTitle": "AI的职业洞察：",
+    "loadingMessage": "AI正在连接星象，解读您的职业未来，请稍候...",
+    "requiredFields": "请填写当前职位/行业、核心技能和职业目标/期望！",
+    "apiError": "AI预测功能暂时不可用，可能是它正在为你看更远的未来。",
+    "formatError": "AI返回的预测结果格式有误，可能命运的丝线有点乱。🔮",
+    "unknownError": "预测职场命运时发生未知错误。请稍后再试。",
+    "aiPrompt": "我目前的职业信息如下：\n- 当前职位/行业：{currentRole}\n- 核心技能：{skills}\n- 工作年限：{experience}\n- 职业目标/期望：{aspirations}\n{preferences}\n\n请基于以上信息，为我分析未来的职业发展路径。请包括：\n1. 可能的职业发展方向（2-3个）。\n2. 每个方向的关键成功因素和所需技能提升点。\n3. 潜在的机遇和挑战。\n4. 一些建议和鼓励的话语。\n请以富有洞察力且积极的语气进行分析。"
+  },
   "header": {
     "appTitle": "打工人必备工具",
     "homepageTitle": "打工人必备工具 - 首页",
@@ -456,19 +593,7 @@
     "expandSidebar": "展开侧边栏",
     "collapseSidebar": "收起侧边栏"
   },
-  "categories": {
-    "communication": "沟通协作",
-    "analysis": "智能分析",
-    "crisis": "危机公关",
-    "generation": "内容生成",
-    "office-fun": "办公娱乐",
-    "time-efficiency": "时间效率",
-    "translation": "翻译助手",
-    "health-wellness": "健康福利",
-    "workplace-survival": "职场生存",
-    "intelligent-analysis": "智能分析",
-    "content-creation": "内容创作"
-  },
+
   "meetingNonsenseTranslator": {
     "title": "会议废话翻译器",
     "description": "粘贴冗长会议内容，AI帮你一键脱水，直击核心，拒绝废话！",
@@ -501,5 +626,148 @@
       "concise": "更简洁明了",
       "emotional": "更有感染力"
     }
+  },
+  "colleaguePersonaAnalyzer": {
+    "title": "同事人设分析器",
+    "description": "通过选择下方各维度的描述，并补充具体事例，AI帮你精准分析同事的人设特点和行为模式。",
+    "communicationStyles": {
+      "title": "TA的核心沟通风格是？",
+      "description": "选择最能代表其日常沟通方式的选项。",
+      "comm_direct": "直接坦诚",
+      "comm_direct_desc": "观点明确，不绕弯子",
+      "comm_diplomatic": "委婉含蓄",
+      "comm_diplomatic_desc": "注重方式，顾及感受",
+      "comm_logical": "逻辑清晰",
+      "comm_logical_desc": "条理分明，重数据事实",
+      "comm_expressive": "表达生动",
+      "comm_expressive_desc": "善用比喻，富有感染力",
+      "comm_reserved": "言简意赅",
+      "comm_reserved_desc": "话不多，但切中要点"
+    },
+    "teamRoles": {
+      "title": "在团队协作中，TA通常扮演什么角色？",
+      "description": "思考TA在团队项目中的典型贡献方式。",
+      "role_leader": "领导者/协调者",
+      "role_leader_desc": "组织引导，推动进展",
+      "role_innovator": "创新者/点子王",
+      "role_innovator_desc": "常有新想法，挑战常规",
+      "role_executor": "执行者/实干家",
+      "role_executor_desc": "专注落实，高效完成",
+      "role_supporter": "支持者/协作者",
+      "role_supporter_desc": "乐于助人，营造氛围",
+      "role_detailer": "细节控/完善者",
+      "role_detailer_desc": "关注细节，追求完美",
+      "role_independent": "独立贡献者",
+      "role_independent_desc": "倾向独自完成任务"
+    },
+    "pressureReactions": {
+      "title": "面对压力或挑战时，TA的典型反应是？",
+      "description": "回忆TA在困境或高压下的表现。",
+      "pressure_calm": "冷静专注",
+      "pressure_calm_desc": "保持镇定，专注解决",
+      "pressure_proactive": "积极应对",
+      "pressure_proactive_desc": "迅速行动，寻找方案",
+      "pressure_anxious": "略显焦虑",
+      "pressure_anxious_desc": "可能紧张，但仍努力",
+      "pressure_seeker": "寻求支持",
+      "pressure_seeker_desc": "会向他人求助或倾诉",
+      "pressure_avoidant": "暂时回避",
+      "pressure_avoidant_desc": "短期内可能逃避问题"
+    },
+    "conflictApproaches": {
+      "title": "TA处理工作冲突或不同意见的方式倾向于？",
+      "description": "想想TA在争议情境下的常见做法。",
+      "conflict_direct": "直接面对",
+      "conflict_direct_desc": "挑明问题，寻求解决",
+      "conflict_collaborative": "合作共赢",
+      "conflict_collaborative_desc": "寻找双方满意的方案",
+      "conflict_compromising": "妥协折中",
+      "conflict_compromising_desc": "愿意让步以达成一致",
+      "conflict_avoiding": "尽量回避",
+      "conflict_avoiding_desc": "不喜欢冲突，试图避开",
+      "conflict_assertive": "坚持己见",
+      "conflict_assertive_desc": "强力维护自己的立场"
+    },
+    "taskManagementStyles": {
+      "title": "在任务管理和执行方面，TA的风格是？",
+      "description": "考虑TA如何安排和完成工作任务。",
+      "task_planner": "计划周密",
+      "task_planner_desc": "事前规划，按部就班",
+      "task_flexible": "灵活应变",
+      "task_flexible_desc": "适应变化，随时调整",
+      "task_detail_oriented": "注重细节",
+      "task_detail_oriented_desc": "细致入微，力求精准",
+      "task_result_driven": "结果导向",
+      "task_result_driven_desc": "关注目标，效率优先",
+      "task_procrastinator": "间歇性拖延",
+      "task_procrastinator_desc": "偶尔拖延，但能赶上"
+    },
+    "adaptabilityToChanges": {
+      "title": "面对工作中的变化（如流程调整、技术更新），TA的适应程度如何？",
+      "description": "评估TA对新情况、新环境的接受和调整能力。",
+      "change_embracer": "积极拥抱",
+      "change_embracer_desc": "视变化为机遇，乐于尝试",
+      "change_cautious": "谨慎适应",
+      "change_cautious_desc": "观察了解后，逐步接受",
+      "change_resistant": "略有抵触",
+      "change_resistant_desc": "偏好稳定，不太喜欢变动",
+      "change_passive": "被动接受",
+      "change_passive_desc": "能跟上，但不会主动求变"
+    },
+    "learningAttitudes": {
+      "title": "对于学习新知识和技能、寻求个人成长，TA的态度是？",
+      "description": "观察TA在职业发展和能力提升上的表现。",
+      "learn_proactive": "积极主动",
+      "learn_proactive_desc": "主动学习新技能和知识",
+      "learn_receptive": "乐于接受",
+      "learn_receptive_desc": "对新事物持开放态度",
+      "learn_practical": "实用主义",
+      "learn_practical_desc": "关注能解决实际问题的技能",
+      "learn_complacent": "满足现状",
+      "learn_complacent_desc": "对学习新东西动力不足"
+    },
+    "supplementDescription": {
+      "title": "补充具体描述和事例 (选填)",
+      "description": "请在此处详细描述能体现该同事特点的具体事例、言行、或您观察到的其他重要信息。越具体，分析可能越准确。",
+      "placeholder": "例如：有一次项目紧急，小李主动承担了最难的部分，连续加班并且还帮助了其他同事... 他在会议上总是能提出一些被大家忽略的关键点...",
+      "guidingPromptsTitle": "或点击下方问题，快速补充到描述框中（内容会追加到现有文字后）："
+    },
+    "guidingPrompts": [
+      "这位同事在日常工作中，最让你印象深刻的三个行为或特质是什么？",
+      "描述一下TA在会议或集体讨论中的典型表现。",
+      "TA在面对工作压力、紧急任务或突发状况时，通常会如何应对和表现？",
+      "请举一个具体事例，说明TA在团队协作或项目中扮演的角色和沟通方式。",
+      "TA在接收正面反馈（表扬）和负面反馈（批评）时，分别有怎样的反应？",
+      "在与他人意见不合或发生工作冲突时，TA通常会如何处理？",
+      "如果用三个词来形容TA的沟通风格，你会选择哪三个词？为什么？",
+      "请描述一个你认为最能体现TA人设特点的具体事例。"
+    ],
+    "analyzeButton": "开始分析人设",
+    "analyzing": "AI深度分析中...",
+    "resetButton": "重置所有选项",
+    "resultTitle": "AI分析报告：",
+    "loadingMessage": "AI大师正在为您解构同事性格，请稍候...",
+    "requiredFields": "请至少选择一个维度的特征，或填写补充描述信息！",
+    "apiError": "同事人设分析器今天有点\"迷糊\"，暂时无法服务。",
+    "formatError": "AI返回的分析结果有点\"玄乎\"...",
+    "unknownError": "分析同事人设时发生未知错误，可能是AI的\"读心术\"短路了！"
+  },
+  "weatherMoodLink": {
+    "title": "天气心情关联分析",
+    "description": "选择城市，让AI结合实时天气分析它对你工作心情的微妙影响！",
+    "selectCityLabel": "选择城市",
+    "selectCityPlaceholder": "请选择一个城市",
+    "searchCityPlaceholder": "搜索城市...",
+    "cityNotFound": "未找到城市。",
+    "loadingCities": "正在加载城市列表...",
+    "loadCityError": "无法加载城市列表。请确保 `public/data/Meizu_cities.json` 文件存在且格式正确。",
+    "analyzeMoodButton": "分析心情",
+    "analyzing": "AI正在感知天气与心情...",
+    "resultTitle": "AI心情洞察：",
+    "loadingMessage": "AI正在结合实时天气进行分析，请稍候...",
+    "selectCityError": "请选择一个城市！",
+    "apiError": "天气心情分析仪服务暂时不可用。",
+    "formatError": "AI返回的分析结果格式不正确。",
+    "unknownError": "分析天气与心情时发生未知错误。"
   }
 }

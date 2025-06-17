@@ -49,7 +49,7 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const [locale, setLocale] = useState<ValidLocale>('zh-CN');
-  const { t, loading, error } = useTranslations(locale);
+  const { t, loading, error, translations } = useTranslations(locale);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
   const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
@@ -71,10 +71,18 @@ export function Sidebar({ className }: SidebarProps) {
       console.log('Testing translation keys:', {
         appTitle: t('sidebar.appTitle'),
         home: t('common.home'),
-        categories: t('categories.communication-writing')
+        categories: t('categories.communication-writing'),
+        translationsObject: translations
+      });
+
+      // 测试特定的翻译键
+      const testKeys = ['categories.communication-writing', 'categories.intelligent-analysis'];
+      testKeys.forEach(key => {
+        const result = t(key);
+        console.log(`Translation test - Key: ${key}, Result: ${result}, Is same as key: ${result === key}`);
       });
     }
-  }, [locale, loading, error, t]);
+  }, [locale, loading, error, t, translations]);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
   const toggleCategory = (categoryId: string) => {

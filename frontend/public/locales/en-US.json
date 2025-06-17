@@ -22,11 +22,9 @@
     "office-fun-recreation": "Office Fun & Recreation",
     "office-fun-recreation-description": "Provide relaxing and fun office entertainment tools",
     "time-efficiency": "Time Efficiency",
-    "time-efficiency-description": "Optimize time management and improve work efficiency",
-    "health-wellness": "Health & Wellness",
-    "health-wellness-description": "Focus on physical and mental health, balance work and life",
+    "time-efficiency-description": "Manage time, improve efficiency, and plan personal goals",
     "well-being-health": "Health & Wellness",
-    "well-being-health-description": "Focus on physical and mental health, balance work and life"
+    "well-being-health-description": "Focus on workplace physical and mental health"
   },
   "common": {
     "wip": "Work in Progress",
@@ -420,6 +418,145 @@
     "unexpectedError": "The returned compliment format is a bit strange, I'm having indigestion... 🌀",
     "unknownError": "Unknown error occurred while generating compliments, my praise engine overheated! 🔥"
   },
+  "electronicWoodenFish": {
+    "title": "Electronic Wooden Fish",
+    "description": "Tap gently, merit +1, worries -1. Each tap is a share of cyber energy!",
+    "sessionMerit": "Session Merit:",
+    "todayMerit": "Today's Merit:",
+    "historicalMerit": "Total Merit:",
+    "feedbackMessages": {
+      "merit": "Merit +1",
+      "wealth": "Wealth +1",
+      "wisdom": "Wisdom +1",
+      "inspiration": "Inspiration +1",
+      "bugFix": "Bug -1",
+      "slackingSuccess": "Slacking Success",
+      "badLuckAway": "Bad Luck Away",
+      "worryReduction": "Worry -1",
+      "codeSuccess": "Code Works First Try",
+      "noRequirementChange": "No Requirement Change"
+    }
+  },
+  "meetingBingoGenerator": {
+    "title": "Meeting BINGO Generator",
+    "description": "Enter meeting topics or common phrases (optional), AI will create a customized meeting BINGO card to make boring meetings fun!",
+    "customWordsTitle": "Custom Meeting Topics or Phrases (Optional)",
+    "customWordsDescription": "Enter some words, AI will generate BINGO cards around these words. Leave blank to use built-in \\\"corporate buzzwords\\\" library.",
+    "customWordsPlaceholder": "e.g.: product planning, technical review, quarterly summary, team building, synergy, leverage, granularity...",
+    "generateButton": "Generate BINGO Card",
+    "generating": "Generating BINGO Card...",
+    "gameTitle": "Meeting BINGO Game",
+    "gameDescription": "Click when you hear the word, see who gets a line first!",
+    "winTitle": "BINGO! You Won!",
+    "winMessage": "Congratulations, meeting slacking master! 🎉",
+    "markedCount": "Marked:",
+    "resetButton": "Reset/New Card",
+    "playAgainButton": "Play Again",
+    "freeCell": "FREE",
+    "errorMessage": "Failed to generate BINGO card, please check custom words or try again later",
+    "aiPrompt": "Please generate 25 words or phrases suitable for meeting BINGO based on these topics: {topics}. Please only return the word list, separated by commas, without other explanations."
+  },
+  "pptPhraseGenerator": {
+    "title": "PPT Phrase Generator",
+    "topicLabel": "PPT Topic:",
+    "topicPlaceholder": "e.g.: Digital transformation strategy, Product innovation plan, Team management insights...",
+    "coreMessageLabel": "Core Message (Optional):",
+    "coreMessagePlaceholder": "e.g.: Drive decisions through data, enhance user experience, achieve business growth...",
+    "presentationStyleLabel": "Presentation Style:",
+    "presentationStylePlaceholder": "Select presentation style...",
+    "phraseTypeLabel": "Phrase Type:",
+    "phraseTypePlaceholder": "Select phrase type...",
+    "targetAudienceLabel": "Target Audience (Optional):",
+    "targetAudiencePlaceholder": "e.g.: Technical team, Management, Clients, Investors...",
+    "generateButton": "Generate PPT Phrases!",
+    "generating": "Copywriter is crafting phrases...",
+    "errorTitle": "Creation Failed!",
+    "loadingMessage": "PPT phrases being polished, please wait...✨",
+    "resultTitle": "Great phrases incoming, please check!",
+    "topicRequired": "Please enter PPT topic!",
+    "apiError": "Phrase generation failed, the copywriter might be thinking of better expressions.",
+    "formatError": "AI returned phrase format is incorrect, the copywriter might be brewing better creativity...✨",
+    "unknownError": "Unknown error occurred while generating phrases, inspiration might be temporarily exhausted!💡",
+    "presentationStyles": {
+      "inspiring": {
+        "label": "Inspiring",
+        "description": "Full of passion, boosting morale"
+      },
+      "analytical": {
+        "label": "Analytical",
+        "description": "Data-driven, logically clear"
+      },
+      "humorous": {
+        "label": "Humorous",
+        "description": "Light and fun, entertaining while educating"
+      },
+      "professional": {
+        "label": "Professional",
+        "description": "Formal and professional, authoritative and credible"
+      },
+      "innovative": {
+        "label": "Innovative",
+        "description": "Forward-thinking, leading trends"
+      },
+      "storytelling": {
+        "label": "Storytelling",
+        "description": "Vivid plot, captivating"
+      }
+    },
+    "phraseTypes": {
+      "title": {
+        "label": "Title Phrases",
+        "description": "Suitable as chapter titles or key emphasis"
+      },
+      "opening": {
+        "label": "Opening Remarks",
+        "description": "Presentation opening, grabbing attention"
+      },
+      "transition": {
+        "label": "Transition Phrases",
+        "description": "Connecting different parts, bridging content"
+      },
+      "conclusion": {
+        "label": "Conclusion Phrases",
+        "description": "Ending elevation, leaving deep impression"
+      },
+      "highlight": {
+        "label": "Highlight Phrases",
+        "description": "Emphasizing key points, finishing touch"
+      }
+    },
+    "aiPrompt": "PPT Topic: {topic}\n{coreMessage}Presentation Style: {style}\nPhrase Type: {type}\n{audience}\n\nPlease generate multiple excellent phrases for my PPT, requiring conciseness, impact, and memorability."
+  },
+  "careerPathForecaster": {
+    "title": "Career Path Forecaster",
+    "description": "Enter your career information and let AI analyze potential development paths, opportunities, and challenges to foresee your future!",
+    "currentRoleLabel": "Current Position/Industry",
+    "currentRolePlaceholder": "e.g., Software Engineer / Tech, Marketing Specialist / FMCG",
+    "skillsLabel": "Core Skills",
+    "skillsPlaceholder": "e.g., JavaScript, Python, Project Management, Data Analysis, Communication (comma-separated)",
+    "experienceLabel": "Years of Experience",
+    "experiencePlaceholder": "Select years of experience...",
+    "experienceLevels": {
+      "0": "Intern/Fresh Graduate (Less than 1 year)",
+      "1-3": "Junior (1-3 years)",
+      "3-5": "Mid-level (3-5 years)",
+      "5-10": "Senior (5-10 years)",
+      "10+": "Expert/Veteran (10+ years)"
+    },
+    "aspirationsLabel": "Career Goals/Aspirations",
+    "aspirationsPlaceholder": "e.g., Become a technical expert, advance to management, start a business, transition to a more meaningful industry",
+    "preferencesLabel": "Work Preferences (Optional)",
+    "preferencesPlaceholder": "e.g., Remote work, flexible hours, innovation-focused team culture, work-life balance",
+    "predictButton": "Predict My Career Path",
+    "predicting": "Predicting your career destiny...",
+    "resultTitle": "AI Career Insights:",
+    "loadingMessage": "AI is connecting with the stars to read your professional future, please wait...",
+    "requiredFields": "Please fill in current position/industry, core skills, and career goals/aspirations!",
+    "apiError": "AI prediction service is temporarily unavailable, it might be looking further into your future.",
+    "formatError": "AI returned prediction results in an unexpected format, the threads of destiny might be a bit tangled. 🔮",
+    "unknownError": "An unknown error occurred while predicting career destiny. Please try again later.",
+    "aiPrompt": "My current career information is as follows:\n- Current Position/Industry: {currentRole}\n- Core Skills: {skills}\n- Years of Experience: {experience}\n- Career Goals/Aspirations: {aspirations}\n{preferences}\n\nBased on the above information, please analyze my future career development paths. Please include:\n1. Possible career development directions (2-3 options).\n2. Key success factors and skill improvement points for each direction.\n3. Potential opportunities and challenges.\n4. Some advice and encouraging words.\nPlease provide the analysis with an insightful and positive tone."
+  },
   "header": {
     "appTitle": "Essential Workplace Toolkit",
     "homepageTitle": "Essential Workplace Toolkit - Home",
@@ -461,5 +598,148 @@
     "loadingText": "Translating corporate speak...",
     "copyButton": "Copy Translation",
     "copiedButton": "Copied!"
+  },
+  "colleaguePersonaAnalyzer": {
+    "title": "Colleague Persona Analyzer",
+    "description": "Select characteristics across various dimensions and add specific examples to help AI accurately analyze your colleague's personality traits and behavioral patterns.",
+    "communicationStyles": {
+      "title": "What is their core communication style?",
+      "description": "Choose the option that best represents their daily communication approach.",
+      "comm_direct": "Direct & Honest",
+      "comm_direct_desc": "Clear viewpoints, no beating around the bush",
+      "comm_diplomatic": "Tactful & Subtle",
+      "comm_diplomatic_desc": "Mindful of approach, considerate of feelings",
+      "comm_logical": "Logical & Clear",
+      "comm_logical_desc": "Well-structured, data and fact-focused",
+      "comm_expressive": "Expressive & Vivid",
+      "comm_expressive_desc": "Uses metaphors, highly engaging",
+      "comm_reserved": "Concise & Precise",
+      "comm_reserved_desc": "Few words, but always to the point"
+    },
+    "teamRoles": {
+      "title": "What role do they typically play in team collaboration?",
+      "description": "Think about their typical contribution style in team projects.",
+      "role_leader": "Leader/Coordinator",
+      "role_leader_desc": "Organizes and guides, drives progress",
+      "role_innovator": "Innovator/Idea Generator",
+      "role_innovator_desc": "Always has new ideas, challenges conventions",
+      "role_executor": "Executor/Doer",
+      "role_executor_desc": "Focuses on implementation, completes efficiently",
+      "role_supporter": "Supporter/Collaborator",
+      "role_supporter_desc": "Helpful, creates positive atmosphere",
+      "role_detailer": "Detail-oriented/Perfectionist",
+      "role_detailer_desc": "Focuses on details, pursues perfection",
+      "role_independent": "Independent Contributor",
+      "role_independent_desc": "Prefers to complete tasks independently"
+    },
+    "pressureReactions": {
+      "title": "What is their typical reaction when facing pressure or challenges?",
+      "description": "Recall their performance under difficult or high-pressure situations.",
+      "pressure_calm": "Calm & Focused",
+      "pressure_calm_desc": "Stays composed, focuses on solutions",
+      "pressure_proactive": "Proactive Response",
+      "pressure_proactive_desc": "Takes quick action, seeks solutions",
+      "pressure_anxious": "Slightly Anxious",
+      "pressure_anxious_desc": "May feel nervous but still tries hard",
+      "pressure_seeker": "Seeks Support",
+      "pressure_seeker_desc": "Will ask others for help or share concerns",
+      "pressure_avoidant": "Temporarily Avoidant",
+      "pressure_avoidant_desc": "May avoid problems in the short term"
+    },
+    "conflictApproaches": {
+      "title": "How do they tend to handle work conflicts or disagreements?",
+      "description": "Think about their common approaches in controversial situations.",
+      "conflict_direct": "Direct Confrontation",
+      "conflict_direct_desc": "Addresses issues directly, seeks resolution",
+      "conflict_collaborative": "Collaborative Win-Win",
+      "conflict_collaborative_desc": "Seeks mutually satisfactory solutions",
+      "conflict_compromising": "Compromising",
+      "conflict_compromising_desc": "Willing to make concessions for agreement",
+      "conflict_avoiding": "Avoidance",
+      "conflict_avoiding_desc": "Dislikes conflict, tries to avoid it",
+      "conflict_assertive": "Assertive",
+      "conflict_assertive_desc": "Strongly defends their position"
+    },
+    "taskManagementStyles": {
+      "title": "What is their style in task management and execution?",
+      "description": "Consider how they organize and complete work tasks.",
+      "task_planner": "Thorough Planner",
+      "task_planner_desc": "Plans ahead, follows step-by-step approach",
+      "task_flexible": "Flexible & Adaptable",
+      "task_flexible_desc": "Adapts to changes, adjusts as needed",
+      "task_detail_oriented": "Detail-oriented",
+      "task_detail_oriented_desc": "Meticulous, strives for precision",
+      "task_result_driven": "Result-driven",
+      "task_result_driven_desc": "Focuses on goals, prioritizes efficiency",
+      "task_procrastinator": "Occasional Procrastinator",
+      "task_procrastinator_desc": "Sometimes delays but catches up"
+    },
+    "adaptabilityToChanges": {
+      "title": "How well do they adapt to workplace changes (process adjustments, tech updates)?",
+      "description": "Assess their acceptance and adjustment ability to new situations and environments.",
+      "change_embracer": "Embraces Change",
+      "change_embracer_desc": "Views change as opportunity, eager to try",
+      "change_cautious": "Cautiously Adaptive",
+      "change_cautious_desc": "Observes and understands before gradually accepting",
+      "change_resistant": "Slightly Resistant",
+      "change_resistant_desc": "Prefers stability, doesn't like changes much",
+      "change_passive": "Passively Accepting",
+      "change_passive_desc": "Can keep up but won't actively seek change"
+    },
+    "learningAttitudes": {
+      "title": "What is their attitude toward learning new knowledge and skills, seeking personal growth?",
+      "description": "Observe their performance in professional development and skill enhancement.",
+      "learn_proactive": "Proactive Learner",
+      "learn_proactive_desc": "Actively learns new skills and knowledge",
+      "learn_receptive": "Open & Receptive",
+      "learn_receptive_desc": "Open-minded toward new things",
+      "learn_practical": "Pragmatic Learner",
+      "learn_practical_desc": "Focuses on skills that solve practical problems",
+      "learn_complacent": "Content with Status Quo",
+      "learn_complacent_desc": "Lacks motivation to learn new things"
+    },
+    "supplementDescription": {
+      "title": "Additional Specific Descriptions and Examples (Optional)",
+      "description": "Please provide detailed descriptions of specific examples, behaviors, or other important information that reflects this colleague's characteristics. The more specific, the more accurate the analysis may be.",
+      "placeholder": "e.g., During an urgent project, John voluntarily took on the most difficult part, worked overtime continuously, and helped other colleagues... He always brings up key points that others overlook in meetings...",
+      "guidingPromptsTitle": "Or click the questions below to quickly add to the description box (content will be appended to existing text):"
+    },
+    "guidingPrompts": [
+      "What are the three most impressive behaviors or traits of this colleague in daily work?",
+      "Describe their typical performance in meetings or group discussions.",
+      "How do they usually respond and perform when facing work pressure, urgent tasks, or unexpected situations?",
+      "Give a specific example illustrating their role and communication style in team collaboration or projects.",
+      "How do they typically react when receiving positive feedback (praise) and negative feedback (criticism)?",
+      "How do they usually handle disagreements or work conflicts with others?",
+      "If you had to describe their communication style with three words, which three would you choose and why?",
+      "Describe a specific example that you think best represents their personality characteristics."
+    ],
+    "analyzeButton": "Start Persona Analysis",
+    "analyzing": "AI deep analysis in progress...",
+    "resetButton": "Reset All Options",
+    "resultTitle": "AI Analysis Report:",
+    "loadingMessage": "AI master is deconstructing your colleague's personality, please wait...",
+    "requiredFields": "Please select at least one dimensional characteristic or fill in supplementary description!",
+    "apiError": "The colleague persona analyzer is a bit \"confused\" today and temporarily unavailable.",
+    "formatError": "AI returned analysis results that are a bit \"mysterious\"...",
+    "unknownError": "An unknown error occurred while analyzing colleague persona, AI's \"mind reading\" might have short-circuited!"
+  },
+  "weatherMoodLink": {
+    "title": "Weather Mood Correlation Analysis",
+    "description": "Select a city and let AI analyze how real-time weather subtly affects your work mood!",
+    "selectCityLabel": "Select City",
+    "selectCityPlaceholder": "Please select a city",
+    "searchCityPlaceholder": "Search cities...",
+    "cityNotFound": "No cities found.",
+    "loadingCities": "Loading city list...",
+    "loadCityError": "Unable to load city list. Please ensure the `public/data/Meizu_cities.json` file exists and is properly formatted.",
+    "analyzeMoodButton": "Analyze Mood",
+    "analyzing": "AI is sensing weather and mood...",
+    "resultTitle": "AI Mood Insights:",
+    "loadingMessage": "AI is analyzing with real-time weather data, please wait...",
+    "selectCityError": "Please select a city!",
+    "apiError": "Weather mood analysis service is temporarily unavailable.",
+    "formatError": "AI returned analysis results in an incorrect format.",
+    "unknownError": "An unknown error occurred while analyzing weather and mood."
   }
 }

@@ -100,7 +100,7 @@ export function useTranslations(locale: ValidLocale) {
   }, [locale]);
 
   const t = useCallback(
-    (key: string, params?: Record<string, string>) => {
+    (key: string, params?: Record<string, string> | { returnObjects?: boolean }) => {
       if (loading) {
         return key; // 加载中时返回key
       }
@@ -110,9 +110,21 @@ export function useTranslations(locale: ValidLocale) {
         return key;
       }
 
+      // 处理 returnObjects 参数
+      const isReturnObjects =
+        params && typeof params === 'object' && 'returnObjects' in params && params.returnObjects;
+      const interpolationParams = isReturnObjects ? {} : (params as Record<string, string>) || {};
+
       const value = getNestedValue(translations, key);
-      if (typeof value === 'string') {
-        return params ? interpolate(value, params) : value;
+
+      if (value !== undefined) {
+        if (typeof value === 'string') {
+          return interpolationParams && Object.keys(interpolationParams).length > 0
+            ? interpolate(value, interpolationParams)
+            : value;
+        } else if (isReturnObjects) {
+          return value; // 返回对象或数组
+        }
       }
 
       // 如果找不到翻译，记录警告并返回key
@@ -122,5 +134,5 @@ export function useTranslations(locale: ValidLocale) {
     [translations, loading, error, locale]
   );
 
-  return { t, loading, error };
+  return { t, loading, error, translations };
 }

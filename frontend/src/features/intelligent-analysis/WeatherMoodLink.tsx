@@ -15,11 +15,17 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/Popover";
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Check, ChevronsUpDown, Loader2, Sparkles } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
+interface WeatherMoodLinkProps {
+  locale?: ValidLocale;
+}
 
 interface CityInfo {
   city: string;
@@ -42,7 +48,9 @@ interface WeatherApiResponse {
   }>;
 }
 
-const WeatherMoodLink: React.FC = () => {
+const WeatherMoodLink: React.FC<WeatherMoodLinkProps> = ({ locale = 'zh-CN' }) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [cities, setCities] = useState<CityInfo[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<string>('');
   const [moodAnalysis, setMoodAnalysis] = useState<string>('');
@@ -73,7 +81,7 @@ const WeatherMoodLink: React.FC = () => {
 
   const handleSubmit = useCallback(async () => {
     if (!selectedCityId) {
-      setError('请选择一个城市！');
+      setError(t('weatherMoodLink.selectCityError'));
       setMoodAnalysis('');
       return;
     }
@@ -96,11 +104,12 @@ const WeatherMoodLink: React.FC = () => {
         body: JSON.stringify({
           messages: [{ role: 'user', content: selectedCityId }], // Send only the cityId
           toolId: 'weather-mood-link',
+          language: locale === 'en-US' ? 'en' : 'zh'
         }),
       });
 
       if (!apiChatResponse.ok) {
-        const errorData = await apiChatResponse.json().catch(() => ({ message: '天气心情分析仪服务暂时不可用。' }));
+        const errorData = await apiChatResponse.json().catch(() => ({ message: t('weatherMoodLink.apiError') }));
         throw new Error(errorData.message || `HTTP error! status: ${apiChatResponse.status}`);
       }
 
@@ -108,38 +117,49 @@ const WeatherMoodLink: React.FC = () => {
       if (data && data.assistantMessage) {
         setMoodAnalysis(data.assistantMessage);
       } else {
-        throw new Error('AI返回的分析结果格式不正确。');
+        throw new Error(t('weatherMoodLink.formatError'));
       }
 
     } catch (e) {
-      const errorMessage = e instanceof Error ? e.message : '分析天气与心情时发生未知错误。';
+      const errorMessage = e instanceof Error ? e.message : t('weatherMoodLink.unknownError');
       setError(errorMessage);
       console.error("Error in handleSubmit for WeatherMoodLink:", errorMessage, e);
     } finally {
       setIsLoading(false);
     }
-  }, [selectedCityId]);
+  }, [selectedCityId, t, locale]);
+
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="sun behind cloud" className="mr-2 text-4xl">🌤️</span>
-          天气心情关联分析
+          {t('weatherMoodLink.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          选择城市，让AI结合实时天气分析它对你工作心情的微妙影响！
+          {t('weatherMoodLink.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 pt-6">
         <div>
           <label htmlFor="city-combobox-trigger" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            选择城市 <span className="text-red-500">*</span>
+            {t('weatherMoodLink.selectCityLabel')} <span className="text-red-500">*</span>
           </label>
           {isLoadingCities ? (
             <div className="flex items-center space-x-2">
               <Loader2 className="h-5 w-5 animate-spin" />
-              <span>正在加载城市列表...</span>
+              <span>{t('weatherMoodLink.loadingCities')}</span>
             </div>
           ) : cities.length > 0 ? (
             <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
@@ -153,15 +173,15 @@ const WeatherMoodLink: React.FC = () => {
                 >
                   {selectedCityId
                     ? cities.find((city) => city.cityid === selectedCityId)?.city
-                    : "请选择一个城市"}
+                    : t('weatherMoodLink.selectCityPlaceholder')}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[--radix-popover-trigger-width] p-0 max-h-60 overflow-y-auto">
                 <Command>
-                  <CommandInput placeholder="搜索城市..." />
+                  <CommandInput placeholder={t('weatherMoodLink.searchCityPlaceholder')} />
                   <CommandList>
-                    <CommandEmpty>未找到城市。</CommandEmpty>
+                    <CommandEmpty>{t('weatherMoodLink.cityNotFound')}</CommandEmpty>
                     <CommandGroup>
                       {cities.map((city) => (
                         <CommandItem
@@ -192,16 +212,16 @@ const WeatherMoodLink: React.FC = () => {
               </PopoverContent>
             </Popover>
           ) : (
-            <p className="text-red-500">无法加载城市列表。请确保 `public/data/Meizu_cities.json` 文件存在且格式正确。</p>
+            <p className="text-red-500">{t('weatherMoodLink.loadCityError')}</p>
           )}
         </div>
 
         <Button onClick={handleSubmit} disabled={isLoading || isLoadingCities || !selectedCityId} className="w-full">
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在感知天气与心情...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('weatherMoodLink.analyzing')}
             </>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 分析心情
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('weatherMoodLink.analyzeMoodButton')}
             </>
           )}
         </Button>
@@ -215,7 +235,7 @@ const WeatherMoodLink: React.FC = () => {
 
         {moodAnalysis && !isLoading && (
           <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2 text-center text-sky-700 dark:text-sky-300">AI心情洞察：</h3>
+            <h3 className="text-lg font-semibold mb-2 text-center text-sky-700 dark:text-sky-300">{t('weatherMoodLink.resultTitle')}</h3>
             <div className="p-4 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{moodAnalysis}</ReactMarkdown>
             </div>
@@ -224,7 +244,7 @@ const WeatherMoodLink: React.FC = () => {
          {isLoading && !moodAnalysis && !error && (
           <div className="text-center py-6 flex flex-col items-center justify-center">
             <Loader2 className="h-10 w-10 animate-spin text-sky-500 mb-3" />
-            <p className="text-neutral-500 dark:text-neutral-400">AI正在结合实时天气进行分析，请稍候...</p>
+            <p className="text-neutral-500 dark:text-neutral-400">{t('weatherMoodLink.loadingMessage')}</p>
           </div>
         )}
       </CardContent>

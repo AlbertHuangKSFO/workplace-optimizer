@@ -53,8 +53,27 @@ export function Header() {
     if (cleanPath === '/') return t('header.homepageTitle');
     if (cleanPath.includes('/tools/')) {
       const toolName = cleanPath.split('/tools/')[1];
-      const toolTitle = t(`tools.${toolName}`);
-      return `${t('header.currentTool')}: ${toolTitle || t('header.unknownTool')}`;
+      // 尝试获取工具的翻译名称
+      try {
+        const translationKey = `tools.${toolName}`;
+        const toolTitle = t(translationKey);
+        // 检查是否真的获取到了翻译，如果返回的是key本身说明没有翻译
+        if (toolTitle && toolTitle !== translationKey) {
+          return `${t('header.currentTool')}: ${toolTitle}`;
+        } else {
+          // 如果没有翻译，显示格式化的工具名称
+          const formattedToolName = toolName.split('-').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+          ).join(' ');
+          return `${t('header.currentTool')}: ${formattedToolName}`;
+        }
+      } catch (error) {
+        // 如果翻译出错，显示格式化的工具名称
+        const formattedToolName = toolName.split('-').map(word =>
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+        return `${t('header.currentTool')}: ${formattedToolName}`;
+      }
     }
     return t('header.appTitle');
   };
