@@ -1,13 +1,13 @@
-import { ValidLocale } from '@/lib/i18n';
+import TeamMoodDetector from '@/features/analysis/mood-detector/TeamMoodDetector';
+import { getValidLocale, ValidLocale } from '@/lib/i18n';
 
 interface PageProps {
-  params: {
-    locale: ValidLocale;
-  };
+  params: Promise<{ locale: string }>;
 }
 
-export default function Page({ params }: PageProps) {
-  // 动态导入原始页面组件
-  const OriginalPage = require('@/app/tools/team-mood-detector/page').default;
-  return <OriginalPage />;
+export default async function TeamMoodDetectorPage({ params }: PageProps) {
+  const { locale } = await params;
+  const validLocale = getValidLocale(locale) as ValidLocale;
+
+  return <TeamMoodDetector locale={validLocale} />;
 }

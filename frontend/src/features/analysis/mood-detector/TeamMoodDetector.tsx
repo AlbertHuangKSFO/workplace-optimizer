@@ -5,36 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Heart, Loader2, Sparkles, TrendingUp, Users } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const teamSizes = [
-  { value: 'small', label: '小团队 (3-8人)', emoji: '👥', description: '紧密协作的小型团队' },
-  { value: 'medium', label: '中等团队 (9-20人)', emoji: '👨‍👩‍👧‍👦', description: '中等规模的工作团队' },
-  { value: 'large', label: '大团队 (21-50人)', emoji: '🏢', description: '大型部门或项目团队' },
-  { value: 'department', label: '部门级别 (50+人)', emoji: '🏛️', description: '整个部门或事业部' },
-];
+interface TeamMoodDetectorProps {
+  locale: ValidLocale;
+}
 
-const observationPeriods = [
-  { value: 'recent', label: '最近一周', emoji: '📅', description: '近期的团队状态' },
-  { value: 'monthly', label: '最近一个月', emoji: '📊', description: '月度团队表现' },
-  { value: 'quarterly', label: '最近一季度', emoji: '📈', description: '季度团队发展' },
-  { value: 'ongoing', label: '持续观察', emoji: '🔍', description: '长期的团队动态' },
-];
-
-const analysisTypes = [
-  { value: 'comprehensive', label: '综合分析', emoji: '🎯', description: '全面的团队氛围评估' },
-  { value: 'communication', label: '沟通状况', emoji: '💬', description: '团队沟通效率和质量' },
-  { value: 'collaboration', label: '协作效果', emoji: '🤝', description: '团队协作和配合情况' },
-  { value: 'motivation', label: '工作积极性', emoji: '⚡', description: '团队成员的工作热情' },
-  { value: 'stress-level', label: '压力水平', emoji: '😰', description: '团队整体压力状况' },
-  { value: 'satisfaction', label: '满意度', emoji: '😊', description: '工作满意度和幸福感' },
-];
-
-function TeamMoodDetector(): React.JSX.Element {
+function TeamMoodDetector({ locale }: TeamMoodDetectorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
   const [teamSize, setTeamSize] = useState<string>('medium');
   const [observationPeriod, setObservationPeriod] = useState<string>('recent');
   const [analysisType, setAnalysisType] = useState<string>('comprehensive');
@@ -46,10 +30,45 @@ function TeamMoodDetector(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // 团队规模选项
+  const teamSizes = useMemo(() => [
+    { value: 'small', emoji: '👥' },
+    { value: 'medium', emoji: '👨‍👩‍👧‍👦' },
+    { value: 'large', emoji: '🏢' },
+    { value: 'department', emoji: '🏛️' },
+  ], []);
+
+  // 观察周期选项
+  const observationPeriods = useMemo(() => [
+    { value: 'recent', emoji: '📅' },
+    { value: 'monthly', emoji: '📊' },
+    { value: 'quarterly', emoji: '📈' },
+    { value: 'ongoing', emoji: '🔍' },
+  ], []);
+
+  // 分析类型选项
+  const analysisTypes = useMemo(() => [
+    { value: 'comprehensive', emoji: '🎯' },
+    { value: 'communication', emoji: '💬' },
+    { value: 'collaboration', emoji: '🤝' },
+    { value: 'motivation', emoji: '⚡' },
+    { value: 'stress-level', emoji: '😰' },
+    { value: 'satisfaction', emoji: '😊' },
+  ], []);
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+        <span className="ml-2 text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!teamDescription.trim()) {
-      setError('请描述您的团队基本情况！');
+      setError(t('teamMoodDetector.requiredField'));
       setAnalysisResult('');
       return;
     }
@@ -58,14 +77,21 @@ function TeamMoodDetector(): React.JSX.Element {
     setError(null);
     setAnalysisResult('');
 
-    const selectedTeamSize = teamSizes.find(t => t.value === teamSize);
+    const selectedTeamSize = teamSizes.find(ts => ts.value === teamSize);
     const selectedPeriod = observationPeriods.find(p => p.value === observationPeriod);
     const selectedAnalysis = analysisTypes.find(a => a.value === analysisType);
 
-    const userPrompt = `
-团队规模：${selectedTeamSize?.label} - ${selectedTeamSize?.description}
-观察周期：${selectedPeriod?.label} - ${selectedPeriod?.description}
-分析重点：${selectedAnalysis?.label} - ${selectedAnalysis?.description}
+    const teamSizeLabel = t(`teamMoodDetector.teamSizes.${teamSize}.label`);
+    const teamSizeDesc = t(`teamMoodDetector.teamSizes.${teamSize}.description`);
+    const periodLabel = t(`teamMoodDetector.observationPeriods.${observationPeriod}.label`);
+    const periodDesc = t(`teamMoodDetector.observationPeriods.${observationPeriod}.description`);
+    const analysisLabel = t(`teamMoodDetector.analysisTypes.${analysisType}.label`);
+    const analysisDesc = t(`teamMoodDetector.analysisTypes.${analysisType}.description`);
+
+    const userPrompt = locale === 'zh-CN' ? `
+团队规模：${teamSizeLabel} - ${teamSizeDesc}
+观察周期：${periodLabel} - ${periodDesc}
+分析重点：${analysisLabel} - ${analysisDesc}
 
 团队描述：
 ${teamDescription}
@@ -75,6 +101,19 @@ ${specificConcerns.trim() ? `具体关注点：${specificConcerns}` : ''}
 ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
 
 请分析团队氛围状况，提供专业的评估报告和改进建议。
+` : `
+Team Size: ${teamSizeLabel} - ${teamSizeDesc}
+Observation Period: ${periodLabel} - ${periodDesc}
+Analysis Focus: ${analysisLabel} - ${analysisDesc}
+
+Team Description:
+${teamDescription}
+
+${observedBehaviors.trim() ? `Observed Behaviors: ${observedBehaviors}` : ''}
+${specificConcerns.trim() ? `Specific Concerns: ${specificConcerns}` : ''}
+${recentEvents.trim() ? `Recent Important Events: ${recentEvents}` : ''}
+
+Please analyze the team atmosphere and provide a professional assessment report and improvement suggestions.
 `;
 
     try {
@@ -86,11 +125,12 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'team-mood-detector',
+          language: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '氛围分析失败，可能是团队心理专家在深入思考。' }));
+        const errorData = await response.json().catch(() => ({ message: t('teamMoodDetector.apiError') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -100,11 +140,11 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         setAnalysisResult(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure:', data);
-        setError('AI返回的分析格式有误，团队心理专家可能在重新整理思路...👥');
+        setError(t('teamMoodDetector.formatError'));
       }
     } catch (e) {
       console.error('Failed to analyze team mood:', e);
-      setError(e instanceof Error ? e.message : '分析团队氛围时发生未知错误，团队诊断需要更多时间！💭');
+      setError(e instanceof Error ? e.message : t('teamMoodDetector.unknownError'));
     }
 
     setIsLoading(false);
@@ -117,7 +157,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <Users className="w-8 h-8 text-cyan-500 dark:text-cyan-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">团队氛围检测器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('teamMoodDetector.title')}</h1>
         <Heart className="w-8 h-8 text-cyan-500 dark:text-cyan-400 ml-2" />
       </div>
 
@@ -125,7 +165,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="teamSize" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              团队规模：
+              {t('teamMoodDetector.teamSizeLabel')}
             </Label>
             <Select value={teamSize} onValueChange={setTeamSize}>
               <SelectTrigger className={cn(
@@ -133,7 +173,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
               )}>
-                <SelectValue placeholder="选择团队规模..." />
+                <SelectValue placeholder={t('teamMoodDetector.teamSizePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -149,8 +189,8 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{size.emoji} {size.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{size.description}</span>
+                      <span>{size.emoji} {t(`teamMoodDetector.teamSizes.${size.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`teamMoodDetector.teamSizes.${size.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -159,7 +199,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           </div>
           <div>
             <Label htmlFor="observationPeriod" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              观察周期：
+              {t('teamMoodDetector.observationPeriodLabel')}
             </Label>
             <Select value={observationPeriod} onValueChange={setObservationPeriod}>
               <SelectTrigger className={cn(
@@ -167,7 +207,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
               )}>
-                <SelectValue placeholder="选择观察周期..." />
+                <SelectValue placeholder={t('teamMoodDetector.observationPeriodPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -183,8 +223,8 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{period.emoji} {period.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{period.description}</span>
+                      <span>{period.emoji} {t(`teamMoodDetector.observationPeriods.${period.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`teamMoodDetector.observationPeriods.${period.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -193,7 +233,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           </div>
           <div>
             <Label htmlFor="analysisType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              分析重点：
+              {t('teamMoodDetector.analysisTypeLabel')}
             </Label>
             <Select value={analysisType} onValueChange={setAnalysisType}>
               <SelectTrigger className={cn(
@@ -201,7 +241,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-cyan-500 focus:border-cyan-500 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
               )}>
-                <SelectValue placeholder="选择分析重点..." />
+                <SelectValue placeholder={t('teamMoodDetector.analysisTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -217,8 +257,8 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{analysis.emoji} {analysis.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{analysis.description}</span>
+                      <span>{analysis.emoji} {t(`teamMoodDetector.analysisTypes.${analysis.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`teamMoodDetector.analysisTypes.${analysis.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -228,13 +268,13 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         </div>
         <div>
           <Label htmlFor="teamDescription" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            团队描述：
+            {t('teamMoodDetector.teamDescriptionLabel')}
           </Label>
           <Textarea
             id="teamDescription"
             value={teamDescription}
             onChange={(e) => setTeamDescription(e.target.value)}
-            placeholder="描述您的团队基本情况，如部门职能、工作性质、团队组成等..."
+            placeholder={t('teamMoodDetector.teamDescriptionPlaceholder')}
             className={cn(
               "w-full min-h-[100px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -246,13 +286,13 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         </div>
         <div>
           <Label htmlFor="observedBehaviors" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            观察到的行为（选填）：
+            {t('teamMoodDetector.observedBehaviorsLabel')}
           </Label>
           <Textarea
             id="observedBehaviors"
             value={observedBehaviors}
             onChange={(e) => setObservedBehaviors(e.target.value)}
-            placeholder="例如：成员间互动减少、会议效率低下、抱怨增多、加班常态化..."
+            placeholder={t('teamMoodDetector.observedBehaviorsPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -265,13 +305,13 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="specificConcerns" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              具体关注点（选填）：
+              {t('teamMoodDetector.specificConcernsLabel')}
             </Label>
             <Textarea
               id="specificConcerns"
               value={specificConcerns}
               onChange={(e) => setSpecificConcerns(e.target.value)}
-              placeholder="例如：新项目压力、团队成员流失、领导风格问题..."
+              placeholder={t('teamMoodDetector.specificConcernsPlaceholder')}
               className={cn(
                 "w-full min-h-[60px]",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -283,13 +323,13 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           </div>
           <div>
             <Label htmlFor="recentEvents" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              近期重要事件（选填）：
+              {t('teamMoodDetector.recentEventsLabel')}
             </Label>
             <Textarea
               id="recentEvents"
               value={recentEvents}
               onChange={(e) => setRecentEvents(e.target.value)}
-              placeholder="例如：组织架构调整、重要项目上线、季度绩效考核..."
+              placeholder={t('teamMoodDetector.recentEventsPlaceholder')}
               className={cn(
                 "w-full min-h-[60px]",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -310,9 +350,9 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 分析中...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('teamMoodDetector.analyzing')}</>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 检测团队氛围</>
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('teamMoodDetector.analyzeButton')}</>
           )}
         </Button>
       </form>
@@ -323,7 +363,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">分析失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('teamMoodDetector.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -334,7 +374,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
       {isLoading && !analysisResult && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-cyan-500 dark:text-cyan-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">团队心理专家正在深入分析团队氛围...💭</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('teamMoodDetector.loadingMessage')}</p>
         </div>
       )}
 
@@ -345,7 +385,7 @@ ${recentEvents.trim() ? `近期重要事件：${recentEvents}` : ''}
         )}>
           <CardHeader>
             <CardTitle className="text-cyan-600 dark:text-cyan-400 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2" /> 团队氛围分析报告
+              <TrendingUp className="w-5 h-5 mr-2" /> {t('teamMoodDetector.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

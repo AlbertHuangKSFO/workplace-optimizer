@@ -27,10 +27,10 @@ import React, { useCallback, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface NicknameGeneratorProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
-function NicknameGenerator({ locale = 'zh-CN' }: NicknameGeneratorProps): React.JSX.Element {
+function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Element {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [objectType, setObjectType] = useState<string>('');

@@ -725,12 +725,12 @@
     "unknownError": "An unknown error occurred while analyzing colleague persona, AI's \"mind reading\" might have short-circuited!"
   },
   "weatherMoodLink": {
-    "title": "Weather Mood Correlation Analysis",
+    "title": "Weather Mood Link Analysis",
     "description": "Select a city and let AI analyze how real-time weather subtly affects your work mood!",
     "selectCityLabel": "Select City",
     "selectCityPlaceholder": "Please select a city",
     "searchCityPlaceholder": "Search cities...",
-    "cityNotFound": "No cities found.",
+    "cityNotFound": "City not found.",
     "loadingCities": "Loading city list...",
     "loadCityError": "Unable to load city list. Please ensure the `public/data/Meizu_cities.json` file exists and is properly formatted.",
     "analyzeMoodButton": "Analyze Mood",
@@ -738,8 +738,378 @@
     "resultTitle": "AI Mood Insights:",
     "loadingMessage": "AI is analyzing with real-time weather data, please wait...",
     "selectCityError": "Please select a city!",
-    "apiError": "Weather mood analysis service is temporarily unavailable.",
-    "formatError": "AI returned analysis results in an incorrect format.",
-    "unknownError": "An unknown error occurred while analyzing weather and mood."
+    "apiError": "Weather mood analyzer service is temporarily unavailable.",
+    "formatError": "AI returned analysis results in incorrect format.",
+    "unknownError": "Unknown error occurred while analyzing weather and mood."
+  },
+  "teamMoodDetector": {
+    "title": "Team Mood Detector",
+    "description": "Through team observation and description, AI helps you deeply analyze team atmosphere, providing professional assessment reports and improvement suggestions",
+    "teamSizeLabel": "Team Size:",
+    "teamSizePlaceholder": "Select team size...",
+    "observationPeriodLabel": "Observation Period:",
+    "observationPeriodPlaceholder": "Select observation period...",
+    "analysisTypeLabel": "Analysis Focus:",
+    "analysisTypePlaceholder": "Select analysis focus...",
+    "teamDescriptionLabel": "Team Description:",
+    "teamDescriptionPlaceholder": "Describe your team's basic situation, such as department function, work nature, team composition, etc...",
+    "observedBehaviorsLabel": "Observed Behaviors (Optional):",
+    "observedBehaviorsPlaceholder": "E.g.: Reduced interaction between members, low meeting efficiency, increased complaints, normalized overtime...",
+    "specificConcernsLabel": "Specific Concerns (Optional):",
+    "specificConcernsPlaceholder": "E.g.: New project pressure, team member turnover, leadership style issues...",
+    "recentEventsLabel": "Recent Important Events (Optional):",
+    "recentEventsPlaceholder": "E.g.: Organizational restructuring, major project launch, quarterly performance review...",
+    "analyzeButton": "Detect Team Mood",
+    "analyzing": "Analyzing...",
+    "resultTitle": "Team Mood Analysis Report",
+    "loadingMessage": "Team psychology expert is deeply analyzing team atmosphere...💭",
+    "requiredField": "Please describe your team's basic situation!",
+    "apiError": "Mood analysis failed, the team psychology expert might be thinking deeply.",
+    "formatError": "AI returned analysis format is incorrect, team psychology expert might be reorganizing thoughts...👥",
+    "unknownError": "Unknown error occurred while analyzing team mood, team diagnosis needs more time!💭",
+    "errorTitle": "Analysis Failed!",
+    "teamSizes": {
+      "small": {
+        "label": "Small Team (3-8 people)",
+        "description": "Close-knit small team"
+      },
+      "medium": {
+        "label": "Medium Team (9-20 people)",
+        "description": "Medium-sized work team"
+      },
+      "large": {
+        "label": "Large Team (21-50 people)",
+        "description": "Large department or project team"
+      },
+      "department": {
+        "label": "Department Level (50+ people)",
+        "description": "Entire department or business unit"
+      }
+    },
+    "observationPeriods": {
+      "recent": {
+        "label": "Recent Week",
+        "description": "Recent team status"
+      },
+      "monthly": {
+        "label": "Recent Month",
+        "description": "Monthly team performance"
+      },
+      "quarterly": {
+        "label": "Recent Quarter",
+        "description": "Quarterly team development"
+      },
+      "ongoing": {
+        "label": "Ongoing Observation",
+        "description": "Long-term team dynamics"
+      }
+    },
+    "analysisTypes": {
+      "comprehensive": {
+        "label": "Comprehensive Analysis",
+        "description": "Complete team atmosphere assessment"
+      },
+      "communication": {
+        "label": "Communication Status",
+        "description": "Team communication efficiency and quality"
+      },
+      "collaboration": {
+        "label": "Collaboration Effectiveness",
+        "description": "Team collaboration and coordination"
+      },
+      "motivation": {
+        "label": "Work Motivation",
+        "description": "Team members' work enthusiasm"
+      },
+      "stress-level": {
+        "label": "Stress Level",
+        "description": "Overall team stress situation"
+      },
+      "satisfaction": {
+        "label": "Satisfaction",
+        "description": "Work satisfaction and happiness"
+      }
+    }
+  },
+  "dataBeautifier": {
+    "title": "Report Data Beautifier",
+    "description": "Transform boring data into vivid and persuasive text descriptions to make your reports more outstanding",
+    "reportTypeLabel": "Report Type:",
+    "reportTypePlaceholder": "Select report type...",
+    "audienceTypeLabel": "Target Audience:",
+    "audienceTypePlaceholder": "Select target audience...",
+    "beautifyStyleLabel": "Beautify Style:",
+    "beautifyStylePlaceholder": "Select beautify style...",
+    "rawDataLabel": "Raw Data:",
+    "rawDataPlaceholder": "E.g.: Monthly sales of 12 million, 15% year-over-year growth, 85% user activity, 4.2 customer satisfaction score...",
+    "contextLabel": "Background Information (Optional):",
+    "contextPlaceholder": "E.g.: Fierce market competition, team facing personnel adjustments, early stage of new product promotion...",
+    "goalsLabel": "Report Goals (Optional):",
+    "goalsPlaceholder": "E.g.: Secure more resource support, showcase team achievements, improve personal performance evaluation...",
+    "beautifyButton": "Beautify Data",
+    "beautifying": "Beautifying data...",
+    "resultTitle": "Data Beautification Result",
+    "loadingMessage": "Analyzing data and giving it linguistic charm...📊",
+    "requiredField": "Please enter the raw data that needs to be beautified!",
+    "apiError": "Data beautification failed, the data analyst might be looking for better expressions.",
+    "formatError": "AI returned beautification result format is incorrect, data analyst might be reorganizing thoughts...📊",
+    "unknownError": "Unknown error occurred while beautifying data, the charm of data still needs time to show!✨",
+    "errorTitle": "Beautification Failed!",
+    "reportTypes": {
+      "weekly": {
+        "label": "Weekly Report Data",
+        "description": "Weekly work achievement report"
+      },
+      "monthly": {
+        "label": "Monthly Report Data",
+        "description": "Monthly business data summary"
+      },
+      "quarterly": {
+        "label": "Quarterly Report Data",
+        "description": "Quarterly performance report"
+      },
+      "project": {
+        "label": "Project Data",
+        "description": "Project progress and results"
+      },
+      "performance": {
+        "label": "Performance Data",
+        "description": "Individual or team performance"
+      },
+      "business": {
+        "label": "Business Data",
+        "description": "Business metrics and analysis"
+      }
+    },
+    "audienceTypes": {
+      "leadership": {
+        "label": "Leadership",
+        "description": "Executives, director level"
+      },
+      "peers": {
+        "label": "Peer Colleagues",
+        "description": "Same-level colleagues, partners"
+      },
+      "team": {
+        "label": "Team Members",
+        "description": "Subordinates, internal team"
+      },
+      "client": {
+        "label": "Clients",
+        "description": "External clients, partners"
+      },
+      "stakeholders": {
+        "label": "Stakeholders",
+        "description": "Project-related parties"
+      }
+    },
+    "beautifyStyles": {
+      "professional": {
+        "label": "Professional & Rigorous",
+        "description": "Formal and professional, accurate data"
+      },
+      "storytelling": {
+        "label": "Storytelling",
+        "description": "Vivid plot, engaging"
+      },
+      "achievement": {
+        "label": "Achievement-Oriented",
+        "description": "Highlight results, show value"
+      },
+      "analytical": {
+        "label": "Analytical Insight",
+        "description": "Deep analysis, trend insights"
+      },
+      "visual": {
+        "label": "Visual Description",
+        "description": "Chart-like expression, intuitive and clear"
+      },
+      "inspiring": {
+        "label": "Inspiring",
+        "description": "Full of positive energy, boost morale"
+      }
+    }
+  },
+  "meetingNotesOrganizer": {
+    "title": "Smart Meeting Notes Organizer",
+    "description": "Transform messy meeting notes into clear, structured meeting minutes to improve work efficiency",
+    "meetingTypeLabel": "Meeting Type:",
+    "meetingTypePlaceholder": "Select meeting type...",
+    "organizationStyleLabel": "Organization Style:",
+    "organizationStylePlaceholder": "Select organization style...",
+    "outputFormatLabel": "Output Format:",
+    "outputFormatPlaceholder": "Select output format...",
+    "meetingTitleLabel": "Meeting Topic (Optional):",
+    "meetingTitlePlaceholder": "e.g., Q3 Product Planning Review",
+    "meetingDateLabel": "Meeting Time (Optional):",
+    "meetingDatePlaceholder": "e.g., October 26, 2023, 2:00 PM",
+    "participantsLabel": "Participants (Optional):",
+    "participantsPlaceholder": "e.g., John, Jane, Bob (comma-separated)",
+    "rawNotesLabel": "Raw Meeting Notes:",
+    "rawNotesPlaceholder": "Please paste or enter your raw meeting notes content here...",
+    "keyDecisionsLabel": "Key Decisions (Optional):",
+    "keyDecisionsPlaceholder": "Important decisions made in the meeting (AI will try to extract automatically, you can also add manually)",
+    "actionItemsLabel": "Action Items (Optional):",
+    "actionItemsPlaceholder": "To-do items and responsible persons from the meeting (AI will try to extract automatically, you can also add manually)",
+    "organizeButton": "Organize Meeting Notes",
+    "organizing": "Organizing...",
+    "resultTitle": "Organized Meeting Minutes",
+    "loadingMessage": "Meeting secretary is working hard to organize meeting minutes...📝",
+    "requiredField": "Please enter raw meeting notes!",
+    "apiError": "Meeting notes organization failed, the meeting secretary might be carefully organizing the content.",
+    "formatError": "AI returned organization result format is incorrect, meeting secretary might be reorganizing content...📝",
+    "unknownError": "Unknown error occurred while organizing meeting notes, meeting minutes need more time!📋",
+    "errorTitle": "Organization Failed!",
+    "meetingTypes": {
+      "standup": {
+        "label": "Standup/Morning Meeting",
+        "description": "Daily team sync meetings"
+      },
+      "project-review": {
+        "label": "Project Review",
+        "description": "Project progress and results review"
+      },
+      "brainstorming": {
+        "label": "Brainstorming",
+        "description": "Creative discussion and solution design"
+      },
+      "decision-making": {
+        "label": "Decision Making",
+        "description": "Important decision discussion and determination"
+      },
+      "planning": {
+        "label": "Planning Meeting",
+        "description": "Project planning and task allocation"
+      },
+      "retrospective": {
+        "label": "Retrospective",
+        "description": "Project review and experience summary"
+      },
+      "client-meeting": {
+        "label": "Client Meeting",
+        "description": "Communication meetings with clients"
+      },
+      "training": {
+        "label": "Training Meeting",
+        "description": "Knowledge sharing and training"
+      }
+    },
+    "organizationStyles": {
+      "structured": {
+        "label": "Structured Organization",
+        "description": "Categorized by topics, decisions, action items"
+      },
+      "timeline": {
+        "label": "Timeline Organization",
+        "description": "Organized by chronological order of meeting flow"
+      },
+      "action-focused": {
+        "label": "Action-Oriented",
+        "description": "Highlight action items and responsible persons"
+      },
+      "summary": {
+        "label": "Summary",
+        "description": "Extract key information and points"
+      },
+      "detailed": {
+        "label": "Detailed Record",
+        "description": "Preserve complete discussion details"
+      },
+      "executive": {
+        "label": "Executive Summary",
+        "description": "Concise version suitable for executive reporting"
+      }
+    },
+    "outputFormats": {
+      "markdown": {
+        "label": "Markdown Format",
+        "description": "Suitable for documentation and collaboration platforms"
+      },
+      "email": {
+        "label": "Email Format",
+        "description": "Format suitable for email sending"
+      },
+      "presentation": {
+        "label": "Presentation",
+        "description": "Key points suitable for PPT presentation"
+      },
+      "task-list": {
+        "label": "Task List",
+        "description": "Highlight tasks and deadlines"
+      },
+      "report": {
+        "label": "Formal Report",
+        "description": "Formal meeting minutes format"
+      }
+    }
+  },
+  "nicknameGenerator": {
+    "title": "Creative Name Generator",
+    "description": "Generate creative names and codenames for projects, products, teams, etc. with various style options",
+    "objectTypeRequired": "Object Type (Required):",
+    "selectObjectType": "Select the type of object to name...",
+    "nameStyle": "Naming Style (Optional):",
+    "selectNameStyle": "Select naming style...",
+    "objectDescription": "Object Description (Optional):",
+    "objectDescriptionPlaceholder": "Briefly describe the characteristics, purpose, or background of the object...",
+    "keywords": "Keywords (Optional):",
+    "keywordsPlaceholder": "Keywords you want reflected in the name, separated by commas...",
+    "negativeKeywords": "Words to Avoid (Optional):",
+    "negativeKeywordsPlaceholder": "Words you don't want in the name, separated by commas...",
+    "quantity": "Generation Quantity:",
+    "generateNames": "Generate Names",
+    "generating": "Generating...",
+    "clearForm": "Clear Form",
+    "errorSelectObjectType": "Please select the type of object to name!",
+    "errorGeneration": "An error occurred while generating names, please try again later.",
+    "objectTypes": {
+      "project": "Project/Product",
+      "product": "Goods/Service",
+      "team": "Team/Organization",
+      "event": "Event/Meeting",
+      "pet": "Pet",
+      "character": "Character/Person",
+      "company_feature": "Company Feature",
+      "internal_tool": "Internal Tool",
+      "community": "Community/Group",
+      "media_account": "Media Account"
+    },
+    "nameStyles": {
+      "professional": "Professional",
+      "creative": "Creative",
+      "modern": "Modern",
+      "traditional": "Traditional",
+      "playful": "Playful",
+      "techy": "Tech-savvy",
+      "elegant": "Elegant",
+      "friendly": "Friendly",
+      "powerful": "Powerful",
+      "chinese_cultural": "Chinese Cultural"
+    }
+  },
+  "officeOutfitAdvisor": {
+    "title": "\"What to Wear Today?\" Office Edition",
+    "description": "Get the perfect office outfit recommendations based on weather, meetings, and your mood",
+    "weatherLabel": "What's the weather like today? (Optional)",
+    "weatherPlaceholder": "e.g., Sunny, 25°C; Rainy; Cold and windy...",
+    "meetingLabel": "Any important meetings or events? (Optional)",
+    "meetingPlaceholder": "e.g., Client meeting; Internal brainstorming; Regular work day...",
+    "chillLevelLabel": "Today's \"Professional/Chill Index\"?",
+    "chillLevelPlaceholder": "Select your mood...",
+    "getAdviceButton": "Get Today's Outfit Inspiration!",
+    "generating": "Fashion advisor is styling...",
+    "resultTitle": "Today's Style Guide, Please Review!",
+    "loadingMessage": "AI fashion advisor is rummaging through the wardrobe, finding the best match...👗",
+    "apiError": "Outfit advice generation failed, fashion AI might be on the runway.",
+    "formatError": "AI's outfit advice is too trendy, I can't keep up...👠",
+    "unknownError": "Error occurred while getting outfit advice, my wardrobe exploded!👚",
+    "errorTitle": "Outfit Advice Failed!",
+    "chillLevels": {
+      "1": "1 (Casual comfort, comfort first)",
+      "2": "2 (Meeting people, but not too formal)",
+      "3": "3 (Regular work day, decent is enough)",
+      "4": "4 (Somewhat important, need to dress up a bit)",
+      "5": "5 (Important occasion, must shine! ✨)"
+    }
   }
 }

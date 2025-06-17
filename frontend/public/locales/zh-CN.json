@@ -122,7 +122,7 @@
     "ppt-phrase-generator": "为您的PPT增添点睛之笔",
     "resignation-templates": "专业得体地撰写离职或跳槽文案",
     "meeting-nonsense-translator": "识别并翻译会议中的冗余表达",
-    "data-beautifier": "让您的数据和汇报更美观专业",
+    "data-beautifier": "将枯燥的数据转化为生动有说服力的文字描述，让您的汇报更出彩",
     "team-mood-detector": "洞察团队当前的情绪和氛围",
     "meeting-notes-organizer": "自动整理会议记录，提取关键信息",
     "colleague-persona-analyzer": "深入了解同事的工作风格和偏好",
@@ -593,7 +593,6 @@
     "expandSidebar": "展开侧边栏",
     "collapseSidebar": "收起侧边栏"
   },
-
   "meetingNonsenseTranslator": {
     "title": "会议废话翻译器",
     "description": "粘贴冗长会议内容，AI帮你一键脱水，直击核心，拒绝废话！",
@@ -769,5 +768,375 @@
     "apiError": "天气心情分析仪服务暂时不可用。",
     "formatError": "AI返回的分析结果格式不正确。",
     "unknownError": "分析天气与心情时发生未知错误。"
+  },
+  "teamMoodDetector": {
+    "title": "团队氛围检测器",
+    "description": "通过团队观察和描述，AI帮你深度分析团队氛围状况，提供专业的评估报告和改进建议",
+    "teamSizeLabel": "团队规模：",
+    "teamSizePlaceholder": "选择团队规模...",
+    "observationPeriodLabel": "观察周期：",
+    "observationPeriodPlaceholder": "选择观察周期...",
+    "analysisTypeLabel": "分析重点：",
+    "analysisTypePlaceholder": "选择分析重点...",
+    "teamDescriptionLabel": "团队描述：",
+    "teamDescriptionPlaceholder": "描述您的团队基本情况，如部门职能、工作性质、团队组成等...",
+    "observedBehaviorsLabel": "观察到的行为（选填）：",
+    "observedBehaviorsPlaceholder": "例如：成员间互动减少、会议效率低下、抱怨增多、加班常态化...",
+    "specificConcernsLabel": "具体关注点（选填）：",
+    "specificConcernsPlaceholder": "例如：新项目压力、团队成员流失、领导风格问题...",
+    "recentEventsLabel": "近期重要事件（选填）：",
+    "recentEventsPlaceholder": "例如：组织架构调整、重要项目上线、季度绩效考核...",
+    "analyzeButton": "检测团队氛围",
+    "analyzing": "分析中...",
+    "resultTitle": "团队氛围分析报告",
+    "loadingMessage": "团队心理专家正在深入分析团队氛围...💭",
+    "requiredField": "请描述您的团队基本情况！",
+    "apiError": "氛围分析失败，可能是团队心理专家在深入思考。",
+    "formatError": "AI返回的分析格式有误，团队心理专家可能在重新整理思路...👥",
+    "unknownError": "分析团队氛围时发生未知错误，团队诊断需要更多时间！💭",
+    "errorTitle": "分析失败！",
+    "teamSizes": {
+      "small": {
+        "label": "小团队 (3-8人)",
+        "description": "紧密协作的小型团队"
+      },
+      "medium": {
+        "label": "中等团队 (9-20人)",
+        "description": "中等规模的工作团队"
+      },
+      "large": {
+        "label": "大团队 (21-50人)",
+        "description": "大型部门或项目团队"
+      },
+      "department": {
+        "label": "部门级别 (50+人)",
+        "description": "整个部门或事业部"
+      }
+    },
+    "observationPeriods": {
+      "recent": {
+        "label": "最近一周",
+        "description": "近期的团队状态"
+      },
+      "monthly": {
+        "label": "最近一个月",
+        "description": "月度团队表现"
+      },
+      "quarterly": {
+        "label": "最近一季度",
+        "description": "季度团队发展"
+      },
+      "ongoing": {
+        "label": "持续观察",
+        "description": "长期的团队动态"
+      }
+    },
+    "analysisTypes": {
+      "comprehensive": {
+        "label": "综合分析",
+        "description": "全面的团队氛围评估"
+      },
+      "communication": {
+        "label": "沟通状况",
+        "description": "团队沟通效率和质量"
+      },
+      "collaboration": {
+        "label": "协作效果",
+        "description": "团队协作和配合情况"
+      },
+      "motivation": {
+        "label": "工作积极性",
+        "description": "团队成员的工作热情"
+      },
+      "stress-level": {
+        "label": "压力水平",
+        "description": "团队整体压力状况"
+      },
+      "satisfaction": {
+        "label": "满意度",
+        "description": "工作满意度和幸福感"
+      }
+    }
+  },
+  "dataBeautifier": {
+    "title": "汇报数据美化器",
+    "description": "将枯燥的数据转化为生动有说服力的文字描述，让您的汇报更出彩",
+    "reportTypeLabel": "汇报类型：",
+    "reportTypePlaceholder": "选择汇报类型...",
+    "audienceTypeLabel": "目标受众：",
+    "audienceTypePlaceholder": "选择目标受众...",
+    "beautifyStyleLabel": "美化风格：",
+    "beautifyStylePlaceholder": "选择美化风格...",
+    "rawDataLabel": "原始数据：",
+    "rawDataPlaceholder": "例如：本月销售额1200万，同比增长15%，用户活跃度85%，客户满意度4.2分...",
+    "contextLabel": "背景信息（选填）：",
+    "contextPlaceholder": "例如：市场竞争激烈，团队面临人员调整，新产品推广初期...",
+    "goalsLabel": "汇报目标（选填）：",
+    "goalsPlaceholder": "例如：争取更多资源支持，展示团队成果，提升个人绩效评价...",
+    "beautifyButton": "美化数据",
+    "beautifying": "数据美化中...",
+    "resultTitle": "数据美化结果",
+    "loadingMessage": "正在分析数据，赋予其语言魅力...📊",
+    "requiredField": "请输入需要美化的原始数据！",
+    "apiError": "数据美化失败，可能是数据分析师在寻找更好的表达方式。",
+    "formatError": "AI返回的美化结果格式有误，数据分析师可能在重新整理思路...📊",
+    "unknownError": "美化数据时发生未知错误，数据的魅力还需要时间来展现！✨",
+    "errorTitle": "美化失败！",
+    "reportTypes": {
+      "weekly": {
+        "label": "周报数据",
+        "description": "周度工作成果汇报"
+      },
+      "monthly": {
+        "label": "月报数据",
+        "description": "月度业务数据总结"
+      },
+      "quarterly": {
+        "label": "季报数据",
+        "description": "季度业绩汇报"
+      },
+      "project": {
+        "label": "项目数据",
+        "description": "项目进展和成果"
+      },
+      "performance": {
+        "label": "绩效数据",
+        "description": "个人或团队绩效"
+      },
+      "business": {
+        "label": "业务数据",
+        "description": "业务指标和分析"
+      }
+    },
+    "audienceTypes": {
+      "leadership": {
+        "label": "领导层",
+        "description": "高管、总监级别"
+      },
+      "peers": {
+        "label": "同事同级",
+        "description": "平级同事、合作伙伴"
+      },
+      "team": {
+        "label": "团队成员",
+        "description": "下属、团队内部"
+      },
+      "client": {
+        "label": "客户方",
+        "description": "外部客户、合作方"
+      },
+      "stakeholders": {
+        "label": "利益相关方",
+        "description": "项目相关各方"
+      }
+    },
+    "beautifyStyles": {
+      "professional": {
+        "label": "专业严谨",
+        "description": "正式专业，数据准确"
+      },
+      "storytelling": {
+        "label": "故事叙述",
+        "description": "情节生动，引人入胜"
+      },
+      "achievement": {
+        "label": "成就导向",
+        "description": "突出成果，展现价值"
+      },
+      "analytical": {
+        "label": "分析洞察",
+        "description": "深度分析，洞察趋势"
+      },
+      "visual": {
+        "label": "可视化描述",
+        "description": "图表化表达，直观易懂"
+      },
+      "inspiring": {
+        "label": "激励人心",
+        "description": "正能量满满，鼓舞士气"
+      }
+    }
+  },
+  "meetingNotesOrganizer": {
+    "title": "会议记录智能整理",
+    "description": "将杂乱的会议记录整理成清晰结构化的会议纪要，提高工作效率",
+    "meetingTypeLabel": "会议类型：",
+    "meetingTypePlaceholder": "选择会议类型...",
+    "organizationStyleLabel": "整理风格：",
+    "organizationStylePlaceholder": "选择整理风格...",
+    "outputFormatLabel": "输出格式：",
+    "outputFormatPlaceholder": "选择输出格式...",
+    "meetingTitleLabel": "会议主题（选填）：",
+    "meetingTitlePlaceholder": "例如：Q3产品规划评审会",
+    "meetingDateLabel": "会议时间（选填）：",
+    "meetingDatePlaceholder": "例如：2023年10月26日 下午2点",
+    "participantsLabel": "参会人员（选填）：",
+    "participantsPlaceholder": "例如：张三, 李四, 王五 (用逗号分隔)",
+    "rawNotesLabel": "原始会议记录：",
+    "rawNotesPlaceholder": "请在此处粘贴或输入您的原始会议记录内容...",
+    "keyDecisionsLabel": "关键决策（选填）：",
+    "keyDecisionsPlaceholder": "会议中做出的重要决定 (AI会尝试自动提取，您也可以手动补充)",
+    "actionItemsLabel": "行动项（选填）：",
+    "actionItemsPlaceholder": "会议产生的待办事项和负责人 (AI会尝试自动提取，您也可以手动补充)",
+    "organizeButton": "整理会议记录",
+    "organizing": "整理中...",
+    "resultTitle": "整理后的会议纪要",
+    "loadingMessage": "会议秘书正在努力整理会议纪要...📝",
+    "requiredField": "请输入会议原始记录！",
+    "apiError": "会议记录整理失败，可能是会议秘书在仔细梳理内容。",
+    "formatError": "AI返回的整理结果格式有误，会议秘书可能在重新组织内容...📝",
+    "unknownError": "整理会议记录时发生未知错误，会议纪要还需要更多时间！📋",
+    "errorTitle": "整理失败！",
+    "meetingTypes": {
+      "standup": {
+        "label": "站会/晨会",
+        "description": "日常团队同步会议"
+      },
+      "project-review": {
+        "label": "项目评审",
+        "description": "项目进度和成果评审"
+      },
+      "brainstorming": {
+        "label": "头脑风暴",
+        "description": "创意讨论和方案设计"
+      },
+      "decision-making": {
+        "label": "决策会议",
+        "description": "重要决策讨论和确定"
+      },
+      "planning": {
+        "label": "规划会议",
+        "description": "项目规划和任务分配"
+      },
+      "retrospective": {
+        "label": "复盘会议",
+        "description": "项目回顾和经验总结"
+      },
+      "client-meeting": {
+        "label": "客户会议",
+        "description": "与客户的沟通会议"
+      },
+      "training": {
+        "label": "培训会议",
+        "description": "知识分享和培训"
+      }
+    },
+    "organizationStyles": {
+      "structured": {
+        "label": "结构化整理",
+        "description": "按议题、决策、行动项分类"
+      },
+      "timeline": {
+        "label": "时间线整理",
+        "description": "按时间顺序梳理会议流程"
+      },
+      "action-focused": {
+        "label": "行动导向",
+        "description": "突出行动项和责任人"
+      },
+      "summary": {
+        "label": "摘要总结",
+        "description": "提炼关键信息和要点"
+      },
+      "detailed": {
+        "label": "详细记录",
+        "description": "保留完整的讨论细节"
+      },
+      "executive": {
+        "label": "高管摘要",
+        "description": "适合高层汇报的简洁版本"
+      }
+    },
+    "outputFormats": {
+      "markdown": {
+        "label": "Markdown格式",
+        "description": "适合文档和协作平台"
+      },
+      "email": {
+        "label": "邮件格式",
+        "description": "适合邮件发送的格式"
+      },
+      "presentation": {
+        "label": "演示文稿",
+        "description": "适合PPT展示的要点"
+      },
+      "task-list": {
+        "label": "任务清单",
+        "description": "突出任务和截止日期"
+      },
+      "report": {
+        "label": "正式报告",
+        "description": "正式的会议纪要格式"
+      }
+    }
+  },
+  "nicknameGenerator": {
+    "title": "创意命名生成器",
+    "description": "为项目、产品、团队等生成富有创意的名称和代号，支持多种风格选择",
+    "objectTypeRequired": "命名对象类型（必选）：",
+    "selectObjectType": "选择需要命名的对象类型...",
+    "nameStyle": "命名风格（可选）：",
+    "selectNameStyle": "选择命名风格...",
+    "objectDescription": "对象描述（可选）：",
+    "objectDescriptionPlaceholder": "简要描述对象的特点、用途或背景信息...",
+    "keywords": "关键词（可选）：",
+    "keywordsPlaceholder": "希望体现在名称中的关键词，用逗号分隔...",
+    "negativeKeywords": "避免词汇（可选）：",
+    "negativeKeywordsPlaceholder": "不希望出现在名称中的词汇，用逗号分隔...",
+    "quantity": "生成数量：",
+    "generateNames": "生成名称",
+    "generating": "生成中...",
+    "clearForm": "清空表单",
+    "errorSelectObjectType": "请选择需要命名的对象类型！",
+    "errorGeneration": "生成名称时发生错误，请稍后重试。",
+    "objectTypes": {
+      "project": "项目/产品",
+      "product": "商品/服务",
+      "team": "团队/组织",
+      "event": "活动/会议",
+      "pet": "宠物",
+      "character": "角色/人物",
+      "company_feature": "公司功能/特性",
+      "internal_tool": "内部工具",
+      "community": "社区/群组",
+      "media_account": "媒体账号"
+    },
+    "nameStyles": {
+      "professional": "专业正式",
+      "creative": "创意新颖",
+      "modern": "现代时尚",
+      "traditional": "传统经典",
+      "playful": "活泼有趣",
+      "techy": "科技感",
+      "elegant": "优雅精致",
+      "friendly": "亲和友好",
+      "powerful": "强势有力",
+      "chinese_cultural": "中华文化"
+    }
+  },
+  "officeOutfitAdvisor": {
+    "title": "\"今天穿什么？\"职场版",
+    "description": "根据天气、会议场合和心情状态，为您推荐最合适的职场穿搭",
+    "weatherLabel": "今天天气如何？(选填)",
+    "weatherPlaceholder": "例如：晴朗，25度；阴雨绵绵；冷风飕飕...",
+    "meetingLabel": "有啥重要会议或场合吗？(选填)",
+    "meetingPlaceholder": "例如：见客户；内部头脑风暴；普通搬砖日...",
+    "chillLevelLabel": "今日\"职场精致/躺平指数\"？",
+    "chillLevelPlaceholder": "选择你的状态...",
+    "getAdviceButton": "获取今日穿搭灵感！",
+    "generating": "时尚顾问搭配中...",
+    "resultTitle": "今日穿搭指南，请过目！",
+    "loadingMessage": "AI时尚顾问正在翻箱倒柜，寻找最佳搭配...👗",
+    "apiError": "穿搭建议生成失败，时尚AI可能正在T台走秀。",
+    "formatError": "AI返回的穿搭建议太潮了，我暂时跟不上...👠",
+    "unknownError": "获取穿搭建议时发生未知错误，我的衣橱爆炸了！👚",
+    "errorTitle": "穿搭建议获取失败！",
+    "chillLevels": {
+      "1": "1 (随便穿穿，主打一个舒适至上)",
+      "2": "2 (需要见人，但不用太正式)",
+      "3": "3 (普通上班，得体即可)",
+      "4": "4 (有点重要，需要稍微讲究一下)",
+      "5": "5 (重要场合，必须闪亮登场！✨)"
+    }
   }
 }

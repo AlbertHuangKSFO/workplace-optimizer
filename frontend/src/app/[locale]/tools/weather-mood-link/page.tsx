@@ -1,13 +1,13 @@
 import WeatherMoodLink from '@/features/intelligent-analysis/WeatherMoodLink';
-import { ValidLocale } from '@/lib/i18n';
+import { getValidLocale, ValidLocale } from '@/lib/i18n';
 
 interface PageProps {
-  params: Promise<{
-    locale: ValidLocale;
-  }>;
+  params: Promise<{ locale: string }>;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function WeatherMoodLinkPage({ params }: PageProps) {
   const { locale } = await params;
-  return <WeatherMoodLink locale={locale} />;
+  const validLocale = getValidLocale(locale) as ValidLocale;
+
+  return <WeatherMoodLink locale={validLocale} />;
 }

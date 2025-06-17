@@ -6,41 +6,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { CheckSquare, FileText, Loader2 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const meetingTypes = [
-  { value: 'standup', label: '站会/晨会', emoji: '☀️', description: '日常团队同步会议' },
-  { value: 'project-review', label: '项目评审', emoji: '📊', description: '项目进度和成果评审' },
-  { value: 'brainstorming', label: '头脑风暴', emoji: '💡', description: '创意讨论和方案设计' },
-  { value: 'decision-making', label: '决策会议', emoji: '⚖️', description: '重要决策讨论和确定' },
-  { value: 'planning', label: '规划会议', emoji: '📅', description: '项目规划和任务分配' },
-  { value: 'retrospective', label: '复盘会议', emoji: '🔄', description: '项目回顾和经验总结' },
-  { value: 'client-meeting', label: '客户会议', emoji: '🤝', description: '与客户的沟通会议' },
-  { value: 'training', label: '培训会议', emoji: '📚', description: '知识分享和培训' },
-];
+interface MeetingNotesOrganizerProps {
+  locale: ValidLocale;
+}
 
-const organizationStyles = [
-  { value: 'structured', label: '结构化整理', emoji: '📋', description: '按议题、决策、行动项分类' },
-  { value: 'timeline', label: '时间线整理', emoji: '⏰', description: '按时间顺序梳理会议流程' },
-  { value: 'action-focused', label: '行动导向', emoji: '🎯', description: '突出行动项和责任人' },
-  { value: 'summary', label: '摘要总结', emoji: '📝', description: '提炼关键信息和要点' },
-  { value: 'detailed', label: '详细记录', emoji: '📄', description: '保留完整的讨论细节' },
-  { value: 'executive', label: '高管摘要', emoji: '👔', description: '适合高层汇报的简洁版本' },
-];
-
-const outputFormats = [
-  { value: 'markdown', label: 'Markdown格式', emoji: '📝', description: '适合文档和协作平台' },
-  { value: 'email', label: '邮件格式', emoji: '📧', description: '适合邮件发送的格式' },
-  { value: 'presentation', label: '演示文稿', emoji: '📊', description: '适合PPT展示的要点' },
-  { value: 'task-list', label: '任务清单', emoji: '✅', description: '突出任务和截止日期' },
-  { value: 'report', label: '正式报告', emoji: '📋', description: '正式的会议纪要格式' },
-];
-
-function MeetingNotesOrganizer(): React.JSX.Element {
+function MeetingNotesOrganizer({ locale }: MeetingNotesOrganizerProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
   const [meetingType, setMeetingType] = useState<string>('project-review');
   const [organizationStyle, setOrganizationStyle] = useState<string>('structured');
   const [outputFormat, setOutputFormat] = useState<string>('markdown');
@@ -54,10 +33,50 @@ function MeetingNotesOrganizer(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // 会议类型选项
+  const meetingTypes = useMemo(() => [
+    { value: 'standup', emoji: '☀️' },
+    { value: 'project-review', emoji: '📊' },
+    { value: 'brainstorming', emoji: '💡' },
+    { value: 'decision-making', emoji: '⚖️' },
+    { value: 'planning', emoji: '📅' },
+    { value: 'retrospective', emoji: '🔄' },
+    { value: 'client-meeting', emoji: '🤝' },
+    { value: 'training', emoji: '📚' },
+  ], []);
+
+  // 整理风格选项
+  const organizationStyles = useMemo(() => [
+    { value: 'structured', emoji: '📋' },
+    { value: 'timeline', emoji: '⏰' },
+    { value: 'action-focused', emoji: '🎯' },
+    { value: 'summary', emoji: '📝' },
+    { value: 'detailed', emoji: '📄' },
+    { value: 'executive', emoji: '👔' },
+  ], []);
+
+  // 输出格式选项
+  const outputFormats = useMemo(() => [
+    { value: 'markdown', emoji: '📝' },
+    { value: 'email', emoji: '📧' },
+    { value: 'presentation', emoji: '📊' },
+    { value: 'task-list', emoji: '✅' },
+    { value: 'report', emoji: '📋' },
+  ], []);
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
+        <span className="ml-2 text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!rawNotes.trim()) {
-      setError('请输入会议原始记录！');
+      setError(t('meetingNotesOrganizer.requiredField'));
       setOrganizedNotes('');
       return;
     }
@@ -66,14 +85,17 @@ function MeetingNotesOrganizer(): React.JSX.Element {
     setError(null);
     setOrganizedNotes('');
 
-    const selectedMeetingType = meetingTypes.find(m => m.value === meetingType);
-    const selectedStyle = organizationStyles.find(s => s.value === organizationStyle);
-    const selectedFormat = outputFormats.find(f => f.value === outputFormat);
+    const meetingTypeLabel = t(`meetingNotesOrganizer.meetingTypes.${meetingType}.label`);
+    const meetingTypeDesc = t(`meetingNotesOrganizer.meetingTypes.${meetingType}.description`);
+    const styleLabel = t(`meetingNotesOrganizer.organizationStyles.${organizationStyle}.label`);
+    const styleDesc = t(`meetingNotesOrganizer.organizationStyles.${organizationStyle}.description`);
+    const formatLabel = t(`meetingNotesOrganizer.outputFormats.${outputFormat}.label`);
+    const formatDesc = t(`meetingNotesOrganizer.outputFormats.${outputFormat}.description`);
 
-    const userPrompt = `
-会议类型：${selectedMeetingType?.label} - ${selectedMeetingType?.description}
-整理风格：${selectedStyle?.label} - ${selectedStyle?.description}
-输出格式：${selectedFormat?.label} - ${selectedFormat?.description}
+    const userPrompt = locale === 'zh-CN' ? `
+会议类型：${meetingTypeLabel} - ${meetingTypeDesc}
+整理风格：${styleLabel} - ${styleDesc}
+输出格式：${formatLabel} - ${formatDesc}
 
 ${meetingTitle.trim() ? `会议主题：${meetingTitle}` : ''}
 ${meetingDate.trim() ? `会议时间：${meetingDate}` : ''}
@@ -86,6 +108,22 @@ ${keyDecisions.trim() ? `关键决策：${keyDecisions}` : ''}
 ${actionItems.trim() ? `行动项：${actionItems}` : ''}
 
 请将这些原始会议记录整理成清晰、结构化的会议纪要。
+` : `
+Meeting Type: ${meetingTypeLabel} - ${meetingTypeDesc}
+Organization Style: ${styleLabel} - ${styleDesc}
+Output Format: ${formatLabel} - ${formatDesc}
+
+${meetingTitle.trim() ? `Meeting Topic: ${meetingTitle}` : ''}
+${meetingDate.trim() ? `Meeting Time: ${meetingDate}` : ''}
+${participants.trim() ? `Participants: ${participants}` : ''}
+
+Raw Meeting Notes:
+${rawNotes}
+
+${keyDecisions.trim() ? `Key Decisions: ${keyDecisions}` : ''}
+${actionItems.trim() ? `Action Items: ${actionItems}` : ''}
+
+Please organize these raw meeting notes into clear, structured meeting minutes.
 `;
 
     try {
@@ -97,11 +135,12 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'meeting-notes-organizer',
+          language: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '会议记录整理失败，可能是会议秘书在仔细梳理内容。' }));
+        const errorData = await response.json().catch(() => ({ message: t('meetingNotesOrganizer.apiError') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -111,11 +150,11 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         setOrganizedNotes(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure:', data);
-        setError('AI返回的整理结果格式有误，会议秘书可能在重新组织内容...📝');
+        setError(t('meetingNotesOrganizer.formatError'));
       }
     } catch (e) {
       console.error('Failed to organize meeting notes:', e);
-      setError(e instanceof Error ? e.message : '整理会议记录时发生未知错误，会议纪要还需要更多时间！📋');
+      setError(e instanceof Error ? e.message : t('meetingNotesOrganizer.unknownError'));
     }
 
     setIsLoading(false);
@@ -128,7 +167,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <FileText className="w-8 h-8 text-indigo-500 dark:text-indigo-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">会议记录智能整理</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('meetingNotesOrganizer.title')}</h1>
         <CheckSquare className="w-8 h-8 text-indigo-500 dark:text-indigo-400 ml-2" />
       </div>
 
@@ -136,7 +175,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="meetingType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              会议类型：
+              {t('meetingNotesOrganizer.meetingTypeLabel')}
             </Label>
             <Select value={meetingType} onValueChange={setMeetingType}>
               <SelectTrigger className={cn(
@@ -144,7 +183,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
               )}>
-                <SelectValue placeholder="选择会议类型..." />
+                <SelectValue placeholder={t('meetingNotesOrganizer.meetingTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -160,8 +199,8 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{meeting.emoji} {meeting.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{meeting.description}</span>
+                      <span>{meeting.emoji} {t(`meetingNotesOrganizer.meetingTypes.${meeting.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`meetingNotesOrganizer.meetingTypes.${meeting.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -170,7 +209,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           </div>
           <div>
             <Label htmlFor="organizationStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              整理风格：
+              {t('meetingNotesOrganizer.organizationStyleLabel')}
             </Label>
             <Select value={organizationStyle} onValueChange={setOrganizationStyle}>
               <SelectTrigger className={cn(
@@ -178,7 +217,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
               )}>
-                <SelectValue placeholder="选择整理风格..." />
+                <SelectValue placeholder={t('meetingNotesOrganizer.organizationStylePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -194,8 +233,8 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
+                      <span>{style.emoji} {t(`meetingNotesOrganizer.organizationStyles.${style.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`meetingNotesOrganizer.organizationStyles.${style.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -204,7 +243,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           </div>
           <div>
             <Label htmlFor="outputFormat" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              输出格式：
+              {t('meetingNotesOrganizer.outputFormatLabel')}
             </Label>
             <Select value={outputFormat} onValueChange={setOutputFormat}>
               <SelectTrigger className={cn(
@@ -212,7 +251,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
               )}>
-                <SelectValue placeholder="选择输出格式..." />
+                <SelectValue placeholder={t('meetingNotesOrganizer.outputFormatPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -228,8 +267,8 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{format.emoji} {format.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{format.description}</span>
+                      <span>{format.emoji} {t(`meetingNotesOrganizer.outputFormats.${format.value}.label`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`meetingNotesOrganizer.outputFormats.${format.value}.description`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -240,13 +279,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="meetingTitle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              会议主题（选填）：
+              {t('meetingNotesOrganizer.meetingTitleLabel')}
             </Label>
             <Input
               id="meetingTitle"
               value={meetingTitle}
               onChange={(e) => setMeetingTitle(e.target.value)}
-              placeholder="例如：Q3产品规划评审会"
+              placeholder={t('meetingNotesOrganizer.meetingTitlePlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -257,13 +296,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           </div>
           <div>
             <Label htmlFor="meetingDate" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              会议时间（选填）：
+              {t('meetingNotesOrganizer.meetingDateLabel')}
             </Label>
             <Input
               id="meetingDate"
               value={meetingDate}
               onChange={(e) => setMeetingDate(e.target.value)}
-              placeholder="例如：2023年10月26日 下午2点"
+              placeholder={t('meetingNotesOrganizer.meetingDatePlaceholder')}
               type="text"
               className={cn(
                 "w-full",
@@ -275,13 +314,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           </div>
           <div>
             <Label htmlFor="participants" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              参会人员（选填）：
+              {t('meetingNotesOrganizer.participantsLabel')}
             </Label>
             <Input
               id="participants"
               value={participants}
               onChange={(e) => setParticipants(e.target.value)}
-              placeholder="例如：张三, 李四, 王五 (用逗号分隔)"
+              placeholder={t('meetingNotesOrganizer.participantsPlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -293,13 +332,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         </div>
         <div>
           <Label htmlFor="rawNotes" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            原始会议记录：
+            {t('meetingNotesOrganizer.rawNotesLabel')}
           </Label>
           <Textarea
             id="rawNotes"
             value={rawNotes}
             onChange={(e) => setRawNotes(e.target.value)}
-            placeholder="请在此处粘贴或输入您的原始会议记录内容..."
+            placeholder={t('meetingNotesOrganizer.rawNotesPlaceholder')}
             className={cn(
               "w-full min-h-[150px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -312,13 +351,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="keyDecisions" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              关键决策（选填）：
+              {t('meetingNotesOrganizer.keyDecisionsLabel')}
             </Label>
             <Textarea
               id="keyDecisions"
               value={keyDecisions}
               onChange={(e) => setKeyDecisions(e.target.value)}
-              placeholder="会议中做出的重要决定 (AI会尝试自动提取，您也可以手动补充)"
+              placeholder={t('meetingNotesOrganizer.keyDecisionsPlaceholder')}
               className={cn(
                 "w-full min-h-[60px]",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -330,13 +369,13 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           </div>
           <div>
             <Label htmlFor="actionItems" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              行动项（选填）：
+              {t('meetingNotesOrganizer.actionItemsLabel')}
             </Label>
             <Textarea
               id="actionItems"
               value={actionItems}
               onChange={(e) => setActionItems(e.target.value)}
-              placeholder="会议产生的待办事项和负责人 (AI会尝试自动提取，您也可以手动补充)"
+              placeholder={t('meetingNotesOrganizer.actionItemsPlaceholder')}
               className={cn(
                 "w-full min-h-[60px]",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -357,9 +396,9 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 整理中...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('meetingNotesOrganizer.organizing')}</>
           ) : (
-            <><FileText className="mr-2 h-4 w-4" /> 整理会议记录</>
+            <><FileText className="mr-2 h-4 w-4" /> {t('meetingNotesOrganizer.organizeButton')}</>
           )}
         </Button>
       </form>
@@ -370,7 +409,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">整理失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('meetingNotesOrganizer.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -381,7 +420,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
       {isLoading && !organizedNotes && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-indigo-500 dark:text-indigo-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">会议秘书正在努力整理会议纪要...📝</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('meetingNotesOrganizer.loadingMessage')}</p>
         </div>
       )}
 
@@ -392,7 +431,7 @@ ${actionItems.trim() ? `行动项：${actionItems}` : ''}
         )}>
           <CardHeader>
             <CardTitle className="text-indigo-600 dark:text-indigo-400 flex items-center">
-              <CheckSquare className="w-5 h-5 mr-2" /> 整理后的会议纪要
+              <CheckSquare className="w-5 h-5 mr-2" /> {t('meetingNotesOrganizer.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
