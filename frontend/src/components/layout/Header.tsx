@@ -1,10 +1,13 @@
 'use client';
 
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Github, Home, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ModelSelector } from './ModelSelector';
 
 // Placeholder for ModelSelector, to be created later as per docs
@@ -13,7 +16,19 @@ import { ModelSelector } from './ModelSelector';
 export function Header() {
   const githubUrl = 'https://github.com/AlbertHuangKSFO/workplace-optimizer';
   const [selectedModelId, setSelectedModelId] = useState<string>('');
+  const [locale, setLocale] = useState<ValidLocale>('zh-CN');
   const pathname = usePathname();
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
+  // Extract locale from pathname
+  useEffect(() => {
+    const pathParts = pathname.split('/');
+    if (pathParts[1] && (pathParts[1] === 'en-US' || pathParts[1] === 'zh-CN')) {
+      setLocale(pathParts[1] as ValidLocale);
+    } else {
+      setLocale('zh-CN'); // Default locale
+    }
+  }, [pathname]);
 
   console.log('[Header] Current selectedModelId state:', selectedModelId);
 
@@ -27,31 +42,21 @@ export function Header() {
     setSelectedModelId(defaultModelId);
   }, []);
 
-  // 根据路径显示当前页面标题
+  // Get page title with internationalization
   const getPageTitle = () => {
-    if (pathname === '/') return '打工人必备工具 - 首页';
-    if (pathname.includes('/tools/')) {
-      const toolName = pathname.split('/tools/')[1];
-      const toolTitleMap: { [key: string]: string } = {
-        'speech-optimizer': '话术优化器',
-        'email-polisher': '邮件润色器',
-        'meeting-speech-generator': '会议发言生成器',
-        'jargon-translator': '黑话翻译器',
-        'cross-department-translator': '跨部门沟通翻译',
-        'eq-assistant': '职场情商助手',
-        'ppt-phrase-generator': 'PPT金句生成器',
-        'professional-persona-generator': '职场人设生成器',
-        'data-beautifier': '汇报数据美化器',
-        'blame-tactics': '甩锅/背锅话术',
-        'crisis-communication-templates': '危机公关模板',
-        'resignation-templates': '离职/跳槽文案',
-        'team-mood-detector': '团队氛围检测器',
-        'meeting-notes-organizer': '会议记录智能整理',
-        'workplace-meme-generator': '职场梗图生成器',
-      };
-      return `当前工具: ${toolTitleMap[toolName] || '未知工具'}`;
+    if (translationsLoading) {
+      return 'Loading...'; // 翻译加载中时显示加载文本
     }
-    return '打工人必备工具';
+
+    const cleanPath = pathname.replace(/^\/[a-z]{2}-[A-Z]{2}/, '') || '/';
+
+    if (cleanPath === '/') return t('header.homepageTitle');
+    if (cleanPath.includes('/tools/')) {
+      const toolName = cleanPath.split('/tools/')[1];
+      const toolTitle = t(`tools.${toolName}`);
+      return `${t('header.currentTool')}: ${toolTitle || t('header.unknownTool')}`;
+    }
+    return t('header.appTitle');
   };
 
   return (
@@ -63,14 +68,15 @@ export function Header() {
         <h1 className="text-md font-medium text-neutral-800 dark:text-neutral-200">{getPageTitle()}</h1>
       </div>
       <div className="flex items-center space-x-4">
+        <LanguageSwitcher />
         <ModelSelector
           selectedModelId={selectedModelId}
           onModelSelect={handleModelSelect}
           onModelInitialized={handleModelInitialized}
         />
         <Link
-          href="/"
-          title="返回首页"
+          href={locale === 'zh-CN' ? '/' : `/${locale}`}
+          title={t('common.backToHome')}
           className={cn(
             "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
             "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
@@ -83,7 +89,7 @@ export function Header() {
           href={githubUrl}
           target="_blank"
           rel="noopener noreferrer"
-          title="View on GitHub"
+          title={t('common.viewOnGitHub')}
           className={cn(
             "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
             "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
@@ -93,7 +99,7 @@ export function Header() {
           <Github size={20} />
         </a>
         <button
-          title="User Profile"
+          title={t('common.userProfile')}
           className={cn(
             "p-1.5 rounded-md focus:outline-none focus:ring-2 transition-colors",
             "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",

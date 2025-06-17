@@ -91,7 +91,7 @@ export const homeNavigationLink: FeatureConfig = {
 export const toolCategories: ToolCategoryConfig[] = [
   {
     id: 'communication-writing',
-    name: '✍️ 沟通写作',
+    name: '沟通写作',
     icon: MessagesSquare,
     description: '提升书面和口头沟通的质量',
     features: [
@@ -176,7 +176,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'intelligent-analysis',
-    name: '🧠 智能分析',
+    name: '智能分析',
     icon: BrainCircuit,
     description: '利用AI进行分析、洞察和决策辅助',
     features: [
@@ -237,7 +237,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'workplace-survival',
-    name: '🛡️ 职场生存',
+    name: '职场生存',
     icon: ShieldCheck,
     description: '应对职场挑战、处理人际关系、化解危机',
     features: [
@@ -299,7 +299,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'content-generation',
-    name: '💡 内容创作',
+    name: '内容创作',
     icon: Sparkles,
     description: '生成各类职场相关的内容和材料',
     features: [
@@ -343,7 +343,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'office-fun-recreation',
-    name: '🎉 摸鱼作乐',
+    name: '摸鱼作乐',
     icon: Dice5,
     description: '提供轻松有趣的办公室娱乐工具',
     features: [
@@ -519,7 +519,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'time-efficiency',
-    name: '⏳ 时间效率',
+    name: '时间效率',
     icon: Clock,
     description: '管理时间、提升效率、规划个人目标',
     features: [
@@ -580,7 +580,7 @@ export const toolCategories: ToolCategoryConfig[] = [
   },
   {
     id: 'well-being-health',
-    name: '🧘 身心健康',
+    name: '身心健康',
     icon: HeartPulse,
     description: '关注职场人的身心健康',
     features: [

@@ -1,20 +1,30 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { getCurrentLocale } from "@/lib/server-locale";
+import { getTranslator } from "@/lib/translations";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "打工人必备工具",
-  description: "打工人的AI助手工具箱",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getCurrentLocale();
+  const t = await getTranslator(locale);
 
-export default function RootLayout({
+  return {
+    title: t('homepage.title'),
+    description: t('homepage.subtitle'),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getCurrentLocale();
+  const lang = locale === 'zh-CN' ? 'zh-CN' : 'en-US';
+
   return (
-    <html lang="zh-CN">
+    <html lang={lang}>
       <body className="font-sans antialiased">
         <ThemeProvider>
           <AppLayout>{children}</AppLayout>

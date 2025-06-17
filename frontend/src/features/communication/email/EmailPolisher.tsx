@@ -11,18 +11,23 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const emailTypes = [
-  { value: 'formal', label: '正式商务邮件' },
-  { value: 'informal', label: '非正式内部邮件' },
-  { value: 'apology', label: '道歉邮件' },
-  { value: 'thank-you', label: '感谢邮件' },
-  { value: 'request', label: '请求/申请邮件' },
-  { value: 'follow-up', label: '跟进邮件' },
-  { value: 'announcement', label: '通知/公告邮件' },
-  { value: 'complaint', label: '投诉/反馈邮件' },
-];
+interface EmailPolisherProps {
+  locale: ValidLocale;
+}
 
-function EmailPolisher(): React.JSX.Element {
+function EmailPolisher({ locale }: EmailPolisherProps): React.JSX.Element {
+  const { t } = useTranslations(locale);
+
+  const emailTypes = [
+    { value: 'formal', label: t('emailPolisher.emailTypes.formal') },
+    { value: 'informal', label: t('emailPolisher.emailTypes.informal') },
+    { value: 'apology', label: t('emailPolisher.emailTypes.apology') },
+    { value: 'thank-you', label: t('emailPolisher.emailTypes.thank-you') },
+    { value: 'request', label: t('emailPolisher.emailTypes.request') },
+    { value: 'follow-up', label: t('emailPolisher.emailTypes.follow-up') },
+    { value: 'announcement', label: t('emailPolisher.emailTypes.announcement') },
+    { value: 'complaint', label: t('emailPolisher.emailTypes.complaint') },
+  ];
   const [originalEmail, setOriginalEmail] = useState<string>('');
   const [emailType, setEmailType] = useState<string>('formal');
   const [polishedEmail, setPolishedEmail] = useState<string>('');
@@ -32,7 +37,7 @@ function EmailPolisher(): React.JSX.Element {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!originalEmail.trim()) {
-      setError('请输入需要润色的邮件内容！');
+      setError(t('emailPolisher.emptyInputError'));
       setPolishedEmail('');
       return;
     }
@@ -57,7 +62,7 @@ function EmailPolisher(): React.JSX.Element {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '邮件润色失败，可能是AI的商务礼仪课程还在进修中。' }));
+        const errorData = await response.json().catch(() => ({ message: locale === 'zh-CN' ? '邮件润色失败，可能是AI的商务礼仪课程还在进修中。' : 'Email polishing failed. AI might be taking business etiquette classes.' }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -67,11 +72,11 @@ function EmailPolisher(): React.JSX.Element {
         setPolishedEmail(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure for email polishing:', data);
-        setError('AI返回的润色结果有点奇怪，我暂时解读不了...📧');
+        setError(locale === 'zh-CN' ? 'AI返回的润色结果有点奇怪，我暂时解读不了...📧' : 'AI returned unexpected results, cannot interpret...📧');
       }
     } catch (e) {
       console.error('Failed to polish email:', e);
-      setError(e instanceof Error ? e.message : '润色邮件时发生未知错误，我的邮件助手罢工了！📮');
+      setError(e instanceof Error ? e.message : (locale === 'zh-CN' ? '润色邮件时发生未知错误，我的邮件助手罢工了！📮' : 'Unknown error occurred while polishing email, my email assistant went on strike!📮'));
     } finally {
       setIsLoading(false);
     }
@@ -84,20 +89,20 @@ function EmailPolisher(): React.JSX.Element {
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <Mail className="w-8 h-8 text-green-600 dark:text-green-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">邮件润色器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('emailPolisher.title')}</h1>
         <Mail className="w-8 h-8 text-green-600 dark:text-green-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
           <Label htmlFor="originalEmail" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            输入需要润色的邮件内容：
+            {t('emailPolisher.inputLabel')}
           </Label>
           <Textarea
             id="originalEmail"
             value={originalEmail}
             onChange={(e) => setOriginalEmail(e.target.value)}
-            placeholder="例如：Hi，关于那个项目的事情，我想说一下我的想法..."
+            placeholder={t('emailPolisher.inputPlaceholder')}
             className={cn(
               "w-full min-h-[150px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -108,7 +113,7 @@ function EmailPolisher(): React.JSX.Element {
         </div>
         <div>
           <Label htmlFor="emailType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            邮件类型：
+            {t('emailPolisher.emailTypeLabel')}
           </Label>
           <Select value={emailType} onValueChange={setEmailType}>
             <SelectTrigger className={cn(
@@ -116,7 +121,7 @@ function EmailPolisher(): React.JSX.Element {
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
               "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
             )}>
-              <SelectValue placeholder="选择邮件类型..." />
+              <SelectValue placeholder={t('emailPolisher.emailTypePlaceholder')} />
             </SelectTrigger>
             <SelectContent className={cn(
               "border-neutral-200 dark:border-neutral-700",
@@ -146,10 +151,10 @@ function EmailPolisher(): React.JSX.Element {
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在精心润色...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('emailPolisher.polishingButton')}
             </>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 开始润色邮件！
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('emailPolisher.polishButton')}
             </>
           )}
         </Button>
@@ -161,7 +166,7 @@ function EmailPolisher(): React.JSX.Element {
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">润色失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('emailPolisher.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -172,7 +177,7 @@ function EmailPolisher(): React.JSX.Element {
       {isLoading && !polishedEmail && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-green-600 dark:text-green-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">AI邮件专家正在为您的邮件添加专业光泽...✨</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('emailPolisher.loadingText')}</p>
         </div>
       )}
 
@@ -183,7 +188,7 @@ function EmailPolisher(): React.JSX.Element {
         )}>
           <CardHeader>
             <CardTitle className="text-green-700 dark:text-green-400 flex items-center">
-              <Sparkles className="w-5 h-5 mr-2" /> 润色后的邮件：
+              <Sparkles className="w-5 h-5 mr-2" /> {t('emailPolisher.polishedTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

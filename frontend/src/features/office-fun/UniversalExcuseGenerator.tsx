@@ -3,14 +3,21 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { ChefHat, Loader2, Wand2 } from 'lucide-react'; // Wand2 for generating magic excuses
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// TODO: Implement the actual UI and logic for Universal Excuse Generator
-function UniversalExcuseGenerator(): React.JSX.Element {
+interface UniversalExcuseGeneratorProps {
+  locale?: ValidLocale;
+}
+
+function UniversalExcuseGenerator({ locale = 'zh-CN' }: UniversalExcuseGeneratorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [excuseScenario, setExcuseScenario] = useState<string>('');
   const [generatedExcuse, setGeneratedExcuse] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,7 +26,7 @@ function UniversalExcuseGenerator(): React.JSX.Element {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!excuseScenario.trim()) {
-      setError('请描述一下你需要借口的场景，我好对症下药！👨‍🍳');
+      setError(t('universalExcuseGenerator.emptyInputError'));
       setGeneratedExcuse('');
       return;
     }
@@ -41,7 +48,7 @@ function UniversalExcuseGenerator(): React.JSX.Element {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '借口生成失败，可能是我的灵感枯竭了。' }));
+        const errorData = await response.json().catch(() => ({ message: t('universalExcuseGenerator.apiError') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -51,14 +58,25 @@ function UniversalExcuseGenerator(): React.JSX.Element {
         setGeneratedExcuse(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure for excuse:', data);
-        setError('AI返回的借口有点不按套路出牌，我先缓缓...🤔');
+        setError(t('universalExcuseGenerator.unexpectedError'));
       }
     } catch (e) {
       console.error('Failed to fetch excuse:', e);
-      setError(e instanceof Error ? e.message : '生成借口时发生未知错误，我的借口宝典可能被施了魔法！🪄');
+      setError(e instanceof Error ? e.message : t('universalExcuseGenerator.unknownError'));
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -68,20 +86,22 @@ function UniversalExcuseGenerator(): React.JSX.Element {
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <ChefHat className="w-8 h-8 text-orange-500 dark:text-orange-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">"万能借口"生成器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">
+          {t('universalExcuseGenerator.title')}
+        </h1>
         <ChefHat className="w-8 h-8 text-orange-500 dark:text-orange-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
           <label htmlFor="excuseScenario" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            遇到啥窘境了？详细说说，AI大厨为你烹饪完美借口！🍲
+            {t('universalExcuseGenerator.inputLabel')}
           </label>
           <Textarea
             id="excuseScenario"
             value={excuseScenario}
             onChange={(e) => setExcuseScenario(e.target.value)}
-            placeholder="例如：\n- 明早的会不想去了\n- Deadline到了但活儿还没干完\n- 不小心把老板的咖啡打翻了..."
+            placeholder={t('universalExcuseGenerator.inputPlaceholder')}
             className={cn(
               "w-full min-h-[100px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -99,10 +119,10 @@ function UniversalExcuseGenerator(): React.JSX.Element {
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 借口正在精心炮制中...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('universalExcuseGenerator.generating')}
             </>
           ) : (
-            <><Wand2 className="mr-2 h-4 w-4" /> 生成完美借口！
+            <><Wand2 className="mr-2 h-4 w-4" /> {t('universalExcuseGenerator.generateButton')}
             </>
           )}
         </Button>
@@ -114,7 +134,9 @@ function UniversalExcuseGenerator(): React.JSX.Element {
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">借口生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">
+              {t('universalExcuseGenerator.errorTitle')}
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -125,7 +147,9 @@ function UniversalExcuseGenerator(): React.JSX.Element {
       {isLoading && !generatedExcuse && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-orange-500 dark:text-orange-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">AI借口大师正在搜肠刮肚，寻找最天衣无缝的理由...🤔</p>
+          <p className="text-neutral-500 dark:text-neutral-400">
+            {t('universalExcuseGenerator.loadingText')}
+          </p>
         </div>
       )}
 
@@ -136,7 +160,7 @@ function UniversalExcuseGenerator(): React.JSX.Element {
         )}>
           <CardHeader>
             <CardTitle className="text-orange-600 dark:text-orange-400 flex items-center">
-              <ChefHat className="w-5 h-5 mr-2" /> 您的专属万能借口已送达！
+              <ChefHat className="w-5 h-5 mr-2" /> {t('universalExcuseGenerator.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

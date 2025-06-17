@@ -2,9 +2,15 @@
 
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
+
+interface SoupSwitcherProps {
+  locale?: ValidLocale;
+}
 
 // Define types for quote and API response
 interface Quote {
@@ -12,13 +18,25 @@ interface Quote {
   type: 'chicken' | 'poisonous' | 'initial' | 'error';
 }
 
-const SoupSwitcher: React.FC = () => {
+const SoupSwitcher: React.FC<SoupSwitcherProps> = ({ locale = 'zh-CN' }) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [currentQuote, setCurrentQuote] = useState<Quote>({
-    text: '点击按钮，获取今日份"能量"汤！',
+    text: '',
     type: 'initial',
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // 初始化文本
+  React.useEffect(() => {
+    if (!translationsLoading) {
+      setCurrentQuote({
+        text: t('soupSwitcher.initialText'),
+        type: 'initial',
+      });
+    }
+  }, [translationsLoading, t]);
 
   const getRandomQuote = useCallback(async () => {
     setIsLoading(true);
@@ -27,10 +45,18 @@ const SoupSwitcher: React.FC = () => {
     const quoteTypeRequested = isChickenRequest ? 'chicken' : 'poisonous';
 
     let prompt = '';
-    if (quoteTypeRequested === 'chicken') {
-      prompt = '请给我一句充满正能量、富有哲理的鸡汤语录，20-40字左右，适合办公室打工人，风格可以幽默一些。语言：中文。';
+    if (locale === 'en-US') {
+      if (quoteTypeRequested === 'chicken') {
+        prompt = 'Please give me a positive, philosophical chicken soup quote, 20-40 words, suitable for office workers, can be humorous. Language: English.';
+      } else {
+        prompt = 'Please give me a very humorous, slightly sarcastic but wise poison soup quote, 20-40 words, that would make office workers smile. Language: English.';
+      }
     } else {
-      prompt = '请给我一句非常幽默风趣、有点小讽刺但又不失智慧的毒鸡汤语录，20-40字左右，能让办公室打工人会心一笑的那种。语言：中文。';
+      if (quoteTypeRequested === 'chicken') {
+        prompt = '请给我一句充满正能量、富有哲理的鸡汤语录，20-40字左右，适合办公室打工人，风格可以幽默一些。语言：中文。';
+      } else {
+        prompt = '请给我一句非常幽默风趣、有点小讽刺但又不失智慧的毒鸡汤语录，20-40字左右，能让办公室打工人会心一笑的那种。语言：中文。';
+      }
     }
 
     try {
@@ -46,7 +72,7 @@ const SoupSwitcher: React.FC = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'AI大厨今天可能心情不佳，暂时熬不出汤了。' }));
+        const errorData = await response.json().catch(() => ({ message: t('soupSwitcher.apiError') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -59,11 +85,11 @@ const SoupSwitcher: React.FC = () => {
         });
       } else {
         console.warn('Unexpected API response structure for soup switcher:', data);
-        throw new Error('AI返回的汤料有点奇怪，我暂时品不出来味道...');
+        throw new Error(t('soupSwitcher.unexpectedError'));
       }
     } catch (e) {
       console.error('Failed to fetch soup quote:', e);
-      const errorMessage = e instanceof Error ? e.message : '获取能量汤时发生未知错误，厨房可能着火了！🔥';
+      const errorMessage = e instanceof Error ? e.message : t('soupSwitcher.unknownError');
       setError(errorMessage);
       setCurrentQuote({
         text: errorMessage,
@@ -72,7 +98,7 @@ const SoupSwitcher: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [locale, t]);
 
   const getQuoteTextColor = () => {
     switch (currentQuote.type) {
@@ -88,15 +114,26 @@ const SoupSwitcher: React.FC = () => {
     }
   };
 
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-lg mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="soup pot" className="mr-2 text-4xl">🍲</span>
-          随机鸡汤/毒鸡汤
+          {t('soupSwitcher.title')}
         </CardTitle>
         <CardDescription className="mt-1 text-base">
-          AI为你特调，一碗下肚，精神抖擞（或更加清醒）。来，干了这碗！
+          {t('soupSwitcher.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6 pt-6">
@@ -108,7 +145,7 @@ const SoupSwitcher: React.FC = () => {
           {isLoading && currentQuote.type === 'initial' ? (
             <div className="flex flex-col items-center">
               <Loader2 className="h-8 w-8 animate-spin text-sky-500 mb-2" />
-              <p className="text-sky-600 dark:text-sky-400">AI大厨正在熬制中...</p>
+              <p className="text-sky-600 dark:text-sky-400">{t('soupSwitcher.brewingText')}</p>
             </div>
           ) : (
             <p className={`text-lg ${getQuoteTextColor()}`}>
@@ -126,10 +163,10 @@ const SoupSwitcher: React.FC = () => {
 
         <Button onClick={getRandomQuote} disabled={isLoading} size="lg" className="w-full sm:w-auto">
           {isLoading ? (
-            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> AI熬制中...
+            <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t('soupSwitcher.brewing')}
             </>
           ) : (
-            <><RefreshCw className="mr-2 h-5 w-5" /> 换一碗尝尝
+            <><RefreshCw className="mr-2 h-5 w-5" /> {t('soupSwitcher.switchButton')}
             </>
           )}
         </Button>

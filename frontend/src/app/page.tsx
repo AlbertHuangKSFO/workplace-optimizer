@@ -1,14 +1,16 @@
-'use client';
-
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { toolCategories } from '@/constants/navigation';
+import { getCurrentLocale } from '@/lib/server-locale';
+import { getTranslator } from '@/lib/translations';
 import { cn } from '@/lib/utils';
 import { Construction, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await getCurrentLocale();
+  const t = await getTranslator(locale);
   return (
     <div className={cn(
       "min-h-screen",
@@ -29,24 +31,24 @@ export default function HomePage() {
             </div>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 dark:text-white mb-4">
-            打工人必备工具箱
+            {t('homepage.title')}
             <Sparkles className="inline-block w-8 h-8 ml-2 text-yellow-400 dark:text-yellow-400" />
           </h1>
           <p className="text-xl text-neutral-600 dark:text-neutral-300 mb-8 max-w-2xl mx-auto">
-            AI驱动的职场工具集合，让工作更高效、沟通更顺畅、摸鱼更有艺术感
+            {t('homepage.subtitle')}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-500/30">
-              AI智能助手
+              {t('homepage.badges.aiAssistant')}
             </Badge>
             <Badge variant="secondary" className="bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-500/30">
-              职场效率
+              {t('homepage.badges.workEfficiency')}
             </Badge>
             <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-500/30">
-              沟通优化
+              {t('homepage.badges.communicationOptimization')}
             </Badge>
             <Badge variant="secondary" className="bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-500/30">
-              摸鱼神器
+              {t('homepage.badges.slackingArtifact')}
             </Badge>
           </div>
         </div>
@@ -60,10 +62,10 @@ export default function HomePage() {
                   <category.icon className="w-6 h-6 text-neutral-700 dark:text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">{category.name}</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">{t(`categories.${category.id}`)}</h2>
                   {category.description && (
                     <p className="text-neutral-500 dark:text-neutral-400">
-                      {category.description}
+                      {t(`categories.${category.id}-description`)}
                     </p>
                   )}
                 </div>
@@ -105,17 +107,17 @@ export default function HomePage() {
                               className="text-xs border-amber-400 dark:border-amber-500/50 text-amber-600 dark:text-amber-300 flex items-center"
                             >
                               <Construction className="w-3 h-3 mr-1" />
-                              开发中
+                              {t('common.wip')}
                             </Badge>
                           )}
                         </div>
                         <CardTitle className="text-neutral-900 dark:text-white text-base group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors mt-2">
-                          {feature.name}
+                          {t(`tools.${feature.id}`) || feature.name}
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="flex-grow">
                         <CardDescription className="text-neutral-600 dark:text-neutral-300 text-xs leading-normal">
-                          {feature.description}
+                          {t(`toolDescriptions.${feature.id}`) || feature.description}
                         </CardDescription>
                       </CardContent>
                     </Card>
@@ -130,7 +132,7 @@ export default function HomePage() {
         {/* Footer */}
         <div className="text-center mt-16 pt-8 border-t border-neutral-200 dark:border-neutral-700">
           <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-            🚀 让AI成为你的职场助手，工作效率翻倍，摸鱼技能满级！
+            {t('homepage.footer')}
           </p>
         </div>
       </div>

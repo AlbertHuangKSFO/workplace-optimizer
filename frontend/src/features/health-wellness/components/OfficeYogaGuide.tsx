@@ -8,11 +8,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { Loader2, RefreshCw, Sparkles, Terminal } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const OfficeYogaGuide = () => {
+interface OfficeYogaGuideProps {
+  locale?: ValidLocale;
+}
+
+const OfficeYogaGuide = ({ locale = 'zh-CN' }: OfficeYogaGuideProps) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [availableTime, setAvailableTime] = useState([15]);
   const [workEnvironment, setWorkEnvironment] = useState("");
   const [bodyIssues, setBodyIssues] = useState<string[]>([]);
@@ -24,27 +32,28 @@ const OfficeYogaGuide = () => {
   const [error, setError] = useState<string | null>(null);
   const [guide, setGuide] = useState<string | null>(null);
 
-  const bodyIssueOptions = [
-    { id: "neck-pain", label: "颈部疼痛/僵硬" },
-    { id: "shoulder-tension", label: "肩膀紧张" },
-    { id: "back-pain", label: "腰背疼痛" },
-    { id: "eye-strain", label: "眼部疲劳" },
-    { id: "wrist-pain", label: "手腕疼痛" },
-    { id: "leg-numbness", label: "腿部麻木" },
-    { id: "headache", label: "头痛" },
-    { id: "poor-posture", label: "姿势不良" }
-  ];
+  // 使用useMemo来确保选项数组在翻译加载完成后才初始化
+  const bodyIssueOptions = React.useMemo(() => [
+    { id: "neck-pain", label: t('officeYogaGuide.bodyIssueOptions.neck-pain') },
+    { id: "shoulder-tension", label: t('officeYogaGuide.bodyIssueOptions.shoulder-tension') },
+    { id: "back-pain", label: t('officeYogaGuide.bodyIssueOptions.back-pain') },
+    { id: "eye-strain", label: t('officeYogaGuide.bodyIssueOptions.eye-strain') },
+    { id: "wrist-pain", label: t('officeYogaGuide.bodyIssueOptions.wrist-pain') },
+    { id: "leg-numbness", label: t('officeYogaGuide.bodyIssueOptions.leg-numbness') },
+    { id: "headache", label: t('officeYogaGuide.bodyIssueOptions.headache') },
+    { id: "poor-posture", label: t('officeYogaGuide.bodyIssueOptions.poor-posture') }
+  ], [t, translationsLoading]);
 
-  const goalOptions = [
-    { id: "stress-relief", label: "缓解压力" },
-    { id: "improve-posture", label: "改善姿势" },
-    { id: "increase-energy", label: "提升精力" },
-    { id: "pain-relief", label: "缓解疼痛" },
-    { id: "improve-focus", label: "提高专注力" },
-    { id: "better-sleep", label: "改善睡眠" },
-    { id: "team-building", label: "团队建设" },
-    { id: "daily-routine", label: "建立日常习惯" }
-  ];
+  const goalOptions = React.useMemo(() => [
+    { id: "stress-relief", label: t('officeYogaGuide.goalOptions.stress-relief') },
+    { id: "improve-posture", label: t('officeYogaGuide.goalOptions.improve-posture') },
+    { id: "increase-energy", label: t('officeYogaGuide.goalOptions.increase-energy') },
+    { id: "pain-relief", label: t('officeYogaGuide.goalOptions.pain-relief') },
+    { id: "improve-focus", label: t('officeYogaGuide.goalOptions.improve-focus') },
+    { id: "better-sleep", label: t('officeYogaGuide.goalOptions.better-sleep') },
+    { id: "team-building", label: t('officeYogaGuide.goalOptions.team-building') },
+    { id: "daily-routine", label: t('officeYogaGuide.goalOptions.daily-routine') }
+  ], [t, translationsLoading]);
 
   const handleBodyIssueChange = (issueId: string, checked: boolean) => {
     if (checked) {
@@ -64,7 +73,7 @@ const OfficeYogaGuide = () => {
 
   const handleGenerate = async () => {
     if (!workEnvironment || !fitnessLevel) {
-      setError("请填写工作环境和健身水平。");
+      setError(t('officeYogaGuide.errorRequired'));
       return;
     }
 
@@ -83,25 +92,33 @@ const OfficeYogaGuide = () => {
     const analysisData = {
       availableTime: availableTime[0],
       workEnvironment,
-      bodyIssues: selectedBodyIssues.length > 0 ? selectedBodyIssues.join("、") : "无特殊问题",
+      bodyIssues: selectedBodyIssues.length > 0 ? selectedBodyIssues.join("、") : t('officeYogaGuide.noIssues'),
       fitnessLevel,
-      workSchedule: workSchedule || "标准工作时间",
-      goals: selectedGoals.length > 0 ? selectedGoals.join("、") : "整体健康改善",
-      additionalInfo: additionalInfo || "无"
+      workSchedule: workSchedule || t('officeYogaGuide.standardWorkTime'),
+      goals: selectedGoals.length > 0 ? selectedGoals.join("、") : t('officeYogaGuide.overallHealthImprovement'),
+      additionalInfo: additionalInfo || t('officeYogaGuide.none')
     };
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          toolId: "office-yoga-guide",
-          messages: [
-            {
-              role: "user",
-              content: `请为我制定办公室瑜伽指导方案。我的情况如下：
+    // Create prompt based on locale
+    const prompt = locale === 'en-US'
+      ? `Please create an office yoga guide for me. My situation is as follows:
+
+Basic Information:
+- Available time: ${analysisData.availableTime} minutes
+- Work environment: ${analysisData.workEnvironment}
+- Fitness level: ${analysisData.fitnessLevel}
+- Work schedule: ${analysisData.workSchedule}
+
+Physical condition:
+- Main physical issues: ${analysisData.bodyIssues}
+
+Goals and expectations:
+- Desired effects: ${analysisData.goals}
+
+Additional information: ${analysisData.additionalInfo}
+
+Please generate a detailed office yoga guide based on this information, including specific movement instructions, time arrangements, and precautions.`
+      : `请为我制定办公室瑜伽指导方案。我的情况如下：
 
 基本信息：
 - 可用时间：${analysisData.availableTime}分钟
@@ -117,7 +134,20 @@ const OfficeYogaGuide = () => {
 
 补充信息：${analysisData.additionalInfo}
 
-请根据这些信息生成详细的办公室瑜伽指导方案，包括具体的动作指导、时间安排和注意事项。`,
+请根据这些信息生成详细的办公室瑜伽指导方案，包括具体的动作指导、时间安排和注意事项。`;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          toolId: "office-yoga-guide",
+          messages: [
+            {
+              role: "user",
+              content: prompt,
             },
           ],
         }),
@@ -125,13 +155,13 @@ const OfficeYogaGuide = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "生成瑜伽指导方案时发生错误。");
+        throw new Error(errorData.error || t('officeYogaGuide.errorGeneration'));
       }
 
       const data = await response.json();
       setGuide(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "生成瑜伽指导方案时发生未知错误。");
+      setError(err.message || t('officeYogaGuide.errorUnknown'));
     } finally {
       setIsLoading(false);
     }
@@ -149,15 +179,26 @@ const OfficeYogaGuide = () => {
     setError(null);
   };
 
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="yoga" className="mr-2 text-4xl">🧘‍♀️</span>
-          办公室瑜伽指导
+          {t('officeYogaGuide.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          适合在工位进行的拉伸和放松动作，缓解身体疲劳，提升工作状态
+          {t('officeYogaGuide.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -165,29 +206,29 @@ const OfficeYogaGuide = () => {
         {availableTime[0] > 0 && (
           <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-6 rounded-lg border">
             <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold">🕐 练习时间规划</h3>
+              <h3 className="text-xl font-semibold">🕐 {t('officeYogaGuide.timePreview')}</h3>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-green-600">总时长</div>
-                  <div>{availableTime[0]}分钟</div>
+                  <div className="font-semibold text-green-600">{t('officeYogaGuide.totalTime')}</div>
+                  <div>{availableTime[0]}{t('officeYogaGuide.minutes')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-blue-600">热身</div>
-                  <div>{Math.ceil(availableTime[0] * 0.2)}分钟</div>
+                  <div className="font-semibold text-blue-600">{t('officeYogaGuide.warmup')}</div>
+                  <div>{Math.ceil(availableTime[0] * 0.2)}{t('officeYogaGuide.minutes')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-purple-600">主练习</div>
-                  <div>{Math.ceil(availableTime[0] * 0.6)}分钟</div>
+                  <div className="font-semibold text-purple-600">{t('officeYogaGuide.mainPractice')}</div>
+                  <div>{Math.ceil(availableTime[0] * 0.6)}{t('officeYogaGuide.minutes')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-orange-600">放松</div>
-                  <div>{Math.ceil(availableTime[0] * 0.2)}分钟</div>
+                  <div className="font-semibold text-orange-600">{t('officeYogaGuide.relaxation')}</div>
+                  <div>{Math.ceil(availableTime[0] * 0.2)}{t('officeYogaGuide.minutes')}</div>
                 </div>
               </div>
 
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                💡 科学的时间分配，让您在有限时间内获得最佳效果
+                💡 {t('officeYogaGuide.timeAllocationTip')}
               </div>
             </div>
           </div>
@@ -196,10 +237,10 @@ const OfficeYogaGuide = () => {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">⏰ 基本设置</h3>
+              <h3 className="text-lg font-semibold">⏰ {t('officeYogaGuide.basicSettings')}</h3>
 
               <div className="space-y-2">
-                <Label>可用时间：{availableTime[0]}分钟</Label>
+                <Label>{t('officeYogaGuide.availableTime')}：{availableTime[0]}{t('officeYogaGuide.minutes')}</Label>
                 <Slider
                   value={availableTime}
                   onValueChange={setAvailableTime}
@@ -208,64 +249,64 @@ const OfficeYogaGuide = () => {
                   step={5}
                   className="w-full"
                 />
-                <div className="text-xs text-gray-500">建议：5-15分钟为快速缓解，15-30分钟为标准练习</div>
+                <div className="text-xs text-gray-500">
+                  {locale === 'en-US'
+                    ? "Recommendation: 5-15 minutes for quick relief, 15-30 minutes for standard practice"
+                    : "建议：5-15分钟为快速缓解，15-30分钟为标准练习"
+                  }
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="work-environment">工作环境 *</Label>
+                <Label htmlFor="work-environment">{t('officeYogaGuide.workEnvironment')} *</Label>
                 <Select value={workEnvironment} onValueChange={setWorkEnvironment}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择您的工作环境" />
+                    <SelectValue placeholder={t('officeYogaGuide.selectEnvironment')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="open-office">开放式办公区</SelectItem>
-                    <SelectItem value="private-office">独立办公室</SelectItem>
-                    <SelectItem value="cubicle">格子间</SelectItem>
-                    <SelectItem value="home-office">居家办公</SelectItem>
-                    <SelectItem value="shared-space">共享办公空间</SelectItem>
+                    <SelectItem value="open-office">{t('officeYogaGuide.environments.open-office')}</SelectItem>
+                    <SelectItem value="private-office">{t('officeYogaGuide.environments.private-office')}</SelectItem>
+                    <SelectItem value="home-office">{t('officeYogaGuide.environments.home-office')}</SelectItem>
+                    <SelectItem value="meeting-room">{t('officeYogaGuide.environments.meeting-room')}</SelectItem>
+                    <SelectItem value="shared-space">{t('officeYogaGuide.environments.shared-space')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="fitness-level">健身水平 *</Label>
+                <Label htmlFor="fitness-level">{t('officeYogaGuide.fitnessLevel')} *</Label>
                 <Select value={fitnessLevel} onValueChange={setFitnessLevel}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择您的健身水平" />
+                    <SelectValue placeholder={t('officeYogaGuide.selectFitnessLevel')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="beginner">初学者（很少运动）</SelectItem>
-                    <SelectItem value="intermediate">中等水平（偶尔运动）</SelectItem>
-                    <SelectItem value="advanced">较高水平（经常运动）</SelectItem>
-                    <SelectItem value="expert">专业水平（瑜伽经验丰富）</SelectItem>
+                    <SelectItem value="beginner">{t('officeYogaGuide.fitnessLevels.beginner')}</SelectItem>
+                    <SelectItem value="intermediate">{t('officeYogaGuide.fitnessLevels.intermediate')}</SelectItem>
+                    <SelectItem value="advanced">{t('officeYogaGuide.fitnessLevels.advanced')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">📅 工作安排</h3>
+              <h3 className="text-lg font-semibold">📅 {t('officeYogaGuide.workSchedule')}</h3>
 
               <div className="space-y-2">
-                <Label htmlFor="work-schedule">工作时间安排</Label>
-                <Select value={workSchedule} onValueChange={setWorkSchedule}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择您的工作时间" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="standard">标准工作时间（9-18点）</SelectItem>
-                    <SelectItem value="flexible">弹性工作时间</SelectItem>
-                    <SelectItem value="shift">轮班工作</SelectItem>
-                    <SelectItem value="overtime">经常加班</SelectItem>
-                    <SelectItem value="remote">远程工作</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="work-schedule">{t('officeYogaGuide.workSchedule')}</Label>
+                <Textarea
+                  id="work-schedule"
+                  placeholder={t('officeYogaGuide.workSchedulePlaceholder')}
+                  value={workSchedule}
+                  onChange={(e) => setWorkSchedule(e.target.value)}
+                  rows={2}
+                />
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">🩺 身体状况评估</h3>
+            <h3 className="text-lg font-semibold">🩺 {t('officeYogaGuide.bodyIssues')}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('officeYogaGuide.selectBodyIssues')}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {bodyIssueOptions.map((option) => (
                 <div key={option.id} className="flex items-center space-x-2">
@@ -281,7 +322,8 @@ const OfficeYogaGuide = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">🎯 目标设定</h3>
+            <h3 className="text-lg font-semibold">🎯 {t('officeYogaGuide.goals')}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('officeYogaGuide.selectGoals')}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {goalOptions.map((option) => (
                 <div key={option.id} className="flex items-center space-x-2">
@@ -297,10 +339,10 @@ const OfficeYogaGuide = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="additional-info">补充信息</Label>
+            <Label htmlFor="additional-info">{t('officeYogaGuide.additionalInfo')}</Label>
             <Textarea
               id="additional-info"
-              placeholder="其他想要补充的信息，如特殊身体状况、练习偏好、时间限制等..."
+              placeholder={t('officeYogaGuide.additionalInfoPlaceholder')}
               value={additionalInfo}
               onChange={(e) => setAdditionalInfo(e.target.value)}
               rows={3}
@@ -313,25 +355,25 @@ const OfficeYogaGuide = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在生成瑜伽指导...
+                {t('officeYogaGuide.generating')}
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                生成个性化瑜伽方案
+                {t('officeYogaGuide.generateGuide')}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" />
-            重新设置
+            {t('officeYogaGuide.resetForm')}
           </Button>
         </div>
 
         {error && (
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{locale === 'en-US' ? 'Error' : '错误'}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -340,7 +382,9 @@ const OfficeYogaGuide = () => {
       {guide && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">瑜伽指导方案:</h3>
+            <h3 className="text-lg font-semibold">
+              {locale === 'en-US' ? 'Yoga Guide:' : '瑜伽指导方案:'}
+            </h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

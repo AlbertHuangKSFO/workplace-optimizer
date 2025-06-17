@@ -19,38 +19,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Loader2, Tags, Wand2 } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
-const objectTypes = [
-  { value: 'project', label: '项目' },
-  { value: 'product', label: '产品' },
-  { value: 'team', label: '团队' },
-  { value: 'event', label: '活动' },
-  { value: 'pet', label: '宠物' },
-  { value: 'character', label: '角色' },
-  { value: 'company_feature', label: '公司特性/福利' },
-  { value: 'internal_tool', label: '内部工具/系统' },
-  { value: 'community', label: '社群/圈子' },
-  { value: '公众号/自媒体', label: '公众号/自媒体账号' },
-];
+interface NicknameGeneratorProps {
+  locale?: ValidLocale;
+}
 
-const nameStyles = [
-  { value: 'professional', label: '专业稳重' },
-  { value: 'creative', label: '创意独特' },
-  { value: 'modern', label: '现代简约' },
-  { value: 'traditional', label: '经典传统' },
-  { value: 'playful', label: '活泼有趣' },
-  { value: 'techy', label: '科技前沿' },
-  { value: 'elegant', label: '优雅精致' },
-  { value: 'friendly', label: '亲和友善' },
-  { value: 'powerful', label: '霸气有力' },
-  { value: 'chinese_cultural', label: '中国风' },
-];
+function NicknameGenerator({ locale = 'zh-CN' }: NicknameGeneratorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-function NicknameGenerator(): React.JSX.Element {
   const [objectType, setObjectType] = useState<string>('');
   const [nameStyle, setNameStyle] = useState<string>('');
   const [keywords, setKeywords] = useState<string>('');
@@ -62,6 +44,33 @@ function NicknameGenerator(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string>('');
 
+  // 使用useMemo来确保选项数组在翻译加载完成后才初始化
+  const objectTypes = React.useMemo(() => [
+    { value: 'project', label: t('nicknameGenerator.objectTypes.project') },
+    { value: 'product', label: t('nicknameGenerator.objectTypes.product') },
+    { value: 'team', label: t('nicknameGenerator.objectTypes.team') },
+    { value: 'event', label: t('nicknameGenerator.objectTypes.event') },
+    { value: 'pet', label: t('nicknameGenerator.objectTypes.pet') },
+    { value: 'character', label: t('nicknameGenerator.objectTypes.character') },
+    { value: 'company_feature', label: t('nicknameGenerator.objectTypes.company_feature') },
+    { value: 'internal_tool', label: t('nicknameGenerator.objectTypes.internal_tool') },
+    { value: 'community', label: t('nicknameGenerator.objectTypes.community') },
+    { value: 'media_account', label: t('nicknameGenerator.objectTypes.media_account') },
+  ], [t, translationsLoading]);
+
+  const nameStyles = React.useMemo(() => [
+    { value: 'professional', label: t('nicknameGenerator.nameStyles.professional') },
+    { value: 'creative', label: t('nicknameGenerator.nameStyles.creative') },
+    { value: 'modern', label: t('nicknameGenerator.nameStyles.modern') },
+    { value: 'traditional', label: t('nicknameGenerator.nameStyles.traditional') },
+    { value: 'playful', label: t('nicknameGenerator.nameStyles.playful') },
+    { value: 'techy', label: t('nicknameGenerator.nameStyles.techy') },
+    { value: 'elegant', label: t('nicknameGenerator.nameStyles.elegant') },
+    { value: 'friendly', label: t('nicknameGenerator.nameStyles.friendly') },
+    { value: 'powerful', label: t('nicknameGenerator.nameStyles.powerful') },
+    { value: 'chinese_cultural', label: t('nicknameGenerator.nameStyles.chinese_cultural') },
+  ], [t, translationsLoading]);
+
   const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -69,17 +78,28 @@ function NicknameGenerator(): React.JSX.Element {
     setResult('');
 
     if (!objectType) {
-      setError('请选择对象类型');
+      setError(t('nicknameGenerator.errorSelectObjectType'));
       setIsLoading(false);
       return;
     }
 
-    let userPrompt = `我需要为【${objectType}】起一些名称/代号。`;
-    if (nameStyle) userPrompt += `风格偏向【${nameStyle}】。`;
-    if (description) userPrompt += `关于它的简要描述或背景是：【${description}】。`;
-    if (keywords) userPrompt += `希望名称能体现以下关键词或概念：【${keywords}】。`;
-    if (negativeKeywords) userPrompt += `请避免使用或暗示以下内容：【${negativeKeywords}】。`;
-    userPrompt += `请提供大约 ${quantity} 个建议。`;
+    // Create prompt based on locale
+    let userPrompt = '';
+    if (locale === 'en-US') {
+      userPrompt = `I need to create names/codenames for 【${objectType}】.`;
+      if (nameStyle) userPrompt += ` The style should be 【${nameStyle}】.`;
+      if (description) userPrompt += ` Brief description or background: 【${description}】.`;
+      if (keywords) userPrompt += ` The names should reflect these keywords or concepts: 【${keywords}】.`;
+      if (negativeKeywords) userPrompt += ` Please avoid using or implying the following: 【${negativeKeywords}】.`;
+      userPrompt += ` Please provide approximately ${quantity} suggestions.`;
+    } else {
+      userPrompt = `我需要为【${objectType}】起一些名称/代号。`;
+      if (nameStyle) userPrompt += `风格偏向【${nameStyle}】。`;
+      if (description) userPrompt += `关于它的简要描述或背景是：【${description}】。`;
+      if (keywords) userPrompt += `希望名称能体现以下关键词或概念：【${keywords}】。`;
+      if (negativeKeywords) userPrompt += `请避免使用或暗示以下内容：【${negativeKeywords}】。`;
+      userPrompt += `请提供大约 ${quantity} 个建议。`;
+    }
 
     try {
       const response = await fetch('/api/chat', {
@@ -93,7 +113,7 @@ function NicknameGenerator(): React.JSX.Element {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `请求失败，状态码：${response.status}`);
+        throw new Error(errorData.message || `${locale === 'en-US' ? 'Request failed, status code:' : '请求失败，状态码：'} ${response.status}`);
       }
 
       const data = await response.json();
@@ -102,13 +122,24 @@ function NicknameGenerator(): React.JSX.Element {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('生成过程中发生未知错误');
+        setError(t('nicknameGenerator.errorGeneration'));
       }
       console.error(err);
     } finally {
       setIsLoading(false);
     }
-  }, [objectType, nameStyle, keywords, description, negativeKeywords, quantity]);
+  }, [objectType, nameStyle, keywords, description, negativeKeywords, quantity, locale, t]);
+
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className={cn(
@@ -120,10 +151,10 @@ function NicknameGenerator(): React.JSX.Element {
           <Tags className="w-10 h-10 text-purple-500 dark:text-purple-400" />
         </div>
         <CardTitle className="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">
-          智能起名/代号生成器
+          {t('nicknameGenerator.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400 px-2 sm:px-4">
-          根据您的需求，快速生成创意名称、项目代号、宠物昵称等。
+          {t('nicknameGenerator.description')}
         </CardDescription>
       </CardHeader>
 
@@ -131,10 +162,12 @@ function NicknameGenerator(): React.JSX.Element {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="objectType" className="block text-sm font-medium mb-1">对象类型 <span className="text-red-500">*</span></Label>
+              <Label htmlFor="objectType" className="block text-sm font-medium mb-1">
+                {t('nicknameGenerator.objectTypeRequired')}
+              </Label>
               <Select value={objectType} onValueChange={setObjectType}>
                 <SelectTrigger id="objectType">
-                  <SelectValue placeholder="选择对象类型" />
+                  <SelectValue placeholder={t('nicknameGenerator.selectObjectType')} />
                 </SelectTrigger>
                 <SelectContent>
                   {objectTypes.map(type => (
@@ -144,10 +177,12 @@ function NicknameGenerator(): React.JSX.Element {
               </Select>
             </div>
             <div>
-              <Label htmlFor="nameStyle" className="block text-sm font-medium mb-1">期望风格</Label>
+              <Label htmlFor="nameStyle" className="block text-sm font-medium mb-1">
+                {t('nicknameGenerator.nameStyle')}
+              </Label>
               <Select value={nameStyle} onValueChange={setNameStyle}>
                 <SelectTrigger id="nameStyle">
-                  <SelectValue placeholder="选择期望风格 (可选)" />
+                  <SelectValue placeholder={t('nicknameGenerator.selectNameStyle')} />
                 </SelectTrigger>
                 <SelectContent>
                   {nameStyles.map(style => (
@@ -160,86 +195,129 @@ function NicknameGenerator(): React.JSX.Element {
 
           <div>
             <Label htmlFor="description" className="block text-sm font-medium mb-1">
-              对象简述 (可选)
+              {t('nicknameGenerator.objectDescription')}
             </Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="例如：一个帮助提高团队协作效率的内部工具..."
+              placeholder={t('nicknameGenerator.objectDescriptionPlaceholder')}
               className="min-h-[80px]"
             />
           </div>
 
           <div>
             <Label htmlFor="keywords" className="block text-sm font-medium mb-1">
-              包含关键词/核心概念 (可选)
+              {t('nicknameGenerator.keywords')}
             </Label>
             <Input
               id="keywords"
               type="text"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              placeholder="例如：创新, 智能, 连接, 未来 (用逗号分隔)"
+              placeholder={t('nicknameGenerator.keywordsPlaceholder')}
             />
           </div>
 
           <div>
             <Label htmlFor="negativeKeywords" className="block text-sm font-medium mb-1">
-              排除词/避免的含义 (可选)
+              {t('nicknameGenerator.negativeKeywords')}
             </Label>
             <Input
               id="negativeKeywords"
               type="text"
               value={negativeKeywords}
               onChange={(e) => setNegativeKeywords(e.target.value)}
-              placeholder="例如：旧的, 复杂的, 负面的 (用逗号分隔)"
+              placeholder={t('nicknameGenerator.negativeKeywordsPlaceholder')}
             />
           </div>
 
           <div>
-            <Label htmlFor="quantity" className="block text-sm font-medium mb-1">建议数量</Label>
+            <Label htmlFor="quantity" className="block text-sm font-medium mb-1">
+              {t('nicknameGenerator.quantity')}
+            </Label>
             <Select value={quantity} onValueChange={setQuantity}>
-                <SelectTrigger id="quantity" className="w-[180px]">
-                  <SelectValue placeholder="选择数量" />
-                </SelectTrigger>
-                <SelectContent>
-                  {[3, 5, 8, 10, 15].map(num => (
-                    <SelectItem key={num} value={String(num)}>{num}个</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SelectTrigger id="quantity">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="8">8</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="15">15</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <Button type="submit" className="w-full text-base py-3" disabled={isLoading}>
-            {isLoading ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            ) : (
-              <Wand2 className="mr-2 h-5 w-5" />
-            )}
-            {isLoading ? '生成中...' : '开始智能生成'}
-          </Button>
+          <div className="flex gap-3">
+            <Button type="submit" disabled={isLoading} className="flex-1">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('nicknameGenerator.generating')}
+                </>
+              ) : (
+                <>
+                  <Wand2 className="mr-2 h-4 w-4" />
+                  {t('nicknameGenerator.generateNames')}
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setObjectType('');
+                setNameStyle('');
+                setKeywords('');
+                setDescription('');
+                setNegativeKeywords('');
+                setQuantity('5');
+                setResult('');
+                setError(null);
+              }}
+              className="flex-1"
+            >
+              <Tags className="mr-2 h-4 w-4" />
+              {t('nicknameGenerator.clearForm')}
+            </Button>
+          </div>
+
+          {error && (
+            <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            </div>
+          )}
         </form>
+      </CardContent>
 
-        {error && (
-          <div className="mt-6 p-4 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 rounded-md">
-            <p className="font-semibold">发生错误</p>
-            <p className="text-sm">{error}</p>
-          </div>
-        )}
-
-        {result && !isLoading && (
-          <div className="mt-6">
-            <h3 className="text-xl font-semibold mb-3 text-purple-600 dark:text-purple-400">生成结果：</h3>
-            <div className="prose prose-sm sm:prose dark:prose-invert max-w-none p-4 border border-neutral-200 dark:border-neutral-700 rounded-md bg-neutral-50 dark:bg-neutral-800">
-              <ReactMarkdown>{result}</ReactMarkdown>
+      {result && (
+        <CardFooter className="flex-shrink-0 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-3 text-purple-600 dark:text-purple-400">
+              {locale === 'en-US' ? 'Generated Names:' : '生成的名称：'}
+            </h3>
+            <div className="p-4 bg-neutral-50 dark:bg-neutral-800 rounded-md max-h-64 overflow-y-auto">
+              <ReactMarkdown
+                components={{
+                  h1: ({node, ...props}) => <h1 className="text-xl font-bold mb-3 text-purple-600 dark:text-purple-400" {...props} />,
+                  h2: ({node, ...props}) => <h2 className="text-lg font-semibold mb-2 text-blue-600 dark:text-blue-400" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-base font-semibold mb-2 text-green-600 dark:text-green-400" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1" {...props} />,
+                  ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1" {...props} />,
+                  li: ({node, ...props}) => <li className="mb-1" {...props} />,
+                  p: ({node, ...props}) => <p className="mb-2 leading-relaxed" {...props} />,
+                  strong: ({node, ...props}) => <strong className="font-semibold text-purple-600 dark:text-purple-400" {...props} />,
+                  em: ({node, ...props}) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
+                }}
+              >
+                {result}
+              </ReactMarkdown>
             </div>
           </div>
-        )}
-      </CardContent>
-       <CardFooter className="text-xs text-center text-neutral-500 dark:text-neutral-400 pt-4 mt-auto border-t border-neutral-200 dark:border-neutral-700 flex-shrink-0">
-        AI 生成内容仅供参考，请仔细甄别。
-      </CardFooter>
+        </CardFooter>
+      )}
     </Card>
   );
 }

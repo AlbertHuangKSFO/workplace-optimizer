@@ -3,12 +3,19 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { AlertTriangle, Loader2, Sparkles } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const MeetingNonsenseTranslator: React.FC = () => {
+interface MeetingNonsenseTranslatorProps {
+  locale: ValidLocale;
+}
+
+const MeetingNonsenseTranslator: React.FC<MeetingNonsenseTranslatorProps> = ({ locale }) => {
+  const { t } = useTranslations(locale);
   const [originalText, setOriginalText] = useState<string>('');
   const [translatedText, setTranslatedText] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -16,7 +23,7 @@ const MeetingNonsenseTranslator: React.FC = () => {
 
   const handleSubmit = useCallback(async () => {
     if (!originalText.trim()) {
-      setError('请输入需要翻译的会议内容！');
+      setError(t('meetingNonsenseTranslator.emptyInputError'));
       setTranslatedText('');
       return;
     }
@@ -40,7 +47,7 @@ const MeetingNonsenseTranslator: React.FC = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '会议废话过滤器今天有点"啰嗦"，暂时无法服务。' }));
+        const errorData = await response.json().catch(() => ({ message: locale === 'zh-CN' ? '会议废话过滤器今天有点"啰嗦"，暂时无法服务。' : 'The meeting nonsense filter is a bit "chatty" today and temporarily unavailable.' }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -50,27 +57,27 @@ const MeetingNonsenseTranslator: React.FC = () => {
         setTranslatedText(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure for meeting nonsense translator:', data);
-        throw new Error('AI返回的"翻译"结果有点不寻常...');
+        throw new Error(locale === 'zh-CN' ? 'AI返回的"翻译"结果有点不寻常...' : 'The AI translation result is a bit unusual...');
       }
     } catch (e) {
       console.error('Failed to translate meeting nonsense:', e);
-      const errorMessage = e instanceof Error ? e.message : '翻译会议废话时发生未知错误，可能是AI的"废话引擎"过热了！';
+      const errorMessage = e instanceof Error ? e.message : (locale === 'zh-CN' ? '翻译会议废话时发生未知错误，可能是AI的"废话引擎"过热了！' : 'Unknown error occurred while translating meeting nonsense, the AI "nonsense engine" might be overheated!');
       setError(errorMessage);
       setTranslatedText(''); // Clear previous results on error
     } finally {
       setIsLoading(false);
     }
-  }, [originalText]);
+  }, [originalText, t, locale]);
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="megaphone" className="mr-2 text-4xl">📢</span>
-          会议废话翻译器
+          {t('meetingNonsenseTranslator.title')}
         </CardTitle>
         <CardDescription className="mt-1 text-base">
-          粘贴冗长会议内容，AI帮你一键"脱水"，直击核心，拒绝废话！
+          {t('meetingNonsenseTranslator.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 pt-6">
@@ -78,17 +85,17 @@ const MeetingNonsenseTranslator: React.FC = () => {
           <Textarea
             value={originalText}
             onChange={(e) => setOriginalText(e.target.value)}
-            placeholder="例如：嗯...那个...我想说的是，关于这个项目，我觉得吧，总的来说，呃，还是不错的，但是呢，可能有些小地方...大家懂我意思吧...就是那个什么...对吧..."
+            placeholder={t('meetingNonsenseTranslator.placeholder')}
             className="min-h-[150px] w-full bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 focus:ring-sky-500 focus:border-sky-500"
             rows={6}
           />
         </div>
         <Button onClick={handleSubmit} disabled={isLoading} className="w-full">
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在精炼中...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('meetingNonsenseTranslator.translatingButton')}
             </>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 开始翻译废话
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('meetingNonsenseTranslator.translateButton')}
             </>
           )}
         </Button>
@@ -102,7 +109,7 @@ const MeetingNonsenseTranslator: React.FC = () => {
 
         {translatedText && !isLoading && (
           <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2 text-center text-sky-700 dark:text-sky-300">"翻译"结果：</h3>
+            <h3 className="text-lg font-semibold mb-2 text-center text-sky-700 dark:text-sky-300">{t('meetingNonsenseTranslator.resultTitle')}</h3>
             <div className="p-4 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700/50 prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{translatedText}</ReactMarkdown>
             </div>
@@ -111,7 +118,7 @@ const MeetingNonsenseTranslator: React.FC = () => {
          {isLoading && !translatedText && !error && (
           <div className="text-center py-6 flex flex-col items-center justify-center">
             <Loader2 className="h-10 w-10 animate-spin text-sky-500 mb-3" />
-            <p className="text-neutral-500 dark:text-neutral-400">AI正在过滤会议中的水分，请稍候...</p>
+            <p className="text-neutral-500 dark:text-neutral-400">{t('meetingNonsenseTranslator.loadingText')}</p>
           </div>
         )}
       </CardContent>
