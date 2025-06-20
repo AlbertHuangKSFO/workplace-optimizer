@@ -8,11 +8,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { Calculator, Loader2, RefreshCw, Terminal } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const FireCountdown = () => {
+interface FireCountdownProps {
+  locale: ValidLocale;
+}
+
+const FireCountdown = ({ locale }: FireCountdownProps) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [monthlyIncome, setMonthlyIncome] = useState("");
   const [monthlyExpense, setMonthlyExpense] = useState("");
   const [currentAssets, setCurrentAssets] = useState("");
@@ -58,7 +66,7 @@ const FireCountdown = () => {
 
   // 计算达到财务自由的时间（简化版复利计算）
   const calculateTimeToFire = (targetAmount: number, currentAssets: number, monthlySavings: number, annualReturn: number) => {
-    if (monthlySavings <= 0) return "无法实现";
+    if (monthlySavings <= 0) return t('fireCountdown.cannotAchieve');
 
     const monthlyReturn = annualReturn / 12 / 100;
     const yearlySavings = monthlySavings * 12;
@@ -72,19 +80,19 @@ const FireCountdown = () => {
       years++;
     }
 
-    return years >= 100 ? "超过100年" : `${years}年`;
+    return years >= 100 ? t('fireCountdown.overHundredYears') : `${years}${t('fireCountdown.years')}`;
   };
 
   const basicData = calculateBasicData();
 
   const handleCalculate = async () => {
     if (!monthlyIncome || !monthlyExpense) {
-      setError("请填写月收入和月支出。");
+      setError(t('fireCountdown.emptyIncomeExpenseError'));
       return;
     }
 
     if (parseFloat(monthlyIncome) <= parseFloat(monthlyExpense)) {
-      setError("月收入必须大于月支出才能实现财务自由。");
+      setError(t('fireCountdown.negativeBalanceError'));
       return;
     }
 
@@ -96,24 +104,44 @@ const FireCountdown = () => {
       ...basicData,
       expectedReturn: expectedReturn[0],
       inflationRate: inflationRate[0],
-      fireStrategy: fireStrategy || "标准版",
-      city: city || "未指定",
-      age: age || "未指定",
-      additionalInfo: additionalInfo || "无"
+      fireStrategy: fireStrategy || (locale === 'en-US' ? 'Standard' : '标准版'),
+      city: city || (locale === 'en-US' ? 'Not specified' : '未指定'),
+      age: age || (locale === 'en-US' ? 'Not specified' : '未指定'),
+      additionalInfo: additionalInfo || (locale === 'en-US' ? 'None' : '无')
     };
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          toolId: "fire-countdown",
-          messages: [
-            {
-              role: "user",
-              content: `请帮我计算财务自由倒计时。我的财务信息如下：
+    // Create prompt based on locale
+    const prompt = locale === 'en-US'
+      ? `Please help me calculate my financial independence countdown. My financial information is as follows:
+
+Basic Information:
+- Age: ${analysisData.age}
+- City: ${analysisData.city}
+- FIRE Strategy: ${analysisData.fireStrategy}
+
+Income & Expenses:
+- Monthly Income: $${analysisData.monthlyIncome}
+- Monthly Expenses: $${analysisData.monthlyExpense}
+- Monthly Net Savings: $${analysisData.monthlySavings?.toFixed(2)}
+- Savings Rate: ${analysisData.savingsRate?.toFixed(1)}%
+- Annual Expenses: $${analysisData.yearlyExpense}
+
+Assets:
+- Current Assets: $${analysisData.currentAssets}
+
+Investment Expectations:
+- Expected Annual Return: ${analysisData.expectedReturn}%
+- Expected Inflation Rate: ${analysisData.inflationRate}%
+
+FIRE Targets:
+- Conservative (30x): $${analysisData.conservativeTarget?.toFixed(0)}
+- Standard (25x): $${analysisData.standardTarget?.toFixed(0)}
+- Aggressive (20x): $${analysisData.aggressiveTarget?.toFixed(0)}
+
+Additional Information: ${analysisData.additionalInfo}
+
+Please generate a detailed financial independence countdown analysis report based on this information, including time predictions, risk analysis, optimization suggestions, and action plans.`
+      : `请帮我计算财务自由倒计时。我的财务信息如下：
 
 基本信息：
 - 年龄：${analysisData.age}
@@ -141,7 +169,21 @@ const FireCountdown = () => {
 
 补充信息：${analysisData.additionalInfo}
 
-请根据这些信息生成详细的财务自由倒计时分析报告，包括时间预测、风险分析、优化建议和行动计划。`,
+请根据这些信息生成详细的财务自由倒计时分析报告，包括时间预测、风险分析、优化建议和行动计划。`;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          toolId: "fire-countdown",
+          locale: locale,
+          messages: [
+            {
+              role: "user",
+              content: prompt,
             },
           ],
         }),
@@ -149,13 +191,13 @@ const FireCountdown = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "计算财务自由倒计时时发生错误。");
+        throw new Error(errorData.error || t('fireCountdown.calculationError'));
       }
 
       const data = await response.json();
       setReport(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "计算财务自由倒计时时发生未知错误。");
+      setError(err.message || t('fireCountdown.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -175,15 +217,26 @@ const FireCountdown = () => {
     setError(null);
   };
 
+  // Show loading if translations are still loading
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="fire" className="mr-2 text-4xl">🔥</span>
-          财务自由倒计时
+          {t('fireCountdown.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          按当前储蓄速度计算何时实现财务自由，让梦想有个明确的时间表
+          {t('fireCountdown.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -191,52 +244,52 @@ const FireCountdown = () => {
         {basicData && (
           <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-lg border">
             <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold">🎯 财务自由目标预览</h3>
+              <h3 className="text-xl font-semibold">{t('fireCountdown.targetPreview')}</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                  <div className="font-semibold text-blue-600">🛡️ 保守版</div>
-                  <div className="text-lg font-bold">¥{(basicData.conservativeTarget / 10000).toFixed(0)}万</div>
-                  <div className="text-xs text-gray-500">年支出的30倍</div>
+                  <div className="font-semibold text-blue-600">{t('fireCountdown.conservativeVersion')}</div>
+                  <div className="text-lg font-bold">{locale === 'en-US' ? '$' : '¥'}{(basicData.conservativeTarget / (locale === 'en-US' ? 1000 : 10000)).toFixed(0)}{t('fireCountdown.wan')}</div>
+                  <div className="text-xs text-gray-500">{t('fireCountdown.yearExpenseMultiple30')}</div>
                 </div>
                 <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                  <div className="font-semibold text-green-600">📈 标准版</div>
-                  <div className="text-lg font-bold">¥{(basicData.standardTarget / 10000).toFixed(0)}万</div>
-                  <div className="text-xs text-gray-500">年支出的25倍</div>
+                  <div className="font-semibold text-green-600">{t('fireCountdown.standardVersion')}</div>
+                  <div className="text-lg font-bold">{locale === 'en-US' ? '$' : '¥'}{(basicData.standardTarget / (locale === 'en-US' ? 1000 : 10000)).toFixed(0)}{t('fireCountdown.wan')}</div>
+                  <div className="text-xs text-gray-500">{t('fireCountdown.yearExpenseMultiple25')}</div>
                 </div>
                 <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                  <div className="font-semibold text-red-600">🚀 激进版</div>
-                  <div className="text-lg font-bold">¥{(basicData.aggressiveTarget / 10000).toFixed(0)}万</div>
-                  <div className="text-xs text-gray-500">年支出的20倍</div>
+                  <div className="font-semibold text-red-600">{t('fireCountdown.aggressiveVersion')}</div>
+                  <div className="text-lg font-bold">{locale === 'en-US' ? '$' : '¥'}{(basicData.aggressiveTarget / (locale === 'en-US' ? 1000 : 10000)).toFixed(0)}{t('fireCountdown.wan')}</div>
+                  <div className="text-xs text-gray-500">{t('fireCountdown.yearExpenseMultiple20')}</div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-green-600">月储蓄</div>
-                  <div>¥{basicData.monthlySavings.toFixed(0)}</div>
+                  <div className="font-semibold text-green-600">{t('fireCountdown.monthlySavings')}</div>
+                  <div>{locale === 'en-US' ? '$' : '¥'}{basicData.monthlySavings.toFixed(0)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-blue-600">储蓄率</div>
+                  <div className="font-semibold text-blue-600">{t('fireCountdown.savingsRate')}</div>
                   <div>{basicData.savingsRate.toFixed(1)}%</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-purple-600">年支出</div>
-                  <div>¥{(basicData.yearlyExpense / 10000).toFixed(1)}万</div>
+                  <div className="font-semibold text-purple-600">{t('fireCountdown.yearlyExpense')}</div>
+                  <div>{locale === 'en-US' ? '$' : '¥'}{(basicData.yearlyExpense / (locale === 'en-US' ? 1000 : 10000)).toFixed(1)}{t('fireCountdown.wan')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-orange-600">当前资产</div>
-                  <div>¥{(basicData.currentAssets / 10000).toFixed(1)}万</div>
+                  <div className="font-semibold text-orange-600">{t('fireCountdown.currentAssets')}</div>
+                  <div>{locale === 'en-US' ? '$' : '¥'}{(basicData.currentAssets / (locale === 'en-US' ? 1000 : 10000)).toFixed(1)}{t('fireCountdown.wan')}</div>
                 </div>
               </div>
 
               {expectedReturn.length > 0 && (
                 <div className="text-center">
-                  <div className="text-lg font-semibold mb-2">⏰ 预计实现时间（{expectedReturn[0]}%年化收益）</div>
+                  <div className="text-lg font-semibold mb-2">{t('fireCountdown.estimatedTime')}{expectedReturn[0]}{t('fireCountdown.estimatedTimeSuffix')}</div>
                   <div className="grid grid-cols-3 gap-2 text-sm">
-                    <div>保守版: {calculateTimeToFire(basicData.conservativeTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
-                    <div>标准版: {calculateTimeToFire(basicData.standardTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
-                    <div>激进版: {calculateTimeToFire(basicData.aggressiveTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
+                    <div>{t('fireCountdown.conservativeVersion')}: {calculateTimeToFire(basicData.conservativeTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
+                    <div>{t('fireCountdown.standardVersion')}: {calculateTimeToFire(basicData.standardTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
+                    <div>{t('fireCountdown.aggressiveVersion')}: {calculateTimeToFire(basicData.aggressiveTarget, basicData.currentAssets, basicData.monthlySavings, expectedReturn[0])}</div>
                   </div>
                 </div>
               )}
@@ -247,36 +300,36 @@ const FireCountdown = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 收支信息 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">💰 收支信息</h3>
+            <h3 className="text-lg font-semibold">{t('fireCountdown.incomeExpenseInfo')}</h3>
 
             <div className="space-y-2">
-              <Label htmlFor="monthly-income">月收入 *</Label>
+              <Label htmlFor="monthly-income">{t('fireCountdown.monthlyIncomeLabel')}</Label>
               <Input
                 id="monthly-income"
                 type="number"
-                placeholder="请输入月收入"
+                placeholder={t('fireCountdown.monthlyIncomePlaceholder')}
                 value={monthlyIncome}
                 onChange={(e) => setMonthlyIncome(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="monthly-expense">月支出 *</Label>
+              <Label htmlFor="monthly-expense">{t('fireCountdown.monthlyExpenseLabel')}</Label>
               <Input
                 id="monthly-expense"
                 type="number"
-                placeholder="请输入月支出"
+                placeholder={t('fireCountdown.monthlyExpensePlaceholder')}
                 value={monthlyExpense}
                 onChange={(e) => setMonthlyExpense(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="current-assets">当前资产</Label>
+              <Label htmlFor="current-assets">{t('fireCountdown.currentAssetsLabel')}</Label>
               <Input
                 id="current-assets"
                 type="number"
-                placeholder="包括存款、投资等总资产"
+                placeholder={t('fireCountdown.currentAssetsPlaceholder')}
                 value={currentAssets}
                 onChange={(e) => setCurrentAssets(e.target.value)}
               />
@@ -285,39 +338,39 @@ const FireCountdown = () => {
 
           {/* 个人信息 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">👤 个人信息</h3>
+            <h3 className="text-lg font-semibold">{t('fireCountdown.personalInfo')}</h3>
 
             <div className="space-y-2">
-              <Label htmlFor="age">年龄</Label>
+              <Label htmlFor="age">{t('fireCountdown.ageLabel')}</Label>
               <Input
                 id="age"
                 type="number"
-                placeholder="您的年龄"
+                placeholder={t('fireCountdown.agePlaceholder')}
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">所在城市</Label>
+              <Label htmlFor="city">{t('fireCountdown.cityLabel')}</Label>
               <Input
                 id="city"
-                placeholder="例如：北京、上海、深圳等"
+                placeholder={t('fireCountdown.cityPlaceholder')}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="fire-strategy">财务自由策略</Label>
+              <Label htmlFor="fire-strategy">{t('fireCountdown.fireStrategyLabel')}</Label>
               <Select value={fireStrategy} onValueChange={setFireStrategy}>
                 <SelectTrigger>
-                  <SelectValue placeholder="选择您的策略" />
+                  <SelectValue placeholder={t('fireCountdown.fireStrategyPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="conservative">保守版（30倍年支出）</SelectItem>
-                  <SelectItem value="standard">标准版（25倍年支出）</SelectItem>
-                  <SelectItem value="aggressive">激进版（20倍年支出）</SelectItem>
+                  <SelectItem value="conservative">{t('fireCountdown.strategies.conservative')}</SelectItem>
+                  <SelectItem value="standard">{t('fireCountdown.strategies.standard')}</SelectItem>
+                  <SelectItem value="aggressive">{t('fireCountdown.strategies.aggressive')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -327,7 +380,7 @@ const FireCountdown = () => {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>预期年化收益率：{expectedReturn[0]}%</Label>
+              <Label>{t('fireCountdown.expectedReturnLabel')}{expectedReturn[0]}%</Label>
               <Slider
                 value={expectedReturn}
                 onValueChange={setExpectedReturn}
@@ -336,11 +389,11 @@ const FireCountdown = () => {
                 step={0.5}
                 className="w-full"
               />
-              <div className="text-xs text-gray-500">建议：3-7%为保守，8-12%为中等，13%+为激进</div>
+              <div className="text-xs text-gray-500">{t('fireCountdown.expectedReturnTip')}</div>
             </div>
 
             <div className="space-y-2">
-              <Label>预期通胀率：{inflationRate[0]}%</Label>
+              <Label>{t('fireCountdown.inflationRateLabel')}{inflationRate[0]}%</Label>
               <Slider
                 value={inflationRate}
                 onValueChange={setInflationRate}
@@ -349,15 +402,15 @@ const FireCountdown = () => {
                 step={0.5}
                 className="w-full"
               />
-              <div className="text-xs text-gray-500">历史平均通胀率约为3%</div>
+              <div className="text-xs text-gray-500">{t('fireCountdown.inflationRateTip')}</div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="additional-info">补充信息</Label>
+            <Label htmlFor="additional-info">{t('fireCountdown.additionalInfoLabel')}</Label>
             <Textarea
               id="additional-info"
-              placeholder="其他想要补充的财务规划信息，如投资偏好、风险承受能力、特殊支出计划等..."
+              placeholder={t('fireCountdown.additionalInfoPlaceholder')}
               value={additionalInfo}
               onChange={(e) => setAdditionalInfo(e.target.value)}
               rows={3}
@@ -370,25 +423,25 @@ const FireCountdown = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在计算财务自由时间...
+                {t('fireCountdown.calculating')}
               </>
             ) : (
               <>
                 <Calculator className="mr-2 h-4 w-4" />
-                计算财务自由倒计时
+                {t('fireCountdown.calculateButton')}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" />
-            重新规划
+            {t('fireCountdown.resetButton')}
           </Button>
         </div>
 
         {error && (
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{t('fireCountdown.errorTitle')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -397,7 +450,7 @@ const FireCountdown = () => {
       {report && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">财务自由分析报告:</h3>
+            <h3 className="text-lg font-semibold">{t('fireCountdown.reportTitle')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

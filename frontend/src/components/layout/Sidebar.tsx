@@ -49,7 +49,7 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
   const [locale, setLocale] = useState<ValidLocale>('zh-CN');
-  const { t, loading, error, translations } = useTranslations(locale);
+  const { t, loading } = useTranslations(locale);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
   const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
@@ -66,23 +66,22 @@ export function Sidebar({ className }: SidebarProps) {
 
   // Debug logging
   useEffect(() => {
-    console.log('Sidebar translation state:', { locale, loading, error, hasTranslations: !!t });
-    if (!loading && !error) {
+    console.log('Sidebar translation state:', { locale, loading, error: !!t });
+    if (!loading && !!t) {
       console.log('Testing translation keys:', {
         appTitle: t('sidebar.appTitle'),
         home: t('common.home'),
         categories: t('categories.communication-writing'),
-        translationsObject: translations
       });
 
       // 测试特定的翻译键
-      const testKeys = ['categories.communication-writing', 'categories.intelligent-analysis'];
+      const testKeys = ['categories.communication-writing', 'categories.intelligent-analysis', 'sidebar.collapse', 'sidebar.expand'];
       testKeys.forEach(key => {
         const result = t(key);
         console.log(`Translation test - Key: ${key}, Result: ${result}, Is same as key: ${result === key}`);
       });
     }
-  }, [locale, loading, error, t, translations]);
+  }, [locale, loading, t]);
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
   const toggleCategory = (categoryId: string) => {
@@ -112,27 +111,6 @@ export function Sidebar({ className }: SidebarProps) {
       >
         <div className="flex items-center justify-center h-14 border-b border-neutral-200 dark:border-neutral-700">
           <div className="animate-pulse text-sm">Loading translations...</div>
-        </div>
-      </aside>
-    );
-  }
-
-  // Show error state if translations failed to load
-  if (error) {
-    return (
-      <aside
-        className={cn(
-          'flex flex-col border-r transition-all duration-300 ease-in-out',
-          'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700',
-          'w-64',
-          className
-        )}
-      >
-        <div className="flex items-center justify-center h-14 border-b border-neutral-200 dark:border-neutral-700">
-          <div className="text-red-500 text-sm">Translation Error</div>
-        </div>
-        <div className="p-4 text-xs text-red-400">
-          {error}
         </div>
       </aside>
     );
@@ -293,7 +271,7 @@ export function Sidebar({ className }: SidebarProps) {
           )}
         >
           {isCollapsed ? <ChevronsRight className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} /> : <ChevronsLeft className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />}
-          {!isCollapsed && (isCollapsed ? t('sidebar.expand') : t('sidebar.collapse'))}
+          {!isCollapsed && t('sidebar.collapse')}
         </button>
       </div>
     </aside>

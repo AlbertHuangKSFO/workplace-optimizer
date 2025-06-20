@@ -5,24 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Brain, Heart, Loader2, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const communicationScenarios = [
-  { value: 'upward', label: '向上汇报', emoji: '📈', description: '向领导汇报工作、争取资源' },
-  { value: 'downward', label: '向下管理', emoji: '👥', description: '管理下属、团队激励' },
-  { value: 'peer', label: '同事协作', emoji: '🤝', description: '跨部门合作、项目协调' },
-  { value: 'client', label: '客户沟通', emoji: '💼', description: '客户对接、需求沟通' },
-  { value: 'conflict', label: '处理冲突', emoji: '⚖️', description: '化解矛盾、协调分歧' },
-  { value: 'feedback', label: '反馈建议', emoji: '💡', description: '提出建议、接受反馈' },
-  { value: 'negotiation', label: '谈判协商', emoji: '🎯', description: '资源争取、条件协商' },
-  { value: 'presentation', label: '汇报演示', emoji: '📊', description: '项目汇报、方案展示' },
-];
+interface EQAssistantProps {
+  locale: ValidLocale;
+}
 
-function EQAssistant(): React.JSX.Element {
+function EQAssistant({ locale }: EQAssistantProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [scenario, setScenario] = useState<string>('upward');
   const [situationDescription, setSituationDescription] = useState<string>('');
   const [communicationGoal, setCommunicationGoal] = useState<string>('');
@@ -30,10 +27,30 @@ function EQAssistant(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const communicationScenarios = React.useMemo(() => [
+    { value: 'upward', label: t('eqAssistant.scenarios.upward.label'), emoji: t('eqAssistant.scenarios.upward.emoji'), description: t('eqAssistant.scenarios.upward.description') },
+    { value: 'downward', label: t('eqAssistant.scenarios.downward.label'), emoji: t('eqAssistant.scenarios.downward.emoji'), description: t('eqAssistant.scenarios.downward.description') },
+    { value: 'peer', label: t('eqAssistant.scenarios.peer.label'), emoji: t('eqAssistant.scenarios.peer.emoji'), description: t('eqAssistant.scenarios.peer.description') },
+    { value: 'client', label: t('eqAssistant.scenarios.client.label'), emoji: t('eqAssistant.scenarios.client.emoji'), description: t('eqAssistant.scenarios.client.description') },
+    { value: 'conflict', label: t('eqAssistant.scenarios.conflict.label'), emoji: t('eqAssistant.scenarios.conflict.emoji'), description: t('eqAssistant.scenarios.conflict.description') },
+    { value: 'feedback', label: t('eqAssistant.scenarios.feedback.label'), emoji: t('eqAssistant.scenarios.feedback.emoji'), description: t('eqAssistant.scenarios.feedback.description') },
+    { value: 'negotiation', label: t('eqAssistant.scenarios.negotiation.label'), emoji: t('eqAssistant.scenarios.negotiation.emoji'), description: t('eqAssistant.scenarios.negotiation.description') },
+    { value: 'presentation', label: t('eqAssistant.scenarios.presentation.label'), emoji: t('eqAssistant.scenarios.presentation.emoji'), description: t('eqAssistant.scenarios.presentation.description') },
+  ], [t, translationsLoading]);
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
+        <span className="ml-2 text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!situationDescription.trim()) {
-      setError('请描述具体的沟通场景！');
+      setError(t('eqAssistant.emptyInputError'));
       setEqAdvice('');
       return;
     }
@@ -44,12 +61,18 @@ function EQAssistant(): React.JSX.Element {
 
     const selectedScenario = communicationScenarios.find(s => s.value === scenario);
 
-    const userPrompt = `
+    const userPrompt = locale === 'zh-CN' ? `
 场景类型：${selectedScenario?.label} - ${selectedScenario?.description}
 具体情况：${situationDescription}
 ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
 
 请为我提供高情商的沟通策略和具体话术建议。
+` : `
+Scenario Type: ${selectedScenario?.label} - ${selectedScenario?.description}
+Specific Situation: ${situationDescription}
+${communicationGoal.trim() ? `Communication Goal: ${communicationGoal}` : ''}
+
+Please provide me with high emotional intelligence communication strategies and specific dialogue suggestions.
 `;
 
     try {
@@ -65,7 +88,10 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '情商助手暂时下线，可能在学习新的沟通技巧。' }));
+        const defaultErrorMessage = locale === 'zh-CN'
+          ? '情商助手暂时下线，可能在学习新的沟通技巧。'
+          : 'EQ assistant is temporarily offline, possibly learning new communication skills.';
+        const errorData = await response.json().catch(() => ({ message: defaultErrorMessage }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -75,11 +101,17 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
         setEqAdvice(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure:', data);
-        setError('AI返回的建议格式有误，情商助手可能在思考人生...🤔');
+        const unexpectedResponseError = locale === 'zh-CN'
+          ? 'AI返回的建议格式有误，情商助手可能在思考人生...🤔'
+          : 'The AI suggestion format is incorrect, the EQ assistant might be contemplating life...🤔';
+        setError(unexpectedResponseError);
       }
     } catch (e) {
       console.error('Failed to get EQ advice:', e);
-      setError(e instanceof Error ? e.message : '获取情商建议时发生未知错误，助手的情商可能也需要充值！💡');
+      const unknownError = locale === 'zh-CN'
+        ? '获取情商建议时发生未知错误，助手的情商可能也需要充值！💡'
+        : 'An unknown error occurred while getting EQ advice, the assistant\'s EQ might need a recharge too!💡';
+      setError(e instanceof Error ? e.message : unknownError);
     }
 
     setIsLoading(false);
@@ -92,14 +124,14 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <Heart className="w-8 h-8 text-pink-600 dark:text-pink-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场情商助手</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('eqAssistant.title')}</h1>
         <Brain className="w-8 h-8 text-pink-600 dark:text-pink-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
           <Label htmlFor="scenario" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            沟通场景：
+            {t('eqAssistant.scenarioLabel')}
           </Label>
           <Select value={scenario} onValueChange={setScenario}>
             <SelectTrigger className={cn(
@@ -107,7 +139,7 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
               "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
             )}>
-              <SelectValue placeholder="选择沟通场景..." />
+              <SelectValue placeholder={t('eqAssistant.scenarioPlaceholder')} />
             </SelectTrigger>
             <SelectContent className={cn(
               "border-neutral-200 dark:border-neutral-700",
@@ -133,13 +165,13 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
         </div>
         <div>
           <Label htmlFor="situationDescription" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            具体情况描述：
+            {t('eqAssistant.situationLabel')}
           </Label>
           <Textarea
             id="situationDescription"
             value={situationDescription}
             onChange={(e) => setSituationDescription(e.target.value)}
-            placeholder="例如：需要向老板汇报项目延期，但担心被批评，希望能获得更多资源支持..."
+            placeholder={t('eqAssistant.situationPlaceholder')}
             className={cn(
               "w-full min-h-[120px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -150,13 +182,13 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
         </div>
         <div>
           <Label htmlFor="communicationGoal" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            沟通目标（选填）：
+            {t('eqAssistant.goalLabel')}
           </Label>
           <Textarea
             id="communicationGoal"
             value={communicationGoal}
             onChange={(e) => setCommunicationGoal(e.target.value)}
-            placeholder="例如：获得理解和支持，争取更多时间或人力资源..."
+            placeholder={t('eqAssistant.goalPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -174,9 +206,9 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 情商大师正在分析人际关系...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('eqAssistant.analyzing')}</>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 获取高情商建议！</>
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('eqAssistant.analyzeButton')}</>
           )}
         </Button>
       </form>
@@ -187,7 +219,7 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">情商充值失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('eqAssistant.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -198,7 +230,7 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
       {isLoading && !eqAdvice && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-pink-600 dark:text-pink-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">AI情商导师正在分析人际动态，制定沟通策略...💝</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('eqAssistant.loadingText')}</p>
         </div>
       )}
 
@@ -209,7 +241,7 @@ ${communicationGoal.trim() ? `沟通目标：${communicationGoal}` : ''}
         )}>
           <CardHeader>
             <CardTitle className="text-pink-700 dark:text-pink-400 flex items-center">
-              <Heart className="w-5 h-5 mr-2" /> 高情商沟通建议
+              <Sparkles className="w-5 h-5 mr-2" /> {t('eqAssistant.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

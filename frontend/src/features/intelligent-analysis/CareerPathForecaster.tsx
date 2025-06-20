@@ -72,7 +72,7 @@ function CareerPathForecaster({ locale = 'zh-CN' }: CareerPathForecasterProps): 
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'career-path-forecaster',
-          language: locale === 'en-US' ? 'en' : 'zh'
+          language: locale
         }),
       });
 

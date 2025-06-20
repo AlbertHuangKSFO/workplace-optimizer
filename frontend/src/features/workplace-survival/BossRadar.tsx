@@ -14,10 +14,10 @@ import {
     Skull,
     Smile,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface BossRadarProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
 interface RiskLevel {
@@ -29,10 +29,12 @@ interface RiskLevel {
   bgColorClass: string;
 }
 
-function BossRadar({ locale = 'zh-CN' }: BossRadarProps): React.JSX.Element {
+function BossRadar({ locale }: BossRadarProps): React.JSX.Element {
+  // 1. 翻译 Hook
   const { t, loading: translationsLoading } = useTranslations(locale);
 
-  const riskLevels: RiskLevel[] = [
+  // 2. 使用 useMemo 稳定 riskLevels 数组
+  const riskLevels: RiskLevel[] = useMemo(() => [
     {
       level: 0,
       nameKey: 'bossRadar.riskLevels.absolutelySafe',
@@ -73,26 +75,28 @@ function BossRadar({ locale = 'zh-CN' }: BossRadarProps): React.JSX.Element {
       bgColorClass: 'bg-red-100 dark:bg-red-800/30',
       messagesKey: 'bossRadar.messages.extremelyDangerous',
     },
-  ];
+  ], []);
 
-  const [currentRisk, setCurrentRisk] = useState<RiskLevel>(riskLevels[0]);
+  // 3. State Hooks
+  const [currentRisk, setCurrentRisk] = useState<RiskLevel>(() => riskLevels[0]);
   const [currentMessage, setCurrentMessage] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(false);
 
-  const getRandomMessage = (messagesKey: string): string => {
-    const messages = t(messagesKey) as string[];
-    if (Array.isArray(messages)) {
+  // 4. 获取随机消息的函数
+  const getRandomMessage = useCallback((messagesKey: string): string => {
+    const messages = t(messagesKey, { returnObjects: true }) as string[];
+    if (Array.isArray(messages) && messages.length > 0) {
       return messages[Math.floor(Math.random() * messages.length)];
     }
     return '';
-  };
+  }, [t]);
 
+  // 5. Effect Hook
   useEffect(() => {
-    if (!translationsLoading) {
-      setCurrentMessage(getRandomMessage(currentRisk.messagesKey));
-    }
-  }, [currentRisk, translationsLoading, t]);
+    setCurrentMessage(getRandomMessage(currentRisk.messagesKey));
+  }, [currentRisk, getRandomMessage]);
 
+  // 6. Callback Hook
   const detectRisk = useCallback(() => {
     setIsDetecting(true);
     // Simulate detection delay
@@ -103,12 +107,12 @@ function BossRadar({ locale = 'zh-CN' }: BossRadarProps): React.JSX.Element {
     }, 1500 + Math.random() * 1000); // Random delay between 1.5s and 2.5s
   }, [riskLevels]);
 
-  // 如果翻译还在加载，显示加载器
+  // 7. 条件渲染 - 在所有 Hooks 之后
   if (translationsLoading) {
     return (
       <Card className="w-full max-w-lg mx-auto">
         <CardContent className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
         </CardContent>
       </Card>
     );

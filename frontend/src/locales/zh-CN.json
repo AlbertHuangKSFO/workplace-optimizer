@@ -54,6 +54,7 @@
     "blame-tactics": "甩锅/背锅策略生成器",
     "crisis-communication-templates": "危机公关模板",
     "workplace-meme-generator": "职场梗图生成器",
+    "worker-meme-generator": "打工人表情包生成器",
     "professional-persona-generator": "职场人设生成器",
     "creative-writing-assistant": "创意写作助手",
     "report-template-generator": "报告模板生成器",
@@ -130,6 +131,7 @@
     "blame-tactics": "职场危机中的策略和话术",
     "crisis-communication-templates": "应对各种危机的沟通模板",
     "workplace-meme-generator": "生成职场相关的有趣图片和梗图",
+    "worker-meme-generator": "输入职场场景，生成打工人专属表情包文案和配图",
     "professional-persona-generator": "创建您的专业职场形象",
     "creative-writing-assistant": "激发创意，辅助各类写作任务",
     "report-template-generator": "快速生成各类报告模板",
@@ -437,6 +439,89 @@
       "noRequirementChange": "需求不变"
     }
   },
+  "meetingDoodleBuddy": {
+    "title": "会议神游涂鸦伴侣",
+    "description": "会议无聊？让AI为你生成涂鸦灵感或直接绘制涂鸦，让开会时光更有趣！",
+    "modeLabel": "生成模式：",
+    "modePlaceholder": "选择生成模式...",
+    "styleLabel": "涂鸦风格：",
+    "stylePlaceholder": "选择涂鸦风格...",
+    "keywordsLabel": "听到啥天书了？把会议里的魔性关键词丢进来！(选填)",
+    "keywordsPlaceholder": "例如：赋能、闭环、颗粒度、对齐一下、抓手...",
+    "generateIdeaButton": "给我涂鸦灵感！",
+    "generateImageButton": "AI帮我画涂鸦！",
+    "generatingIdea": "灵感火花正在碰撞...",
+    "generatingImage": "AI画师正在作画...",
+    "loadingIdeaMessage": "AI涂鸦灵感小助手正在冥想...🧘",
+    "loadingImageMessage": "AI画师正在挥洒创意...🎨",
+    "resultIdeaTitle": "涂鸦灵感：",
+    "resultImageTitle": "AI创作的涂鸦：",
+    "errorTitle": "灵感枯竭了！",
+    "imageOnlyOpenAI": "图片生成功能仅支持 OpenAI DALL-E 模型，需要配置有效的 OpenAI API Key。",
+    "modes": {
+      "idea": "💡 涂鸦灵感（文字描述）",
+      "image": "🎨 AI绘制涂鸦（图片）- 仅支持OpenAI"
+    },
+    "styles": {
+      "simple": "简笔画风格",
+      "cartoon": "卡通风格",
+      "sketch": "素描风格",
+      "doodle": "涂鸦风格",
+      "minimalist": "极简风格"
+    },
+    "errors": {
+      "ideaGeneration": "涂鸦灵感生成失败，可能是我的画笔没墨了。",
+      "imageGeneration": "图片生成失败，可能是AI画师在摸鱼。",
+      "formatError": "AI返回的格式有点奇怪，我暂时显示不了...",
+      "unknownError": "发生未知错误，我的画笔断了！🖌️"
+    },
+    "prompts": {
+      "withKeywords": "帮我把这些会议关键词变成涂鸦灵感：{keywords}",
+      "withoutKeywords": "会议好无聊，快给我点涂鸦灵感！",
+      "imageWithKeywords": "{style}的会议涂鸦，主题：{keywords}",
+      "imageWithoutKeywords": "{style}的会议涂鸦，表现无聊的会议场景"
+    }
+  },
+  "meetingSpeechGenerator": {
+    "title": "会议发言生成器",
+    "description": "输入会议主题和要求，AI为您生成专业的会议发言稿，让您在会议中游刃有余！",
+    "topicLabel": "会议主题：",
+    "topicPlaceholder": "例如：Q4季度业绩回顾、新产品发布计划...",
+    "speechTypeLabel": "发言类型：",
+    "speechTypePlaceholder": "选择发言类型...",
+    "durationLabel": "发言时长：",
+    "durationPlaceholder": "选择发言时长...",
+    "additionalInfoLabel": "补充信息（选填）：",
+    "additionalInfoPlaceholder": "例如：需要强调的重点、特殊要求、背景信息等...",
+    "generateButton": "生成发言稿！",
+    "generating": "AI正在撰写发言稿...",
+    "resultTitle": "您的专属发言稿：",
+    "errorTitle": "生成失败！",
+    "loadingMessage": "AI演讲大师正在为您量身定制发言稿...🎯",
+    "topicRequired": "请输入会议主题！",
+    "speechTypes": {
+      "opening": "开场白/欢迎词",
+      "summary": "总结发言",
+      "proposal": "提案/建议",
+      "question": "提问/质疑",
+      "opposition": "反对意见",
+      "support": "支持/赞同",
+      "closing": "结束语",
+      "update": "进度汇报"
+    },
+    "durations": {
+      "1": "1分钟（简短发言）",
+      "3": "3分钟（标准发言）",
+      "5": "5分钟（详细发言）",
+      "10": "10分钟（深度发言）"
+    },
+    "errors": {
+      "generation": "发言稿生成失败，可能是AI的演讲课程还在进修中。",
+      "formatError": "AI返回的发言稿有点奇怪，我暂时理解不了...🎤",
+      "unknownError": "生成发言稿时发生未知错误，我的演讲助手失声了！🔇"
+    },
+    "aiPrompt": "请为我生成一个{duration}的{speechType}，会议主题是：{topic}{additionalInfo}"
+  },
   "meetingBingoGenerator": {
     "title": "会议BINGO生成器",
     "description": "输入会议主题或常用词汇（可选），AI将为您量身定制一张会议BINGO卡，让无聊的会议充满乐趣！",
@@ -529,33 +614,209 @@
   },
   "careerPathForecaster": {
     "title": "职场命运预测器",
-    "description": "输入你的职业信息，让AI为你分析潜在发展路径、机遇与挑战，洞见未来！",
-    "currentRoleLabel": "当前职位/行业",
-    "currentRolePlaceholder": "例如：软件工程师 / 互联网，市场专员 / 快消品",
-    "skillsLabel": "核心技能",
-    "skillsPlaceholder": "例如：JavaScript, Python, 项目管理, 数据分析, 沟通能力 (请用逗号分隔)",
-    "experienceLabel": "工作年限",
-    "experiencePlaceholder": "选择工作年限...",
-    "experienceLevels": {
-      "0": "实习生/应届生 (少于1年)",
-      "1-3": "初级 (1-3年)",
-      "3-5": "中级 (3-5年)",
-      "5-10": "高级 (5-10年)",
-      "10+": "专家/资深 (10年以上)"
+    "description": "AI为你分析潜在职业发展路径、机遇与挑战",
+    "nameRequired": "请输入姓名",
+    "name": "姓名",
+    "namePlaceholder": "请输入您的姓名",
+    "currentPosition": "当前职位",
+    "currentPositionPlaceholder": "请输入您当前的职位",
+    "industry": "所在行业",
+    "industryPlaceholder": "请输入您所在的行业",
+    "experienceYears": "工作年限",
+    "experienceYearsPlaceholder": "请输入工作年限",
+    "skillsInterests": "技能与兴趣",
+    "skillsInterestsPlaceholder": "请描述您的主要技能和兴趣方向",
+    "careerGoals": "职业目标",
+    "careerGoalsPlaceholder": "请描述您的职业目标或理想发展方向",
+    "workPreferences": "工作偏好",
+    "workPreferencesPlaceholder": "请描述您的工作偏好（如工作环境、团队规模等）",
+    "startPrediction": "开始预测",
+    "predicting": "预测中...",
+    "result": "预测结果",
+    "fillAllFields": "请填写所有必填字段"
+  },
+  "workerMemeGenerator": {
+    "title": "打工人表情包生成器",
+    "description": "输入职场场景，让 AI 帮你生成表情包文案和配图！",
+    "scenarioRequired": "请填写场景描述！",
+    "scenarioLabel": "场景描述",
+    "scenarioPlaceholder": "例如：周一早上开会，却还没喝咖啡...",
+    "moodLabel": "心情/风格 (可选)",
+    "moodPlaceholder": "选择心情",
+    "moods": {
+      "摸鱼": "摸鱼",
+      "无奈": "无奈",
+      "内卷": "内卷",
+      "佛系": "佛系",
+      "沙雕": "沙雕",
+      "自嘲": "自嘲"
     },
-    "aspirationsLabel": "职业目标/期望",
-    "aspirationsPlaceholder": "例如：成为技术专家，晋升管理层，创业，转换到更有意义的行业",
-    "preferencesLabel": "工作偏好 (可选)",
-    "preferencesPlaceholder": "例如：远程工作，弹性时间，注重创新的团队文化，工作生活平衡",
-    "predictButton": "预测我的职场命运",
-    "predicting": "正在预测您的职业命运...",
-    "resultTitle": "AI的职业洞察：",
-    "loadingMessage": "AI正在连接星象，解读您的职业未来，请稍候...",
-    "requiredFields": "请填写当前职位/行业、核心技能和职业目标/期望！",
-    "apiError": "AI预测功能暂时不可用，可能是它正在为你看更远的未来。",
-    "formatError": "AI返回的预测结果格式有误，可能命运的丝线有点乱。🔮",
-    "unknownError": "预测职场命运时发生未知错误。请稍后再试。",
-    "aiPrompt": "我目前的职业信息如下：\n- 当前职位/行业：{currentRole}\n- 核心技能：{skills}\n- 工作年限：{experience}\n- 职业目标/期望：{aspirations}\n{preferences}\n\n请基于以上信息，为我分析未来的职业发展路径。请包括：\n1. 可能的职业发展方向（2-3个）。\n2. 每个方向的关键成功因素和所需技能提升点。\n3. 潜在的机遇和挑战。\n4. 一些建议和鼓励的话语。\n请以富有洞察力且积极的语气进行分析。"
+    "imageStyleLabel": "图片风格",
+    "imageStylePlaceholder": "选择风格",
+    "imageStyles": {
+      "cartoon": "Cartoon",
+      "simple": "Simple",
+      "sketch": "Sketch",
+      "doodle": "Doodle",
+      "minimalist": "Minimalist"
+    },
+    "generate": "生成表情包",
+    "generating": "生成中...",
+    "error": "错误",
+    "imagePromptLabel": "图片提示词",
+    "aiGenerationError": "AI 生成表情包文案失败",
+    "jsonParseError": "AI 返回的 JSON 格式解析失败",
+    "imageGenerationError": "生成图片失败",
+    "imageUrlError": "图片 URL 无效",
+    "unknownError": "生成表情包时发生未知错误"
+  },
+  "workerMemeGeneratorPro": {
+    "title": "打工人表情包生成器 Pro",
+    "description": "专业定制打工人专属表情包，让你的吐槽更有艺术感",
+    "creationSettings": "创作设置",
+    "creationSettingsDescription": "描述你想要表达的场景和情绪",
+    "scenarioRequired": "请输入场景描述",
+    "scenarioLabel": "场景描述",
+    "scenarioPlaceholder": "描述你遇到的工作场景，比如：老板又要求周末加班，但是不给加班费...",
+    "quickScenario": "快速场景",
+    "memeTypeLabel": "表情包类型",
+    "memeTypePlaceholder": "选择类型（可选）",
+    "memeTypes": {
+      "classic-complaint": "经典吐槽型",
+      "self-mockery": "自嘲幽默型",
+      "motivational-irony": "励志鸡汤型",
+      "reality-check": "现实扎心型",
+      "dream-vs-reality": "梦想对比型",
+      "boss-employee": "老板员工型",
+      "slacking-special": "摸鱼专用型",
+      "overtime-culture": "加班熬夜型"
+    },
+    "moodLabel": "情绪风格",
+    "moodPlaceholder": "选择情绪（可选）",
+    "moods": {
+      "frustrated": "抓狂愤怒",
+      "helpless": "无奈躺平",
+      "sarcastic": "讽刺调侃",
+      "optimistic": "乐观自嘲",
+      "desperate": "绝望崩溃",
+      "sneaky": "偷偷摸鱼",
+      "ambitious": "雄心壮志",
+      "tired": "疲惫不堪"
+    },
+    "generate": "生成表情包",
+    "generating": "创作中...",
+    "quickScenarios": [
+      "老板又要求加班",
+      "工资还没发",
+      "被安排做不是自己工作的事",
+      "开会开到怀疑人生",
+      "摸鱼被发现了",
+      "周一上班综合症",
+      "想辞职但不敢",
+      "同事甩锅给我",
+      "客户需求又变了",
+      "年终奖泡汤了"
+    ],
+    "result": "表情包结果",
+    "memeText": "表情包文案",
+    "imageDescription": "图片描述",
+    "usage": "适用场景",
+    "alternatives": "备选方案",
+    "generateImage": "生成图片",
+    "generatingImage": "生成图片中...",
+    "copyText": "复制文案",
+    "downloadImage": "下载图片",
+    "textCopied": "已复制到剪贴板",
+    "imageGenerationFailed": "图片生成失败，请稍后重试。",
+    "generationFailed": "生成失败",
+    "parseError": "生成的内容格式有误，请重试",
+    "unknownError": "生成过程中出现错误，请稍后重试。",
+    "emptyState": "填写场景描述，开始创作你的专属表情包",
+    "tips": "💡 小贴士：",
+    "tip1": "描述越具体，生成的表情包越贴切",
+    "tip2": "可以包含具体的对话、动作、表情等"
+  },
+  "workplaceMemeGenerator": {
+    "title": "职场梗图生成器",
+    "description": "将日常办公室体验转化为可分享、有共鸣的梗图",
+    "generationMode": "生成模式",
+    "modeText": "文字梗图",
+    "modeImage": "图片梗图",
+    "memeCategory": "梗图类别",
+    "memeCategoryPlaceholder": "选择梗图类别...",
+    "memeCategories": {
+      "meeting-humor": "会议搞笑",
+      "deadline-stress": "截止日期焦虑",
+      "boss-interaction": "老板互动",
+      "overtime-life": "加班生活",
+      "code-debugging": "代码调试",
+      "office-politics": "办公室政治",
+      "work-from-home": "居家办公",
+      "salary-dreams": "薪资梦想"
+    },
+    "memeCategoryDescriptions": {
+      "meeting-humor": "会议中的各种搞笑瞬间",
+      "deadline-stress": "DDL临近的紧张心情",
+      "boss-interaction": "与领导相处的趣事",
+      "overtime-life": "加班狗的日常写照",
+      "code-debugging": "程序员的调试日常",
+      "office-politics": "职场人际关系",
+      "work-from-home": "远程工作的酸甜苦辣",
+      "salary-dreams": "关于涨薪的美好幻想"
+    },
+    "memeStyle": "梗图风格",
+    "memeStylePlaceholder": "选择梗图风格...",
+    "memeStyles": {
+      "classic-template": "经典模板",
+      "text-based": "文字梗",
+      "dialogue": "对话形式",
+      "comparison": "对比梗",
+      "progression": "递进式",
+      "reaction": "反应梗"
+    },
+    "memeStyleDescriptions": {
+      "classic-template": "使用经典梗图模板",
+      "text-based": "纯文字的搞笑内容",
+      "dialogue": "人物对话的形式",
+      "comparison": "理想vs现实的对比",
+      "progression": "情况逐步恶化/好转",
+      "reaction": "各种情况下的反应"
+    },
+    "humorLevel": "幽默程度",
+    "humorLevelPlaceholder": "选择幽默程度...",
+    "humorLevels": {
+      "mild": "温和幽默",
+      "sarcastic": "讽刺幽默",
+      "self-deprecating": "自嘲式",
+      "absurd": "荒诞幽默",
+      "relatable": "共鸣式"
+    },
+    "humorLevelDescriptions": {
+      "mild": "轻松愉快，适合分享",
+      "sarcastic": "带有讽刺意味的幽默",
+      "self-deprecating": "自我调侃的幽默",
+      "absurd": "夸张荒诞的搞笑",
+      "relatable": "引起强烈共鸣的幽默"
+    },
+    "situation": "情况描述",
+    "situationRequired": "请描述要制作梗图的情况！",
+    "situationPlaceholder": "描述要制作梗图的具体情况，比如：每天开会都在讨论同样的问题...",
+    "characters": "涉及角色",
+    "charactersPlaceholder": "涉及的人物角色（可选）",
+    "specificDetails": "具体细节",
+    "specificDetailsPlaceholder": "补充具体细节（可选）",
+    "targetAudience": "目标受众",
+    "targetAudiencePlaceholder": "目标受众（可选）",
+    "generate": "生成梗图",
+    "generating": "生成中...",
+    "result": "生成结果",
+    "noResult": "还没有生成梗图，快来试试吧！",
+    "error": "出错了",
+    "errorGenerating": "梗图生成失败，可能是段子手在思考更搞笑的内容。",
+    "errorFormat": "AI返回的梗图格式有误，段子手可能在重新构思笑点...😂",
+    "errorImageFormat": "AI返回的图片格式有点奇怪，梗图可能太抽象了...🖼️",
+    "errorUnknown": "生成梗图时发生未知错误，幽默细胞还需要更多时间激活！🎭",
+    "errorImageUnknown": "生成梗图图片时发生未知错误，AI画师的幽默感可能需要充电！🎨"
   },
   "header": {
     "appTitle": "打工人必备工具",
@@ -575,6 +836,8 @@
     "errorTitle": "润色失败！",
     "loadingText": "AI邮件专家正在为您的邮件添加专业光泽...✨",
     "emptyInputError": "请输入需要润色的邮件内容！",
+    "copyButton": "复制",
+    "copiedButton": "已复制！",
     "emailTypes": {
       "formal": "正式商务邮件",
       "informal": "非正式内部邮件",
@@ -624,6 +887,202 @@
       "friendly": "更亲切友好",
       "concise": "更简洁明了",
       "emotional": "更有感染力"
+    }
+  },
+  "jargonTranslator": {
+    "title": "黑话翻译器",
+    "modeLabel": "翻译方向：",
+    "modePlaceholder": "选择翻译方向...",
+    "inputLabel": "输入需要翻译的内容：",
+    "translateButton": "开始翻译！",
+    "translatingButton": "AI正在翻译中...",
+    "resultTitle": "翻译结果：",
+    "loadingText": "AI翻译官正在破解职场密码...🔍",
+    "errorTitle": "翻译失败！",
+    "emptyInputError": "请输入需要翻译的内容！",
+    "modes": {
+      "jargon-to-plain": "黑话 → 人话（翻译成正常表达）",
+      "plain-to-jargon": "人话 → 黑话（包装成职场用语）"
+    },
+    "examples": {
+      "jargon-to-plain": "例如：我们需要赋能业务，形成闭环，提升颗粒度...",
+      "plain-to-jargon": "例如：这个方案不行，需要重新做，时间很紧..."
+    }
+  },
+  "eqAssistant": {
+    "title": "职场情商助手",
+    "scenarioLabel": "沟通场景：",
+    "scenarioPlaceholder": "选择沟通场景...",
+    "situationLabel": "具体情况描述：",
+    "situationPlaceholder": "例如：需要向老板汇报项目延期，但担心被批评，希望能获得更多资源支持...",
+    "goalLabel": "沟通目标（选填）：",
+    "goalPlaceholder": "例如：获得理解和支持，争取更多时间或人力资源...",
+    "analyzeButton": "获取高情商建议！",
+    "analyzing": "情商大师正在分析人际关系...",
+    "resultTitle": "高情商沟通建议：",
+    "loadingText": "AI情商大师正在为您分析人际关系...💡",
+    "errorTitle": "情商充值失败！",
+    "emptyInputError": "请描述具体的沟通场景！",
+    "scenarios": {
+      "upward": {
+        "label": "向上汇报",
+        "emoji": "📈",
+        "description": "向领导汇报工作、争取资源"
+      },
+      "downward": {
+        "label": "向下管理",
+        "emoji": "👥",
+        "description": "管理下属、团队激励"
+      },
+      "peer": {
+        "label": "同事协作",
+        "emoji": "🤝",
+        "description": "跨部门合作、项目协调"
+      },
+      "client": {
+        "label": "客户沟通",
+        "emoji": "💼",
+        "description": "客户对接、需求沟通"
+      },
+      "conflict": {
+        "label": "处理冲突",
+        "emoji": "⚖️",
+        "description": "化解矛盾、协调分歧"
+      },
+      "feedback": {
+        "label": "反馈建议",
+        "emoji": "💡",
+        "description": "提出建议、接受反馈"
+      },
+      "negotiation": {
+        "label": "谈判协商",
+        "emoji": "🎯",
+        "description": "资源争取、条件协商"
+      },
+      "presentation": {
+        "label": "汇报演示",
+        "emoji": "📊",
+        "description": "项目汇报、方案展示"
+      }
+    }
+  },
+  "resignationTemplates": {
+    "title": "离职/跳槽文案生成器",
+    "resignationTypeLabel": "离职原因：",
+    "resignationTypePlaceholder": "选择离职原因...",
+    "relationshipLabel": "关系状况：",
+    "relationshipPlaceholder": "选择关系状况...",
+    "styleLabel": "通知风格：",
+    "stylePlaceholder": "选择通知风格...",
+    "positionLabel": "当前职位：",
+    "positionPlaceholder": "例如：高级产品经理",
+    "durationLabel": "工作时长（选填）：",
+    "durationPlaceholder": "例如：2年3个月",
+    "reasonsLabel": "具体原因（选填）：",
+    "reasonsPlaceholder": "详细说明离职的具体原因...",
+    "handoverLabel": "交接计划（选填）：",
+    "handoverPlaceholder": "描述工作交接的具体安排...",
+    "generateButton": "生成离职文案",
+    "generating": "AI正在起草文案...",
+    "resultTitle": "生成的离职文案：",
+    "loadingText": "HR顾问正在为您量身定制专业文案...📝",
+    "errorTitle": "文案生成失败！",
+    "emptyPositionError": "请输入当前职位！",
+    "resignationTypes": {
+      "better-opportunity": {
+        "label": "更好机会",
+        "emoji": "🚀",
+        "description": "获得更好的职业发展机会"
+      },
+      "career-change": {
+        "label": "转行发展",
+        "emoji": "🔄",
+        "description": "转向不同的行业或职能"
+      },
+      "personal-reasons": {
+        "label": "个人原因",
+        "emoji": "👤",
+        "description": "家庭、健康等个人因素"
+      },
+      "company-culture": {
+        "label": "文化不合",
+        "emoji": "🏢",
+        "description": "与公司文化价值观不匹配"
+      },
+      "work-life-balance": {
+        "label": "工作生活平衡",
+        "emoji": "⚖️",
+        "description": "追求更好的工作生活平衡"
+      },
+      "compensation": {
+        "label": "薪酬待遇",
+        "emoji": "💰",
+        "description": "薪酬福利不满意"
+      },
+      "growth-limitation": {
+        "label": "发展受限",
+        "emoji": "📈",
+        "description": "职业发展空间有限"
+      },
+      "relocation": {
+        "label": "地理位置",
+        "emoji": "🌍",
+        "description": "搬迁或地理位置因素"
+      }
+    },
+    "relationshipLevels": {
+      "positive": {
+        "label": "关系良好",
+        "emoji": "😊",
+        "description": "与公司和同事关系融洽"
+      },
+      "neutral": {
+        "label": "关系一般",
+        "emoji": "😐",
+        "description": "正常的工作关系"
+      },
+      "strained": {
+        "label": "关系紧张",
+        "emoji": "😬",
+        "description": "存在一些矛盾或分歧"
+      },
+      "professional": {
+        "label": "纯粹职业",
+        "emoji": "🤝",
+        "description": "保持专业的工作关系"
+      }
+    },
+    "noticeStyles": {
+      "formal": {
+        "label": "正式官方",
+        "emoji": "📋",
+        "description": "严格按照公司流程的正式通知"
+      },
+      "grateful": {
+        "label": "感谢型",
+        "emoji": "🙏",
+        "description": "强调感谢和正面经历"
+      },
+      "brief": {
+        "label": "简洁型",
+        "emoji": "✂️",
+        "description": "简明扼要，不过多解释"
+      },
+      "detailed": {
+        "label": "详细型",
+        "emoji": "📝",
+        "description": "详细说明原因和交接安排"
+      },
+      "diplomatic": {
+        "label": "外交型",
+        "emoji": "🤝",
+        "description": "圆滑得体，避免冲突"
+      },
+      "honest": {
+        "label": "坦诚型",
+        "emoji": "💯",
+        "description": "诚实表达想法和感受"
+      }
     }
   },
   "colleaguePersonaAnalyzer": {
@@ -1114,6 +1573,75 @@
       "chinese_cultural": "中华文化"
     }
   },
+  "professionalPersonaGenerator": {
+    "title": "职场人设生成器",
+    "description": "根据你的职业层级、行业背景和个人风格，生成完整的职场人设",
+    "currentRoleRequired": "请输入当前职位！",
+    "careerLevelLabel": "职业层级：",
+    "careerLevelPlaceholder": "选择职业层级...",
+    "industryLabel": "所属行业：",
+    "industryPlaceholder": "选择行业...",
+    "personaStyleLabel": "人设风格：",
+    "personaStylePlaceholder": "选择人设风格...",
+    "currentRoleLabel": "当前职位：",
+    "currentRolePlaceholder": "输入你的当前职位",
+    "targetRoleLabel": "目标职位（选填）：",
+    "targetRolePlaceholder": "输入你的目标职位",
+    "keySkillsLabel": "核心技能（选填）：",
+    "keySkillsPlaceholder": "描述你的核心技能...",
+    "achievementsLabel": "主要成就（选填）：",
+    "achievementsPlaceholder": "描述你的主要成就...",
+    "personalTraitsLabel": "个人特质（选填）：",
+    "personalTraitsPlaceholder": "描述你的个人特质...",
+    "generateButton": "生成职场人设",
+    "generating": "人设塑造中",
+    "resultTitle": "您的专属职场人设：",
+    "error": "生成失败！",
+    "errorFormat": "AI返回的人设格式有误，形象设计师可能在重新构思...🎭",
+    "unknownError": "生成人设时发生未知错误，个人品牌塑造遇到了挑战！💼",
+    "careerLevels": {
+      "junior": "初级员工",
+      "mid": "中级员工",
+      "senior": "高级员工",
+      "lead": "团队负责人",
+      "manager": "部门经理",
+      "director": "总监级别"
+    },
+    "careerLevelDescriptions": {
+      "junior": "1-3年经验，积极学习成长",
+      "mid": "3-5年经验，独当一面",
+      "senior": "5-8年经验，技术专家",
+      "lead": "8+年经验，带团队管理",
+      "manager": "管理岗位，战略规划",
+      "director": "高级管理，决策层"
+    },
+    "industries": {
+      "tech": "互联网科技",
+      "finance": "金融行业",
+      "consulting": "咨询服务",
+      "education": "教育培训",
+      "healthcare": "医疗健康",
+      "retail": "零售电商",
+      "manufacturing": "制造业",
+      "media": "媒体传播"
+    },
+    "personaStyles": {
+      "professional": "专业严谨型",
+      "innovative": "创新前瞻型",
+      "collaborative": "协作亲和型",
+      "results-driven": "结果导向型",
+      "analytical": "理性分析型",
+      "creative": "创意灵感型"
+    },
+    "personaStyleDescriptions": {
+      "professional": "正式专业，权威可信",
+      "innovative": "思维活跃，引领潮流",
+      "collaborative": "团队合作，人际和谐",
+      "results-driven": "目标明确，执行力强",
+      "analytical": "数据驱动，逻辑清晰",
+      "creative": "富有创意，思维跳跃"
+    }
+  },
   "officeOutfitAdvisor": {
     "title": "\"今天穿什么？\"职场版",
     "description": "根据天气、会议场合和心情状态，为您推荐最合适的职场穿搭",
@@ -1137,6 +1665,447 @@
       "3": "3 (普通上班，得体即可)",
       "4": "4 (有点重要，需要稍微讲究一下)",
       "5": "5 (重要场合，必须闪亮登场！✨)"
+    }
+  },
+  "procrastinationBuster": {
+    "title": "拖延症治疗器",
+    "description": "将大任务拆解成5分钟小任务，科学克服拖延症，让执行变得简单",
+    "taskOverview": "📋 任务概览",
+    "estimatedTime": "预估时长",
+    "hours": "小时",
+    "difficultyLevel": "难度等级",
+    "taskCount": "分解任务数",
+    "completionTime": "完成时间",
+    "about": "约",
+    "taskCountSuffix": "个",
+    "completionTimeSuffix": "小时",
+    "tip": "💡 包含休息时间的实际完成时间，让您轻松应对任务",
+    "taskDescription": "任务描述",
+    "taskDescriptionRequired": "任务描述 *",
+    "taskDescriptionPlaceholder": "详细描述您要完成的任务，例如：写一份市场分析报告、准备演讲稿、整理房间、学习新技能等...",
+    "taskAttributes": "📊 任务属性",
+    "taskType": "任务类型",
+    "taskTypePlaceholder": "选择任务类型",
+    "timeEstimate": "预估总时长：",
+    "difficulty": "任务难度：",
+    "procrastinationAnalysis": "🧠 拖延分析",
+    "procrastinationReason": "主要拖延原因",
+    "procrastinationReasonPlaceholder": "选择拖延原因",
+    "urgencyLevel": "紧急程度",
+    "urgencyLevelPlaceholder": "选择紧急程度",
+    "workStyle": "工作风格",
+    "workStylePlaceholder": "选择您的工作风格",
+    "additionalInfo": "补充信息",
+    "additionalInfoPlaceholder": "其他想要补充的信息，如特殊要求、时间限制、资源情况等...",
+    "generateButton": "生成拖延症治疗方案",
+    "generating": "正在生成治疗方案...",
+    "resetButton": "重新开始",
+    "errorTitle": "错误",
+    "treatmentPlan": "拖延症治疗方案:",
+    "emptyTaskError": "请描述您要完成的任务。",
+    "apiError": "生成拖延症治疗方案时发生错误。",
+    "unknownError": "生成拖延症治疗方案时发生未知错误。",
+    "taskTypes": {
+      "work": "工作任务",
+      "study": "学习任务",
+      "creative": "创意任务",
+      "life": "生活任务",
+      "health": "健康任务",
+      "other": "其他任务"
+    },
+    "procrastinationReasons": {
+      "perfectionism": "完美主义",
+      "fear-failure": "害怕失败",
+      "overwhelmed": "任务过载",
+      "lack-motivation": "缺乏动力",
+      "unclear-goals": "目标不明确",
+      "distractions": "容易分心",
+      "lack-skills": "技能不足",
+      "other": "其他原因"
+    },
+    "urgencyLevels": {
+      "low": "不紧急",
+      "medium": "中等紧急",
+      "high": "比较紧急",
+      "urgent": "非常紧急"
+    },
+    "workStyles": {
+      "focused": "专注型（喜欢长时间专注）",
+      "burst": "爆发型（短时间高效）",
+      "steady": "稳定型（匀速推进）",
+      "flexible": "灵活型（根据状态调整）"
+    }
+  },
+  "caffeineDependencyIndex": {
+    "title": "☕ 咖啡因依赖指数",
+    "description": "计算您的每日咖啡因摄入量和依赖程度",
+    "drinkRecordTitle": "饮品记录",
+    "drinkRecordDescription": "记录您今天喝的含咖啡因饮品",
+    "drinkLabel": "饮品",
+    "deleteButton": "删除",
+    "drinkNamePlaceholder": "饮品名称 (如：美式咖啡、奶茶、红牛)",
+    "amountPlaceholder": "分量 (如：大杯、500ml、2杯)",
+    "timePlaceholder": "时间 (如：上午9点、下午3点)",
+    "addDrinkButton": "+ 添加饮品",
+    "additionalInfoLabel": "补充信息（可选）",
+    "additionalInfoPlaceholder": "如：年龄、体重、是否孕妇、睡眠质量、是否有心脏病等健康状况...",
+    "analyzeButton": "开始分析",
+    "analyzing": "分析中...",
+    "resultTitle": "分析结果",
+    "resultDescription": "您的咖啡因依赖指数和健康建议",
+    "emptyStateText": "填写您的饮品记录，开始分析咖啡因依赖指数",
+    "referenceTitle": "💡 常见饮品参考：",
+    "americanoCaffeine": "美式咖啡(中杯) ≈ 150mg咖啡因",
+    "milkTeaCaffeine": "奶茶(大杯) ≈ 80mg咖啡因",
+    "redbullCaffeine": "红牛(250ml) ≈ 80mg咖啡因",
+    "emptyDrinkAlert": "请至少添加一种饮品",
+    "analysisError": "分析失败",
+    "generalError": "分析过程中出现错误，请稍后重试。"
+  },
+  "fireCountdown": {
+    "title": "🔥 财务自由倒计时",
+    "description": "按当前储蓄速度计算何时实现财务自由，让梦想有个明确的时间表",
+    "targetPreview": "🎯 财务自由目标预览",
+    "conservativeVersion": "🛡️ 保守版",
+    "standardVersion": "📈 标准版",
+    "aggressiveVersion": "🚀 激进版",
+    "yearExpenseMultiple30": "年支出的30倍",
+    "yearExpenseMultiple25": "年支出的25倍",
+    "yearExpenseMultiple20": "年支出的20倍",
+    "monthlySavings": "月储蓄",
+    "savingsRate": "储蓄率",
+    "yearlyExpense": "年支出",
+    "currentAssets": "当前资产",
+    "estimatedTime": "⏰ 预计实现时间（",
+    "estimatedTimeSuffix": "%年化收益）",
+    "incomeExpenseInfo": "💰 收支信息",
+    "monthlyIncomeLabel": "月收入 *",
+    "monthlyIncomePlaceholder": "请输入月收入",
+    "monthlyExpenseLabel": "月支出 *",
+    "monthlyExpensePlaceholder": "请输入月支出",
+    "currentAssetsLabel": "当前资产",
+    "currentAssetsPlaceholder": "包括存款、投资等总资产",
+    "personalInfo": "👤 个人信息",
+    "ageLabel": "年龄",
+    "agePlaceholder": "您的年龄",
+    "cityLabel": "所在城市",
+    "cityPlaceholder": "例如：北京、上海、深圳等",
+    "fireStrategyLabel": "财务自由策略",
+    "fireStrategyPlaceholder": "选择您的策略",
+    "expectedReturnLabel": "预期年化收益率：{rate}%",
+    "expectedReturnTip": "建议：3-7%为保守，8-12%为中等，13%+为激进",
+    "inflationRateLabel": "预期通胀率：{rate}%",
+    "inflationRateTip": "历史平均通胀率约为3%",
+    "additionalInfoLabel": "补充信息",
+    "additionalInfoPlaceholder": "其他想要补充的财务规划信息，如投资偏好、风险承受能力、特殊支出计划等...",
+    "calculateButton": "计算财务自由倒计时",
+    "calculating": "正在计算财务自由时间...",
+    "resetButton": "重新规划",
+    "errorTitle": "错误",
+    "reportTitle": "财务自由分析报告:",
+    "emptyIncomeExpenseError": "请填写月收入和月支出。",
+    "negativeBalanceError": "月收入必须大于月支出才能实现财务自由。",
+    "calculationError": "计算财务自由倒计时时发生错误。",
+    "unknownError": "计算财务自由倒计时时发生未知错误。",
+    "cannotAchieve": "无法实现",
+    "overHundredYears": "超过100年",
+    "years": "年",
+    "wan": "万",
+    "strategies": {
+      "conservative": "保守版（30倍年支出）",
+      "standard": "标准版（25倍年支出）",
+      "aggressive": "激进版（20倍年支出）"
+    }
+  },
+  "crossDepartmentTranslator": {
+    "title": "跨部门沟通翻译",
+    "description": "将不同部门的专业术语翻译成其他部门能理解的语言",
+    "sourceDepartmentLabel": "源部门：",
+    "targetDepartmentLabel": "目标部门：",
+    "sourceDepartmentPlaceholder": "选择源部门...",
+    "targetDepartmentPlaceholder": "选择目标部门...",
+    "inputLabel": "输入需要翻译的内容：",
+    "inputPlaceholder": "例如：我们需要重构整个架构，优化性能瓶颈，提升系统稳定性...",
+    "translateButton": "开始跨部门翻译！",
+    "translating": "翻译官正在努力破译部门黑话...",
+    "resultTitle": "翻译结果：",
+    "emptyInputError": "请输入需要翻译的内容！",
+    "sameDepartmentError": "源部门和目标部门不能相同！",
+    "apiError": "翻译失败，可能是翻译官在摸鱼。",
+    "formatError": "AI返回的翻译结果格式有误，翻译官可能在开小差...🤖",
+    "unknownError": "翻译时发生未知错误，部门间的沟通壁垒太厚了！🧱",
+    "errorTitle": "翻译失败",
+    "departments": {
+      "tech": "技术部门",
+      "product": "产品部门",
+      "design": "设计部门",
+      "marketing": "市场部门",
+      "sales": "销售部门",
+      "operations": "运营部门",
+      "hr": "人力资源",
+      "finance": "财务部门",
+      "legal": "法务部门",
+      "management": "管理层"
+    }
+  },
+  "antiPuaAssistant": {
+    "title": "拒绝PUA小助手",
+    "description": "描述您在职场中遇到的疑似PUA（精神控制）的场景，小助手将尝试分析并提供应对建议。",
+    "scenarioLabel": "请详细描述您遇到的场景：",
+    "scenarioPlaceholder": "例如：我的老板总是模糊地批评我的工作，但从不给出具体改进建议，还经常在深夜给我发消息...",
+    "analyzeButton": "获取分析和建议",
+    "analyzing": "分析中...",
+    "resultTitle": "分析与建议：",
+    "emptyInputError": "请输入您遇到的PUA场景描述。",
+    "errorTitle": "发生错误",
+    "footerNote": "请注意：本工具提供的分析和建议仅供参考，不能替代专业的心理咨询或法律意见。"
+  },
+  "blameTactics": {
+    "title": "职场背锅战术大全",
+    "description": "分析复杂职场情况，提供避免背锅的策略建议，保护自己的职业声誉。",
+    "situationLabel": "请描述具体情况：",
+    "situationPlaceholder": "详细描述你面临的职场问题、涉及的人员、时间线等...",
+    "urgencyLabel": "紧急程度：",
+    "urgencyPlaceholder": "选择紧急程度",
+    "impactLabel": "影响范围：",
+    "impactPlaceholder": "选择影响范围",
+    "roleLabel": "你的角色：",
+    "rolePlaceholder": "选择你在这个情况中的角色",
+    "getAdviceButton": "获取避锅策略",
+    "analyzing": "战术分析中...",
+    "resultTitle": "避锅战术分析：",
+    "emptySituationError": "请描述你面临的职场情况。",
+    "errorTitle": "分析失败",
+    "urgencyLevels": {
+      "low": "不紧急 - 有充足时间处理",
+      "medium": "中等紧急 - 需要在几天内处理",
+      "high": "比较紧急 - 需要尽快处理",
+      "critical": "非常紧急 - 需要立即处理"
+    },
+    "impactLevels": {
+      "personal": "仅影响个人",
+      "team": "影响团队",
+      "department": "影响部门",
+      "company": "影响整个公司"
+    },
+    "roles": {
+      "junior": "初级员工/实习生",
+      "senior": "资深员工/主管",
+      "manager": "中层管理者",
+      "director": "高级管理者/总监"
+    }
+  },
+  "crisisCommunicationTemplates": {
+    "title": "危机公关模板生成器",
+    "description": "根据具体危机情况，生成专业的危机公关文案模板，帮助化解职场或商业危机。",
+    "crisisTypeLabel": "危机类型：",
+    "crisisTypePlaceholder": "选择危机类型",
+    "severityLabel": "严重程度：",
+    "severityPlaceholder": "选择严重程度",
+    "audienceLabel": "目标受众：",
+    "audiencePlaceholder": "选择主要受众",
+    "situationLabel": "具体情况描述：",
+    "situationPlaceholder": "详细描述危机的具体情况、背景、时间线等...",
+    "toneLabel": "沟通语调：",
+    "tonePlaceholder": "选择沟通语调",
+    "generateButton": "生成危机公关模板",
+    "generating": "正在生成危机公关模板...",
+    "resultTitle": "危机公关模板：",
+    "emptySituationError": "请描述具体的危机情况。",
+    "errorTitle": "生成失败",
+    "crisisTypes": {
+      "product": "产品/服务问题",
+      "personnel": "人事危机",
+      "financial": "财务问题",
+      "legal": "法律纠纷",
+      "reputation": "声誉损害",
+      "operational": "运营事故",
+      "security": "安全事件",
+      "other": "其他危机"
+    },
+    "severityLevels": {
+      "low": "轻微 - 影响有限",
+      "medium": "中等 - 需要关注",
+      "high": "严重 - 需要紧急处理",
+      "critical": "危急 - 威胁企业生存"
+    },
+    "audiences": {
+      "internal": "内部员工",
+      "customers": "客户/用户",
+      "media": "媒体记者",
+      "investors": "投资者/股东",
+      "public": "公众/社会",
+      "government": "政府/监管机构"
+    },
+    "tones": {
+      "apologetic": "道歉式 - 真诚道歉",
+      "explanatory": "解释式 - 说明情况",
+      "reassuring": "安抚式 - 提供保证",
+      "defensive": "防御式 - 维护立场",
+      "proactive": "主动式 - 展示行动"
+    }
+  },
+  "bossRadar": {
+    "title": "老板雷达探测器",
+    "description": "分析老板的行为模式和管理风格，提供相处策略和职场生存指南。",
+    "behaviorLabel": "老板行为描述：",
+    "behaviorPlaceholder": "描述老板的日常行为、说话方式、管理风格、决策习惯等...",
+    "interactionLabel": "互动频率：",
+    "interactionPlaceholder": "选择互动频率",
+    "moodLabel": "情绪稳定性：",
+    "moodPlaceholder": "选择情绪稳定性",
+    "communicationLabel": "沟通方式：",
+    "communicationPlaceholder": "选择主要沟通方式",
+    "relationshipLabel": "当前关系：",
+    "relationshipPlaceholder": "选择当前关系状态",
+    "analyzeButton": "启动老板雷达分析",
+    "analyzing": "雷达扫描中...",
+    "resultTitle": "老板雷达分析报告：",
+    "emptyBehaviorError": "请描述老板的行为模式。",
+    "errorTitle": "分析失败",
+    "interactionFrequencies": {
+      "daily": "每天多次接触",
+      "regular": "每天接触1-2次",
+      "weekly": "每周接触几次",
+      "occasional": "偶尔接触",
+      "minimal": "很少接触"
+    },
+    "moodStabilities": {
+      "stable": "情绪稳定，心情平和",
+      "fluctuating": "情绪起伏，但可预测",
+      "unpredictable": "情绪多变，难以预测",
+      "intense": "情绪激烈，反应强烈",
+      "cold": "情绪冷淡，难以读懂"
+    },
+    "communicationStyles": {
+      "direct": "直接沟通 - 有话直说",
+      "diplomatic": "委婉沟通 - 拐弯抹角",
+      "formal": "正式沟通 - 公事公办",
+      "casual": "随意沟通 - 比较轻松",
+      "mixed": "混合方式 - 看情况而定"
+    },
+    "relationshipStatuses": {
+      "excellent": "关系很好 - 相互信任",
+      "good": "关系不错 - 正常合作",
+      "neutral": "关系一般 - 保持距离",
+      "tense": "关系紧张 - 有些摩擦",
+      "poor": "关系很差 - 经常冲突"
+    },
+    "riskLevels": {
+      "absolutelySafe": "绝对安全",
+      "lowRisk": "低风险",
+      "mediumRisk": "中等风险",
+      "highRisk": "高风险",
+      "extremelyDangerous": "极度危险"
+    },
+    "messages": {
+      "absolutelySafe": [
+        "老板心情不错，可以安心工作",
+        "今天是个好日子，老板很和善",
+        "雷达显示一切正常，继续保持"
+      ],
+      "lowRisk": ["老板状态还算稳定，保持低调", "有轻微波动，但问题不大", "建议观察一下再行动"],
+      "mediumRisk": [
+        "老板情绪有些不稳定，小心行事",
+        "建议暂缓汇报坏消息",
+        "保持警觉，随时准备撤退"
+      ],
+      "highRisk": ["危险等级较高，避免直接接触", "建议通过邮件沟通", "今天不适合提加薪的事"],
+      "extremelyDangerous": ["紧急警报！老板处于暴走状态", "建议立即寻找掩体", "今天最好请假在家"]
+    },
+    "detecting": "检测中...",
+    "scanningSignals": "正在扫描老板信号...",
+    "detectRisk": "开始检测",
+    "emergencyDetect": "紧急检测"
+  },
+  "careerLevelingSystem": {
+    "title": "职场等级系统",
+    "description": "评估你的职场技能等级，制定升级攻略，规划职业发展路径。",
+    "currentRoleLabel": "当前职位：",
+    "currentRolePlaceholder": "请输入你的当前职位",
+    "experienceLabel": "工作经验：",
+    "experiencePlaceholder": "选择工作经验",
+    "industryLabel": "所在行业：",
+    "industryPlaceholder": "选择你的行业",
+    "skillsLabel": "核心技能描述：",
+    "skillsPlaceholder": "描述你目前掌握的核心技能、专业能力、项目经验等...",
+    "goalLabel": "职业目标：",
+    "goalPlaceholder": "描述你的职业发展目标和期望达到的职位",
+    "challengesLabel": "面临的挑战：",
+    "challengesPlaceholder": "目前在职业发展中遇到的困难和挑战...",
+    "generateButton": "生成职场等级报告",
+    "generating": "正在分析你的职场等级...",
+    "resultTitle": "职场等级分析报告：",
+    "emptyRoleError": "请输入你的当前职位。",
+    "emptySkillsError": "请描述你的核心技能。",
+    "errorTitle": "分析失败",
+    "experienceLevels": {
+      "entry": "0-1年 (新手)",
+      "junior": "1-3年 (初级)",
+      "intermediate": "3-5年 (中级)",
+      "senior": "5-8年 (高级)",
+      "expert": "8年以上 (专家)"
+    },
+    "industries": {
+      "tech": "互联网/技术",
+      "finance": "金融/投资",
+      "consulting": "咨询服务",
+      "manufacturing": "制造业",
+      "healthcare": "医疗健康",
+      "education": "教育培训",
+      "retail": "零售/电商",
+      "media": "媒体/广告",
+      "government": "政府/公共部门",
+      "other": "其他行业"
+    }
+  },
+  "sideHustleAssessor": {
+    "title": "副业评估师",
+    "description": "评估你的副业想法的可行性，分析风险和收益，提供专业的副业发展建议。",
+    "currentJobLabel": "当前主业：",
+    "currentJobPlaceholder": "请输入你的当前主业或职业",
+    "skillsLabel": "技能描述：",
+    "skillsPlaceholder": "描述你拥有的技能和专业能力...",
+    "interestsLabel": "兴趣爱好：",
+    "interestsPlaceholder": "描述你的兴趣爱好和个人偏好...",
+    "budgetLabel": "启动预算：",
+    "budgetPlaceholder": "选择你的启动预算范围",
+    "timeCommitmentLabel": "时间投入：",
+    "timeCommitmentPlaceholder": "选择每周可投入的时间",
+    "experienceLabel": "创业经验：",
+    "experiencePlaceholder": "选择你的创业经验",
+    "riskToleranceLabel": "风险承受能力：",
+    "riskTolerancePlaceholder": "选择风险承受能力",
+    "assessButton": "开始副业评估",
+    "assessing": "正在评估副业可行性...",
+    "resultTitle": "副业评估报告：",
+    "emptyFieldsError": "请填写所有必填字段。",
+    "errorTitle": "评估失败",
+    "budgetRanges": {
+      "minimal": "1000元以下",
+      "low": "1000-5000元",
+      "medium": "5000-20000元",
+      "high": "20000-50000元",
+      "significant": "50000元以上"
+    },
+    "timeCommitments": {
+      "casual": "每周1-5小时",
+      "part": "每周6-15小时",
+      "serious": "每周16-25小时",
+      "intensive": "每周25小时以上"
+    },
+    "experienceLevels": {
+      "none": "完全没有创业经验",
+      "minimal": "有过小项目经验",
+      "some": "有过一些创业尝试",
+      "experienced": "有成功的创业经历",
+      "serial": "连续创业者"
+    },
+    "riskTolerances": {
+      "conservative": "保守型 - 不愿承担风险",
+      "moderate": "适中型 - 可承担一定风险",
+      "aggressive": "积极型 - 愿意承担较高风险",
+      "high": "高风险型 - 追求高回报"
     }
   }
 }

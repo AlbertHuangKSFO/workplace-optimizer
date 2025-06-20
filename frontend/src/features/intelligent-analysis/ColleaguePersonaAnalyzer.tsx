@@ -12,7 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface ColleaguePersonaAnalyzerProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
 interface PersonaDimensionOption {
@@ -22,7 +22,7 @@ interface PersonaDimensionOption {
   description: string;
 }
 
-const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ locale = 'zh-CN' }) => {
+const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ locale }) => {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   // State for selected dimension options
@@ -47,7 +47,7 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     { id: 'comm_logical', label: t('colleaguePersonaAnalyzer.communicationStyles.comm_logical'), emoji: '🧠', description: t('colleaguePersonaAnalyzer.communicationStyles.comm_logical_desc') },
     { id: 'comm_expressive', label: t('colleaguePersonaAnalyzer.communicationStyles.comm_expressive'), emoji: '🗣️', description: t('colleaguePersonaAnalyzer.communicationStyles.comm_expressive_desc') },
     { id: 'comm_reserved', label: t('colleaguePersonaAnalyzer.communicationStyles.comm_reserved'), emoji: '🤐', description: t('colleaguePersonaAnalyzer.communicationStyles.comm_reserved_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const teamRoles: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'role_leader', label: t('colleaguePersonaAnalyzer.teamRoles.role_leader'), emoji: '👑', description: t('colleaguePersonaAnalyzer.teamRoles.role_leader_desc') },
@@ -56,7 +56,7 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     { id: 'role_supporter', label: t('colleaguePersonaAnalyzer.teamRoles.role_supporter'), emoji: '🤝', description: t('colleaguePersonaAnalyzer.teamRoles.role_supporter_desc') },
     { id: 'role_detailer', label: t('colleaguePersonaAnalyzer.teamRoles.role_detailer'), emoji: '🔍', description: t('colleaguePersonaAnalyzer.teamRoles.role_detailer_desc') },
     { id: 'role_independent', label: t('colleaguePersonaAnalyzer.teamRoles.role_independent'), emoji: '🚶', description: t('colleaguePersonaAnalyzer.teamRoles.role_independent_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const pressureReactions: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'pressure_calm', label: t('colleaguePersonaAnalyzer.pressureReactions.pressure_calm'), emoji: '🧘', description: t('colleaguePersonaAnalyzer.pressureReactions.pressure_calm_desc') },
@@ -64,7 +64,7 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     { id: 'pressure_anxious', label: t('colleaguePersonaAnalyzer.pressureReactions.pressure_anxious'), emoji: '😟', description: t('colleaguePersonaAnalyzer.pressureReactions.pressure_anxious_desc') },
     { id: 'pressure_seeker', label: t('colleaguePersonaAnalyzer.pressureReactions.pressure_seeker'), emoji: '🙋', description: t('colleaguePersonaAnalyzer.pressureReactions.pressure_seeker_desc') },
     { id: 'pressure_avoidant', label: t('colleaguePersonaAnalyzer.pressureReactions.pressure_avoidant'), emoji: '🙈', description: t('colleaguePersonaAnalyzer.pressureReactions.pressure_avoidant_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const conflictApproaches: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'conflict_direct', label: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_direct'), emoji: '⚔️', description: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_direct_desc') },
@@ -72,7 +72,7 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     { id: 'conflict_compromising', label: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_compromising'), emoji: '⚖️', description: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_compromising_desc') },
     { id: 'conflict_avoiding', label: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_avoiding'), emoji: '🙈', description: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_avoiding_desc') },
     { id: 'conflict_assertive', label: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_assertive'), emoji: '💪', description: t('colleaguePersonaAnalyzer.conflictApproaches.conflict_assertive_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const taskManagementStyles: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'task_planner', label: t('colleaguePersonaAnalyzer.taskManagementStyles.task_planner'), emoji: '🗓️', description: t('colleaguePersonaAnalyzer.taskManagementStyles.task_planner_desc') },
@@ -80,26 +80,26 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     { id: 'task_detail_oriented', label: t('colleaguePersonaAnalyzer.taskManagementStyles.task_detail_oriented'), emoji: '🔬', description: t('colleaguePersonaAnalyzer.taskManagementStyles.task_detail_oriented_desc') },
     { id: 'task_result_driven', label: t('colleaguePersonaAnalyzer.taskManagementStyles.task_result_driven'), emoji: '🏁', description: t('colleaguePersonaAnalyzer.taskManagementStyles.task_result_driven_desc') },
     { id: 'task_procrastinator', label: t('colleaguePersonaAnalyzer.taskManagementStyles.task_procrastinator'), emoji: '⏳', description: t('colleaguePersonaAnalyzer.taskManagementStyles.task_procrastinator_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const adaptabilityToChanges: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'change_embracer', label: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_embracer'), emoji: '🤗', description: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_embracer_desc') },
     { id: 'change_cautious', label: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_cautious'), emoji: '🧐', description: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_cautious_desc') },
     { id: 'change_resistant', label: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_resistant'), emoji: '🙅', description: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_resistant_desc') },
     { id: 'change_passive', label: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_passive'), emoji: '😶', description: t('colleaguePersonaAnalyzer.adaptabilityToChanges.change_passive_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const learningAttitudes: PersonaDimensionOption[] = React.useMemo(() => [
     { id: 'learn_proactive', label: t('colleaguePersonaAnalyzer.learningAttitudes.learn_proactive'), emoji: '🌟', description: t('colleaguePersonaAnalyzer.learningAttitudes.learn_proactive_desc') },
     { id: 'learn_receptive', label: t('colleaguePersonaAnalyzer.learningAttitudes.learn_receptive'), emoji: '💡', description: t('colleaguePersonaAnalyzer.learningAttitudes.learn_receptive_desc') },
     { id: 'learn_practical', label: t('colleaguePersonaAnalyzer.learningAttitudes.learn_practical'), emoji: '🔧', description: t('colleaguePersonaAnalyzer.learningAttitudes.learn_practical_desc') },
     { id: 'learn_complacent', label: t('colleaguePersonaAnalyzer.learningAttitudes.learn_complacent'), emoji: '😌', description: t('colleaguePersonaAnalyzer.learningAttitudes.learn_complacent_desc') },
-  ], [t]);
+  ], [t, translationsLoading]);
 
   const guidingPrompts = React.useMemo(() => {
     const prompts = t('colleaguePersonaAnalyzer.guidingPrompts', { returnObjects: true });
     return Array.isArray(prompts) ? prompts : [];
-  }, [t]);
+  }, [t, translationsLoading]);
 
   const handleGuidingPromptClick = (prompt: string) => {
     setColleagueDescription((prev) => prev.trim() ? `${prev}\n\n${prompt} ` : `${prompt} `);
@@ -178,7 +178,7 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
         body: JSON.stringify({
           messages: [{ role: 'user', content: finalPrompt }],
           toolId: 'colleague-persona-analyzer',
-          language: locale === 'en-US' ? 'en' : 'zh'
+          language: locale
         }),
       });
 
@@ -216,7 +216,20 @@ const ColleaguePersonaAnalyzer: React.FC<ColleaguePersonaAnalyzerProps> = ({ loc
     return (
       <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-8">
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+          <span className="ml-3 text-lg text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 如果翻译加载失败或数据为空，显示错误状态
+  if (!translationsLoading && (!t || typeof t !== 'function')) {
+    return (
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-8">
+        <div className="flex items-center justify-center py-20">
+          <AlertTriangle className="h-8 w-8 text-red-500" />
+          <span className="ml-3 text-lg text-red-600">Failed to load translations</span>
         </div>
       </div>
     );

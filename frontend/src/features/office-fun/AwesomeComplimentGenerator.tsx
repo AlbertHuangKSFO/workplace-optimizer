@@ -12,10 +12,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface AwesomeComplimentGeneratorProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
-function AwesomeComplimentGenerator({ locale = 'zh-CN' }: AwesomeComplimentGeneratorProps): React.JSX.Element {
+function AwesomeComplimentGenerator({ locale }: AwesomeComplimentGeneratorProps): React.JSX.Element {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [praiseSubject, setPraiseSubject] = useState<string>('');
@@ -44,6 +44,7 @@ function AwesomeComplimentGenerator({ locale = 'zh-CN' }: AwesomeComplimentGener
         body: JSON.stringify({
           messages: [{ role: 'user', content: praiseSubject }],
           toolId: 'awesome-compliment-generator',
+          locale: locale,
         }),
       });
 

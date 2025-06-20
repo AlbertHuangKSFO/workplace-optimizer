@@ -6,40 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Briefcase, FileText, Loader2, LogOut } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const resignationTypes = [
-  { value: 'better-opportunity', label: '更好机会', emoji: '🚀', description: '获得更好的职业发展机会' },
-  { value: 'career-change', label: '转行发展', emoji: '🔄', description: '转向不同的行业或职能' },
-  { value: 'personal-reasons', label: '个人原因', emoji: '👤', description: '家庭、健康等个人因素' },
-  { value: 'company-culture', label: '文化不合', emoji: '🏢', description: '与公司文化价值观不匹配' },
-  { value: 'work-life-balance', label: '工作生活平衡', emoji: '⚖️', description: '追求更好的工作生活平衡' },
-  { value: 'compensation', label: '薪酬待遇', emoji: '💰', description: '薪酬福利不满意' },
-  { value: 'growth-limitation', label: '发展受限', emoji: '📈', description: '职业发展空间有限' },
-  { value: 'relocation', label: '地理位置', emoji: '🌍', description: '搬迁或地理位置因素' },
-];
+interface ResignationTemplatesProps {
+  locale: ValidLocale;
+}
 
-const relationshipLevels = [
-  { value: 'positive', label: '关系良好', emoji: '😊', description: '与公司和同事关系融洽' },
-  { value: 'neutral', label: '关系一般', emoji: '😐', description: '正常的工作关系' },
-  { value: 'strained', label: '关系紧张', emoji: '😬', description: '存在一些矛盾或分歧' },
-  { value: 'professional', label: '纯粹职业', emoji: '🤝', description: '保持专业的工作关系' },
-];
+function ResignationTemplates({ locale }: ResignationTemplatesProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-const noticeStyles = [
-  { value: 'formal', label: '正式官方', emoji: '📋', description: '严格按照公司流程的正式通知' },
-  { value: 'grateful', label: '感谢型', emoji: '🙏', description: '强调感谢和正面经历' },
-  { value: 'brief', label: '简洁型', emoji: '✂️', description: '简明扼要，不过多解释' },
-  { value: 'detailed', label: '详细型', emoji: '📝', description: '详细说明原因和交接安排' },
-  { value: 'diplomatic', label: '外交型', emoji: '🤝', description: '圆滑得体，避免冲突' },
-  { value: 'honest', label: '坦诚型', emoji: '💯', description: '诚实表达想法和感受' },
-];
-
-function ResignationTemplates(): React.JSX.Element {
   const [resignationType, setResignationType] = useState<string>('better-opportunity');
   const [relationshipLevel, setRelationshipLevel] = useState<string>('positive');
   const [noticeStyle, setNoticeStyle] = useState<string>('formal');
@@ -51,10 +32,46 @@ function ResignationTemplates(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const resignationTypes = React.useMemo(() => [
+    { value: 'better-opportunity', label: t('resignationTemplates.resignationTypes.better-opportunity.label'), emoji: t('resignationTemplates.resignationTypes.better-opportunity.emoji'), description: t('resignationTemplates.resignationTypes.better-opportunity.description') },
+    { value: 'career-change', label: t('resignationTemplates.resignationTypes.career-change.label'), emoji: t('resignationTemplates.resignationTypes.career-change.emoji'), description: t('resignationTemplates.resignationTypes.career-change.description') },
+    { value: 'personal-reasons', label: t('resignationTemplates.resignationTypes.personal-reasons.label'), emoji: t('resignationTemplates.resignationTypes.personal-reasons.emoji'), description: t('resignationTemplates.resignationTypes.personal-reasons.description') },
+    { value: 'company-culture', label: t('resignationTemplates.resignationTypes.company-culture.label'), emoji: t('resignationTemplates.resignationTypes.company-culture.emoji'), description: t('resignationTemplates.resignationTypes.company-culture.description') },
+    { value: 'work-life-balance', label: t('resignationTemplates.resignationTypes.work-life-balance.label'), emoji: t('resignationTemplates.resignationTypes.work-life-balance.emoji'), description: t('resignationTemplates.resignationTypes.work-life-balance.description') },
+    { value: 'compensation', label: t('resignationTemplates.resignationTypes.compensation.label'), emoji: t('resignationTemplates.resignationTypes.compensation.emoji'), description: t('resignationTemplates.resignationTypes.compensation.description') },
+    { value: 'growth-limitation', label: t('resignationTemplates.resignationTypes.growth-limitation.label'), emoji: t('resignationTemplates.resignationTypes.growth-limitation.emoji'), description: t('resignationTemplates.resignationTypes.growth-limitation.description') },
+    { value: 'relocation', label: t('resignationTemplates.resignationTypes.relocation.label'), emoji: t('resignationTemplates.resignationTypes.relocation.emoji'), description: t('resignationTemplates.resignationTypes.relocation.description') },
+  ], [t, translationsLoading]);
+
+  const relationshipLevels = React.useMemo(() => [
+    { value: 'positive', label: t('resignationTemplates.relationshipLevels.positive.label'), emoji: t('resignationTemplates.relationshipLevels.positive.emoji'), description: t('resignationTemplates.relationshipLevels.positive.description') },
+    { value: 'neutral', label: t('resignationTemplates.relationshipLevels.neutral.label'), emoji: t('resignationTemplates.relationshipLevels.neutral.emoji'), description: t('resignationTemplates.relationshipLevels.neutral.description') },
+    { value: 'strained', label: t('resignationTemplates.relationshipLevels.strained.label'), emoji: t('resignationTemplates.relationshipLevels.strained.emoji'), description: t('resignationTemplates.relationshipLevels.strained.description') },
+    { value: 'professional', label: t('resignationTemplates.relationshipLevels.professional.label'), emoji: t('resignationTemplates.relationshipLevels.professional.emoji'), description: t('resignationTemplates.relationshipLevels.professional.description') },
+  ], [t, translationsLoading]);
+
+  const noticeStyles = React.useMemo(() => [
+    { value: 'formal', label: t('resignationTemplates.noticeStyles.formal.label'), emoji: t('resignationTemplates.noticeStyles.formal.emoji'), description: t('resignationTemplates.noticeStyles.formal.description') },
+    { value: 'grateful', label: t('resignationTemplates.noticeStyles.grateful.label'), emoji: t('resignationTemplates.noticeStyles.grateful.emoji'), description: t('resignationTemplates.noticeStyles.grateful.description') },
+    { value: 'brief', label: t('resignationTemplates.noticeStyles.brief.label'), emoji: t('resignationTemplates.noticeStyles.brief.emoji'), description: t('resignationTemplates.noticeStyles.brief.description') },
+    { value: 'detailed', label: t('resignationTemplates.noticeStyles.detailed.label'), emoji: t('resignationTemplates.noticeStyles.detailed.emoji'), description: t('resignationTemplates.noticeStyles.detailed.description') },
+    { value: 'diplomatic', label: t('resignationTemplates.noticeStyles.diplomatic.label'), emoji: t('resignationTemplates.noticeStyles.diplomatic.emoji'), description: t('resignationTemplates.noticeStyles.diplomatic.description') },
+    { value: 'honest', label: t('resignationTemplates.noticeStyles.honest.label'), emoji: t('resignationTemplates.noticeStyles.honest.emoji'), description: t('resignationTemplates.noticeStyles.honest.description') },
+  ], [t, translationsLoading]);
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+        <span className="ml-2 text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!currentPosition.trim()) {
-      setError('请输入当前职位！');
+      setError(t('resignationTemplates.emptyPositionError'));
       setGeneratedTemplate('');
       return;
     }
@@ -67,7 +84,7 @@ function ResignationTemplates(): React.JSX.Element {
     const selectedRelationship = relationshipLevels.find(r => r.value === relationshipLevel);
     const selectedStyle = noticeStyles.find(s => s.value === noticeStyle);
 
-    const userPrompt = `
+    const userPrompt = locale === 'zh-CN' ? `
 离职原因：${selectedResignation?.label} - ${selectedResignation?.description}
 关系状况：${selectedRelationship?.label} - ${selectedRelationship?.description}
 通知风格：${selectedStyle?.label} - ${selectedStyle?.description}
@@ -78,6 +95,17 @@ ${specificReasons.trim() ? `具体原因：${specificReasons}` : ''}
 ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
 
 请生成一份专业、得体的离职申请或通知文案，包括邮件标题和正文内容。
+` : `
+Resignation Reason: ${selectedResignation?.label} - ${selectedResignation?.description}
+Relationship Status: ${selectedRelationship?.label} - ${selectedRelationship?.description}
+Notice Style: ${selectedStyle?.label} - ${selectedStyle?.description}
+
+Current Position: ${currentPosition}
+${workDuration.trim() ? `Work Duration: ${workDuration}` : ''}
+${specificReasons.trim() ? `Specific Reasons: ${specificReasons}` : ''}
+${handoverPlans.trim() ? `Handover Plans: ${handoverPlans}` : ''}
+
+Please generate a professional and appropriate resignation application or notice, including email subject and content.
 `;
 
     try {
@@ -89,11 +117,15 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'resignation-templates',
+          language: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '文案生成失败，可能是HR顾问在思考更好的表达方式。' }));
+        const defaultErrorMessage = locale === 'zh-CN'
+          ? '文案生成失败，可能是HR顾问在思考更好的表达方式。'
+          : 'Template generation failed, the HR consultant might be thinking of better expressions.';
+        const errorData = await response.json().catch(() => ({ message: defaultErrorMessage }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -103,11 +135,17 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         setGeneratedTemplate(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure:', data);
-        setError('AI返回的文案格式有误，HR顾问可能在重新组织语言...📝');
+        const unexpectedResponseError = locale === 'zh-CN'
+          ? 'AI返回的文案格式有误，HR顾问可能在重新组织语言...📝'
+          : 'The AI template format is incorrect, the HR consultant might be reorganizing the language...📝';
+        setError(unexpectedResponseError);
       }
     } catch (e) {
       console.error('Failed to generate template:', e);
-      setError(e instanceof Error ? e.message : '生成文案时发生未知错误，职业规划师还需要更多时间！💼');
+      const unknownError = locale === 'zh-CN'
+        ? '生成文案时发生未知错误，职业规划师还需要更多时间！💼'
+        : 'An unknown error occurred while generating the template, the career planner needs more time!💼';
+      setError(e instanceof Error ? e.message : unknownError);
     }
 
     setIsLoading(false);
@@ -120,7 +158,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <LogOut className="w-8 h-8 text-purple-500 dark:text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">离职/跳槽文案生成器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('resignationTemplates.title')}</h1>
         <Briefcase className="w-8 h-8 text-purple-500 dark:text-purple-400 ml-2" />
       </div>
 
@@ -128,7 +166,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="resignationType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              离职原因：
+              {t('resignationTemplates.resignationTypeLabel')}
             </Label>
             <Select value={resignationType} onValueChange={setResignationType}>
               <SelectTrigger className={cn(
@@ -136,7 +174,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
               )}>
-                <SelectValue placeholder="选择离职原因..." />
+                <SelectValue placeholder={t('resignationTemplates.resignationTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -162,7 +200,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
           </div>
           <div>
             <Label htmlFor="relationshipLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              关系状况：
+              {t('resignationTemplates.relationshipLabel')}
             </Label>
             <Select value={relationshipLevel} onValueChange={setRelationshipLevel}>
               <SelectTrigger className={cn(
@@ -170,7 +208,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
               )}>
-                <SelectValue placeholder="选择关系状况..." />
+                <SelectValue placeholder={t('resignationTemplates.relationshipPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -196,7 +234,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
           </div>
           <div>
             <Label htmlFor="noticeStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              通知风格：
+              {t('resignationTemplates.styleLabel')}
             </Label>
             <Select value={noticeStyle} onValueChange={setNoticeStyle}>
               <SelectTrigger className={cn(
@@ -204,7 +242,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-purple-500 focus:border-purple-500 dark:focus:ring-purple-500 dark:focus:border-purple-500"
               )}>
-                <SelectValue placeholder="选择通知风格..." />
+                <SelectValue placeholder={t('resignationTemplates.stylePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -232,13 +270,13 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="currentPosition" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              当前职位：
+              {t('resignationTemplates.positionLabel')}
             </Label>
             <Input
               id="currentPosition"
               value={currentPosition}
               onChange={(e) => setCurrentPosition(e.target.value)}
-              placeholder="例如：高级产品经理、技术总监、市场专员..."
+              placeholder={t('resignationTemplates.positionPlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -249,13 +287,13 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
           </div>
           <div>
             <Label htmlFor="workDuration" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              工作时长（选填）：
+              {t('resignationTemplates.durationLabel')}
             </Label>
             <Input
               id="workDuration"
               value={workDuration}
               onChange={(e) => setWorkDuration(e.target.value)}
-              placeholder="例如：3年5个月、2年、10个月..."
+              placeholder={t('resignationTemplates.durationPlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -267,13 +305,13 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         </div>
         <div>
           <Label htmlFor="specificReasons" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            具体原因（选填）：
+            {t('resignationTemplates.reasonsLabel')}
           </Label>
           <Textarea
             id="specificReasons"
             value={specificReasons}
             onChange={(e) => setSpecificReasons(e.target.value)}
-            placeholder="可以更详细地说明离职原因，例如：追求新的职业挑战，个人发展规划等..."
+            placeholder={t('resignationTemplates.reasonsPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -285,13 +323,13 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         </div>
         <div>
           <Label htmlFor="handoverPlans" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            交接计划（选填）：
+            {t('resignationTemplates.handoverLabel')}
           </Label>
           <Textarea
             id="handoverPlans"
             value={handoverPlans}
             onChange={(e) => setHandoverPlans(e.target.value)}
-            placeholder="例如：我将尽力配合完成工作交接，确保项目平稳过渡..."
+            placeholder={t('resignationTemplates.handoverPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -311,9 +349,9 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成文案中...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('resignationTemplates.generating')}</>
           ) : (
-            <><FileText className="mr-2 h-4 w-4" /> 生成离职文案</>
+            <><FileText className="mr-2 h-4 w-4" /> {t('resignationTemplates.generateButton')}</>
           )}
         </Button>
       </form>
@@ -324,7 +362,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('resignationTemplates.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -335,7 +373,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
       {isLoading && !generatedTemplate && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-purple-500 dark:text-purple-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">HR顾问正在精心撰写您的离职文案...📝</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('resignationTemplates.loadingText')}</p>
         </div>
       )}
 
@@ -346,7 +384,7 @@ ${handoverPlans.trim() ? `交接计划：${handoverPlans}` : ''}
         )}>
           <CardHeader>
             <CardTitle className="text-purple-600 dark:text-purple-400 flex items-center">
-              <FileText className="w-5 h-5 mr-2" /> 您的离职文案
+              <FileText className="w-5 h-5 mr-2" /> {t('resignationTemplates.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

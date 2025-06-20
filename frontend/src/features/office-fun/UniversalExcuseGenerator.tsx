@@ -12,10 +12,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface UniversalExcuseGeneratorProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
-function UniversalExcuseGenerator({ locale = 'zh-CN' }: UniversalExcuseGeneratorProps): React.JSX.Element {
+function UniversalExcuseGenerator({ locale }: UniversalExcuseGeneratorProps): React.JSX.Element {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [excuseScenario, setExcuseScenario] = useState<string>('');
@@ -44,6 +44,7 @@ function UniversalExcuseGenerator({ locale = 'zh-CN' }: UniversalExcuseGenerator
         body: JSON.stringify({
           messages: [{ role: 'user', content: excuseScenario }],
           toolId: 'universal-excuse-generator',
+          locale: locale,
         }),
       });
 

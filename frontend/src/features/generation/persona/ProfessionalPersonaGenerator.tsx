@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
+import { ValidLocale } from '@/types/global';
 import { Loader2, Sparkles, Target, User } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -41,7 +43,12 @@ const personaStyles = [
   { value: 'creative', label: '创意灵感型', emoji: '🎨', description: '富有创意，思维跳跃' },
 ];
 
-function ProfessionalPersonaGenerator(): React.JSX.Element {
+interface Props {
+  locale: ValidLocale;
+}
+
+function ProfessionalPersonaGenerator({ locale }: Props): React.JSX.Element {
+  const { t, loading } = useTranslations(locale);
   const [careerLevel, setCareerLevel] = useState<string>('mid');
   const [industry, setIndustry] = useState<string>('tech');
   const [personaStyle, setPersonaStyle] = useState<string>('professional');
@@ -57,7 +64,7 @@ function ProfessionalPersonaGenerator(): React.JSX.Element {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!currentRole.trim()) {
-      setError('请输入当前职位！');
+      setError(t('professionalPersonaGenerator.currentRoleRequired'));
       setGeneratedPersona('');
       return;
     }
@@ -92,11 +99,12 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'professional-persona-generator',
+          language: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '人设生成失败，可能是形象设计师在思考更好的定位。' }));
+        const errorData = await response.json().catch(() => ({ message: t('professionalPersonaGenerator.errorFormat') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -106,11 +114,11 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         setGeneratedPersona(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure:', data);
-        setError('AI返回的人设格式有误，形象设计师可能在重新构思...🎭');
+        setError(t('professionalPersonaGenerator.errorFormat'));
       }
     } catch (e) {
       console.error('Failed to generate persona:', e);
-      setError(e instanceof Error ? e.message : '生成人设时发生未知错误，个人品牌塑造遇到了挑战！💼');
+      setError(e instanceof Error ? e.message : t('professionalPersonaGenerator.unknownError'));
     }
 
     setIsLoading(false);
@@ -123,7 +131,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <User className="w-8 h-8 text-blue-500 dark:text-blue-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场人设生成器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('professionalPersonaGenerator.title')}</h1>
         <Target className="w-8 h-8 text-blue-500 dark:text-blue-400 ml-2" />
       </div>
 
@@ -131,7 +139,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="careerLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              职业层级：
+              {t('professionalPersonaGenerator.careerLevelLabel')}
             </Label>
             <Select value={careerLevel} onValueChange={setCareerLevel}>
               <SelectTrigger className={cn(
@@ -139,33 +147,33 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               )}>
-                <SelectValue placeholder="选择职业层级..." />
+                <SelectValue placeholder={t('professionalPersonaGenerator.careerLevelPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
                 "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
               )}>
-                {careerLevels.map(level => (
-                  <SelectItem
-                    key={level.value}
-                    value={level.value}
-                    className={cn(
-                      "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-blue-100 dark:focus:bg-blue-700/50",
-                      "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
-                    )}
-                  >
-                    <div className="flex flex-col">
-                      <span>{level.emoji} {level.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{level.description}</span>
-                    </div>
-                  </SelectItem>
-                ))}
+                                  {careerLevels.map(level => (
+                    <SelectItem
+                      key={level.value}
+                      value={level.value}
+                      className={cn(
+                        "hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:bg-blue-100 dark:focus:bg-blue-700/50",
+                        "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
+                      )}
+                    >
+                      <div className="flex flex-col">
+                        <span>{level.emoji} {t(`professionalPersonaGenerator.careerLevels.${level.value}`)}</span>
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`professionalPersonaGenerator.careerLevelDescriptions.${level.value}`)}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label htmlFor="industry" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              所属行业：
+              {t('professionalPersonaGenerator.industryLabel')}
             </Label>
             <Select value={industry} onValueChange={setIndustry}>
               <SelectTrigger className={cn(
@@ -173,7 +181,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               )}>
-                <SelectValue placeholder="选择行业..." />
+                <SelectValue placeholder={t('professionalPersonaGenerator.industryPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -188,7 +196,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
                       "data-[state=checked]:bg-blue-200 dark:data-[state=checked]:bg-blue-600/50"
                     )}
                   >
-                    <span>{ind.emoji} {ind.label}</span>
+                    <span>{ind.emoji} {t(`professionalPersonaGenerator.industries.${ind.value}`)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -196,7 +204,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
           </div>
           <div>
             <Label htmlFor="personaStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              人设风格：
+              {t('professionalPersonaGenerator.personaStyleLabel')}
             </Label>
             <Select value={personaStyle} onValueChange={setPersonaStyle}>
               <SelectTrigger className={cn(
@@ -204,7 +212,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500"
               )}>
-                <SelectValue placeholder="选择风格..." />
+                <SelectValue placeholder={t('professionalPersonaGenerator.personaStylePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -220,8 +228,8 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
                     )}
                   >
                     <div className="flex flex-col">
-                      <span>{style.emoji} {style.label}</span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{style.description}</span>
+                      <span>{style.emoji} {t(`professionalPersonaGenerator.personaStyles.${style.value}`)}</span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">{t(`professionalPersonaGenerator.personaStyleDescriptions.${style.value}`)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -232,13 +240,13 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="currentRole" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              当前职位：
+              {t('professionalPersonaGenerator.currentRoleLabel')}
             </Label>
             <Input
               id="currentRole"
               value={currentRole}
               onChange={(e) => setCurrentRole(e.target.value)}
-              placeholder="例如：高级产品经理、技术总监、市场专员..."
+              placeholder={t('professionalPersonaGenerator.currentRolePlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -249,13 +257,13 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
           </div>
           <div>
             <Label htmlFor="targetRole" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              目标职位（选填）：
+              {t('professionalPersonaGenerator.targetRoleLabel')}
             </Label>
             <Input
               id="targetRole"
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
-              placeholder="例如：产品副总裁、首席架构师、营销总监..."
+              placeholder={t('professionalPersonaGenerator.targetRolePlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -267,13 +275,13 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         </div>
         <div>
           <Label htmlFor="keySkills" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            核心技能（选填，逗号分隔）：
+            {t('professionalPersonaGenerator.keySkillsLabel')}
           </Label>
           <Textarea
             id="keySkills"
             value={keySkills}
             onChange={(e) => setKeySkills(e.target.value)}
-            placeholder="例如：产品管理, 数据分析, 团队领导, Python, React, 市场营销..."
+            placeholder={t('professionalPersonaGenerator.keySkillsPlaceholder')}
             className={cn(
               "w-full min-h-[60px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -285,13 +293,13 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         </div>
         <div>
           <Label htmlFor="achievements" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            主要成就（选填，简述）：
+            {t('professionalPersonaGenerator.achievementsLabel')}
           </Label>
           <Textarea
             id="achievements"
             value={achievements}
             onChange={(e) => setAchievements(e.target.value)}
-            placeholder="例如：主导XX产品上线，用户增长XX%；优化XX流程，效率提升XX%..."
+            placeholder={t('professionalPersonaGenerator.achievementsPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -303,13 +311,13 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         </div>
         <div>
           <Label htmlFor="personalTraits" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            个人特质（选填，逗号分隔）：
+            {t('professionalPersonaGenerator.personalTraitsLabel')}
           </Label>
           <Input
             id="personalTraits"
             value={personalTraits}
             onChange={(e) => setPersonalTraits(e.target.value)}
-            placeholder="例如：积极主动, 善于沟通, 结果导向, 抗压能力强, 学习能力强..."
+            placeholder={t('professionalPersonaGenerator.personalTraitsPlaceholder')}
             className={cn(
               "w-full",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -328,9 +336,9 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 人设塑造中...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('professionalPersonaGenerator.generating')}</>
           ) : (
-            <><Sparkles className="mr-2 h-4 w-4" /> 生成职场人设</>
+            <><Sparkles className="mr-2 h-4 w-4" /> {t('professionalPersonaGenerator.generateButton')}</>
           )}
         </Button>
       </form>
@@ -341,7 +349,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('professionalPersonaGenerator.error')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -352,7 +360,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
       {isLoading && !generatedPersona && (
         <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-blue-500 dark:text-blue-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">正在为您量身打造职场人设...🎭</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('professionalPersonaGenerator.generating')}...🎭</p>
         </div>
       )}
 
@@ -363,7 +371,7 @@ ${personalTraits.trim() ? `个人特质：${personalTraits}` : ''}
         )}>
           <CardHeader>
             <CardTitle className="text-blue-600 dark:text-blue-400 flex items-center">
-              <User className="w-5 h-5 mr-2" /> 您的专属职场人设
+              <User className="w-5 h-5 mr-2" /> {t('professionalPersonaGenerator.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

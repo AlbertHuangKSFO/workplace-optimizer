@@ -40,11 +40,14 @@ async function loadTranslationData(locale: ValidLocale): Promise<Record<string, 
       data = JSON.parse(fileContent);
     } else {
       // 客户端 - 使用fetch
+      console.log(`Loading translations for ${locale}...`);
       const response = await fetch(`/locales/${locale}.json`);
+      console.log(`Fetch response status: ${response.status}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch ${locale}.json: ${response.status}`);
       }
       data = await response.json();
+      console.log(`Loaded ${Object.keys(data).length} translation keys for ${locale}`);
     }
 
     translationCache[locale] = data;
@@ -102,7 +105,7 @@ export function useTranslations(locale: ValidLocale) {
   const t = useCallback(
     (key: string, params?: Record<string, string> | { returnObjects?: boolean }) => {
       if (loading) {
-        return key; // 加载中时返回key
+        return key; // 加载中时返回key，但组件应该处理加载状态
       }
 
       if (error) {

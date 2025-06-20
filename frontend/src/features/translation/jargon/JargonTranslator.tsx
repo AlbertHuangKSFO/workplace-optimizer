@@ -5,33 +5,50 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { ArrowLeftRight, Languages, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const translationModes = [
-  { value: 'jargon-to-plain', label: '黑话 → 人话（翻译成正常表达）' },
-  { value: 'plain-to-jargon', label: '人话 → 黑话（包装成职场用语）' },
-];
+interface JargonTranslatorProps {
+  locale: ValidLocale;
+}
 
-const jargonExamples = {
-  'jargon-to-plain': '例如：我们需要赋能业务，形成闭环，提升颗粒度...',
-  'plain-to-jargon': '例如：这个方案不行，需要重新做，时间很紧...',
-};
+function JargonTranslator({ locale }: JargonTranslatorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-function JargonTranslator(): React.JSX.Element {
   const [inputText, setInputText] = useState<string>('');
   const [translationMode, setTranslationMode] = useState<string>('jargon-to-plain');
   const [translatedText, setTranslatedText] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const translationModes = React.useMemo(() => [
+    { value: 'jargon-to-plain', label: t('jargonTranslator.modes.jargon-to-plain') },
+    { value: 'plain-to-jargon', label: t('jargonTranslator.modes.plain-to-jargon') },
+  ], [t, translationsLoading]);
+
+  const jargonExamples = React.useMemo(() => ({
+    'jargon-to-plain': t('jargonTranslator.examples.jargon-to-plain'),
+    'plain-to-jargon': t('jargonTranslator.examples.plain-to-jargon'),
+  }), [t, translationsLoading]);
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
+        <span className="ml-2 text-neutral-600 dark:text-neutral-400">Loading translations...</span>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!inputText.trim()) {
-      setError('请输入需要翻译的内容！');
+      setError(t('jargonTranslator.emptyInputError'));
       setTranslatedText('');
       return;
     }
@@ -43,10 +60,20 @@ function JargonTranslator(): React.JSX.Element {
     const selectedMode = translationModes.find(m => m.value === translationMode);
     let userPrompt = '';
 
-    if (translationMode === 'jargon-to-plain') {
-      userPrompt = `请将以下职场黑话翻译成通俗易懂的人话：\n\n${inputText}`;
+    if (locale === 'zh-CN') {
+      // Chinese prompts
+      if (translationMode === 'jargon-to-plain') {
+        userPrompt = `请将以下职场黑话翻译成通俗易懂的人话：\n\n${inputText}`;
+      } else {
+        userPrompt = `请将以下直白的表达包装成职场黑话/专业用语：\n\n${inputText}`;
+      }
     } else {
-      userPrompt = `请将以下直白的表达包装成职场黑话/专业用语：\n\n${inputText}`;
+      // English prompts
+      if (translationMode === 'jargon-to-plain') {
+        userPrompt = `Please translate the following corporate jargon into plain, easy-to-understand language:\n\n${inputText}`;
+      } else {
+        userPrompt = `Please transform the following straightforward expression into corporate jargon/professional terminology:\n\n${inputText}`;
+      }
     }
 
     try {
@@ -58,11 +85,15 @@ function JargonTranslator(): React.JSX.Element {
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'jargon-translator',
+          language: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '翻译失败，可能是AI的黑话词典需要更新了。' }));
+        const defaultErrorMessage = locale === 'zh-CN'
+          ? '翻译失败，可能是AI的黑话词典需要更新了。'
+          : 'Translation failed, the AI jargon dictionary might need an update.';
+        const errorData = await response.json().catch(() => ({ message: defaultErrorMessage }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -72,11 +103,17 @@ function JargonTranslator(): React.JSX.Element {
         setTranslatedText(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure for jargon translation:', data);
-        setError('AI返回的翻译结果有点奇怪，我暂时理解不了...🤖');
+        const unexpectedResponseError = locale === 'zh-CN'
+          ? 'AI返回的翻译结果有点奇怪，我暂时理解不了...🤖'
+          : 'The AI translation result seems strange, I can\'t understand it for now...🤖';
+        setError(unexpectedResponseError);
       }
     } catch (e) {
       console.error('Failed to translate jargon:', e);
-      setError(e instanceof Error ? e.message : '翻译时发生未知错误，我的翻译引擎卡壳了！🔧');
+      const unknownError = locale === 'zh-CN'
+        ? '翻译时发生未知错误，我的翻译引擎卡壳了！🔧'
+        : 'An unknown error occurred during translation, my translation engine got stuck!🔧';
+      setError(e instanceof Error ? e.message : unknownError);
     } finally {
       setIsLoading(false);
     }
@@ -89,14 +126,14 @@ function JargonTranslator(): React.JSX.Element {
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <Languages className="w-8 h-8 text-yellow-600 dark:text-yellow-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">黑话翻译器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('jargonTranslator.title')}</h1>
         <Languages className="w-8 h-8 text-yellow-600 dark:text-yellow-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
           <Label htmlFor="translationMode" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            翻译方向：
+            {t('jargonTranslator.modeLabel')}
           </Label>
           <Select value={translationMode} onValueChange={setTranslationMode}>
             <SelectTrigger className={cn(
@@ -104,7 +141,7 @@ function JargonTranslator(): React.JSX.Element {
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
               "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
             )}>
-              <SelectValue placeholder="选择翻译方向..." />
+              <SelectValue placeholder={t('jargonTranslator.modePlaceholder')} />
             </SelectTrigger>
             <SelectContent className={cn(
               "border-neutral-200 dark:border-neutral-700",
@@ -127,7 +164,7 @@ function JargonTranslator(): React.JSX.Element {
         </div>
         <div>
           <Label htmlFor="inputText" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            输入需要翻译的内容：
+            {t('jargonTranslator.inputLabel')}
           </Label>
           <Textarea
             id="inputText"
@@ -151,10 +188,10 @@ function JargonTranslator(): React.JSX.Element {
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在翻译中...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('jargonTranslator.translatingButton')}
             </>
           ) : (
-            <><ArrowLeftRight className="mr-2 h-4 w-4" /> 开始翻译！
+            <><ArrowLeftRight className="mr-2 h-4 w-4" /> {t('jargonTranslator.translateButton')}
             </>
           )}
         </Button>
@@ -166,7 +203,7 @@ function JargonTranslator(): React.JSX.Element {
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">翻译失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('jargonTranslator.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -177,7 +214,7 @@ function JargonTranslator(): React.JSX.Element {
       {isLoading && !translatedText && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-yellow-600 dark:text-yellow-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">AI翻译官正在破解职场密码...🔍</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('jargonTranslator.loadingText')}</p>
         </div>
       )}
 
@@ -188,7 +225,7 @@ function JargonTranslator(): React.JSX.Element {
         )}>
           <CardHeader>
             <CardTitle className="text-yellow-700 dark:text-yellow-400 flex items-center">
-              <ArrowLeftRight className="w-5 h-5 mr-2" /> 翻译结果：
+              <ArrowLeftRight className="w-5 h-5 mr-2" /> {t('jargonTranslator.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

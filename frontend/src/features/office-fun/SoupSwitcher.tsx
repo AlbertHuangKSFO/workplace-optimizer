@@ -9,7 +9,7 @@ import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 
 interface SoupSwitcherProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
 // Define types for quote and API response
@@ -18,7 +18,7 @@ interface Quote {
   type: 'chicken' | 'poisonous' | 'initial' | 'error';
 }
 
-const SoupSwitcher: React.FC<SoupSwitcherProps> = ({ locale = 'zh-CN' }) => {
+const SoupSwitcher: React.FC<SoupSwitcherProps> = ({ locale }) => {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [currentQuote, setCurrentQuote] = useState<Quote>({
@@ -68,6 +68,7 @@ const SoupSwitcher: React.FC<SoupSwitcherProps> = ({ locale = 'zh-CN' }) => {
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
           toolId: 'soup-switcher', // Important for backend to identify the tool
+          locale: locale,
         }),
       });
 

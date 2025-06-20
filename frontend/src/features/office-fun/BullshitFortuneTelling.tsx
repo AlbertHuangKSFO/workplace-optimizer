@@ -9,10 +9,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface BullshitFortunetellingProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
-function BullshitFortuneTelling({ locale = 'zh-CN' }: BullshitFortunetellingProps): React.JSX.Element {
+function BullshitFortuneTelling({ locale }: BullshitFortunetellingProps): React.JSX.Element {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [content, setContent] = useState<string>('');
@@ -40,6 +40,7 @@ function BullshitFortuneTelling({ locale = 'zh-CN' }: BullshitFortunetellingProp
           body: JSON.stringify({
             messages: [{ role: 'user', content: prompt }],
             toolId: 'bullshit-fortune-telling',
+            locale: locale,
           }),
         });
 

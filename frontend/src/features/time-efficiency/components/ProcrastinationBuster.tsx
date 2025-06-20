@@ -7,11 +7,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { Loader2, RefreshCw, Terminal, Zap } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const ProcrastinationBuster = () => {
+interface ProcrastinationBusterProps {
+  locale: ValidLocale;
+}
+
+const ProcrastinationBuster = ({ locale }: ProcrastinationBusterProps) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [taskDescription, setTaskDescription] = useState("");
   const [taskType, setTaskType] = useState("");
   const [estimatedTime, setEstimatedTime] = useState([2]);
@@ -26,7 +34,7 @@ const ProcrastinationBuster = () => {
 
   const handleGenerate = async () => {
     if (!taskDescription) {
-      setError("请描述您要完成的任务。");
+      setError(t('procrastinationBuster.emptyTaskError'));
       return;
     }
 
@@ -36,27 +44,35 @@ const ProcrastinationBuster = () => {
 
     const analysisData = {
       taskDescription,
-      taskType: taskType || "其他",
+      taskType: taskType || t('procrastinationBuster.taskTypes.other'),
       estimatedTime: estimatedTime[0],
       difficultyLevel: difficultyLevel[0],
-      procrastinationReason: procrastinationReason || "未指定",
-      urgencyLevel: urgencyLevel || "中等",
-      workStyle: workStyle || "未指定",
-      additionalInfo: additionalInfo || "无"
+      procrastinationReason: procrastinationReason || t('procrastinationBuster.procrastinationReasons.other'),
+      urgencyLevel: urgencyLevel || t('procrastinationBuster.urgencyLevels.medium'),
+      workStyle: workStyle || t('procrastinationBuster.workStyles.flexible'),
+      additionalInfo: additionalInfo || (locale === 'en-US' ? 'None' : '无')
     };
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          toolId: "procrastination-buster",
-          messages: [
-            {
-              role: "user",
-              content: `请帮我制定拖延症治疗方案。我的任务信息如下：
+    // Create prompt based on locale
+    const prompt = locale === 'en-US'
+      ? `Please help me create a procrastination treatment plan. My task information is as follows:
+
+Task Description: ${analysisData.taskDescription}
+
+Task Details:
+- Task Type: ${analysisData.taskType}
+- Estimated Total Time: ${analysisData.estimatedTime} hours
+- Difficulty Level: ${analysisData.difficultyLevel}/5
+- Urgency Level: ${analysisData.urgencyLevel}
+- Work Style: ${analysisData.workStyle}
+
+Procrastination Analysis:
+- Main Procrastination Reason: ${analysisData.procrastinationReason}
+
+Additional Information: ${analysisData.additionalInfo}
+
+Please generate a detailed procrastination treatment plan based on this information, break the task into 5-minute mini-tasks, and provide psychological strategies and execution advice.`
+      : `请帮我制定拖延症治疗方案。我的任务信息如下：
 
 任务描述：${analysisData.taskDescription}
 
@@ -72,7 +88,21 @@ const ProcrastinationBuster = () => {
 
 补充信息：${analysisData.additionalInfo}
 
-请根据这些信息生成详细的拖延症治疗方案，将任务分解成5分钟可完成的小任务，并提供心理策略和执行建议。`,
+请根据这些信息生成详细的拖延症治疗方案，将任务分解成5分钟可完成的小任务，并提供心理策略和执行建议。`;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          toolId: "procrastination-buster",
+          locale: locale,
+          messages: [
+            {
+              role: "user",
+              content: prompt,
             },
           ],
         }),
@@ -80,13 +110,13 @@ const ProcrastinationBuster = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "生成拖延症治疗方案时发生错误。");
+        throw new Error(errorData.error || t('procrastinationBuster.apiError'));
       }
 
       const data = await response.json();
       setPlan(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "生成拖延症治疗方案时发生未知错误。");
+      setError(err.message || t('procrastinationBuster.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -105,45 +135,56 @@ const ProcrastinationBuster = () => {
     setError(null);
   };
 
+  // Show loading if translations are still loading
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="target" className="mr-2 text-4xl">🎯</span>
-          拖延症治疗器
+          {t('procrastinationBuster.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          将大任务拆解成5分钟小任务，科学克服拖延症，让执行变得简单
+          {t('procrastinationBuster.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* 任务预览 */}
+        {/* Task Preview */}
         {taskDescription && (
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-lg border">
             <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold">📋 任务概览</h3>
+              <h3 className="text-xl font-semibold">{t('procrastinationBuster.taskOverview')}</h3>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-blue-600">预估时长</div>
-                  <div>{estimatedTime[0]}小时</div>
+                  <div className="font-semibold text-blue-600">{t('procrastinationBuster.estimatedTime')}</div>
+                  <div>{estimatedTime[0]}{t('procrastinationBuster.hours')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-purple-600">难度等级</div>
+                  <div className="font-semibold text-purple-600">{t('procrastinationBuster.difficultyLevel')}</div>
                   <div>{"⭐".repeat(difficultyLevel[0])}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-green-600">分解任务数</div>
-                  <div>约{Math.ceil(estimatedTime[0] * 12)}个</div>
+                  <div className="font-semibold text-green-600">{t('procrastinationBuster.taskCount')}</div>
+                  <div>{t('procrastinationBuster.about')}{Math.ceil(estimatedTime[0] * 12)}{t('procrastinationBuster.taskCountSuffix')}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-orange-600">完成时间</div>
-                  <div>约{Math.ceil(estimatedTime[0] * 1.5)}小时</div>
+                  <div className="font-semibold text-orange-600">{t('procrastinationBuster.completionTime')}</div>
+                  <div>{t('procrastinationBuster.about')}{Math.ceil(estimatedTime[0] * 1.5)}{t('procrastinationBuster.completionTimeSuffix')}</div>
                 </div>
               </div>
 
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                💡 包含休息时间的实际完成时间，让您轻松应对任务
+                {t('procrastinationBuster.tip')}
               </div>
             </div>
           </div>
@@ -151,10 +192,10 @@ const ProcrastinationBuster = () => {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="task-description">任务描述 *</Label>
+            <Label htmlFor="task-description">{t('procrastinationBuster.taskDescriptionRequired')}</Label>
             <Textarea
               id="task-description"
-              placeholder="详细描述您要完成的任务，例如：写一份市场分析报告、准备演讲稿、整理房间、学习新技能等..."
+              placeholder={t('procrastinationBuster.taskDescriptionPlaceholder')}
               value={taskDescription}
               onChange={(e) => setTaskDescription(e.target.value)}
               rows={3}
@@ -163,27 +204,27 @@ const ProcrastinationBuster = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">📊 任务属性</h3>
+              <h3 className="text-lg font-semibold">{t('procrastinationBuster.taskAttributes')}</h3>
 
               <div className="space-y-2">
-                <Label htmlFor="task-type">任务类型</Label>
+                <Label htmlFor="task-type">{t('procrastinationBuster.taskType')}</Label>
                 <Select value={taskType} onValueChange={setTaskType}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择任务类型" />
+                    <SelectValue placeholder={t('procrastinationBuster.taskTypePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="work">工作任务</SelectItem>
-                    <SelectItem value="study">学习任务</SelectItem>
-                    <SelectItem value="creative">创意任务</SelectItem>
-                    <SelectItem value="life">生活任务</SelectItem>
-                    <SelectItem value="health">健康任务</SelectItem>
-                    <SelectItem value="other">其他任务</SelectItem>
+                    <SelectItem value="work">{t('procrastinationBuster.taskTypes.work')}</SelectItem>
+                    <SelectItem value="study">{t('procrastinationBuster.taskTypes.study')}</SelectItem>
+                    <SelectItem value="creative">{t('procrastinationBuster.taskTypes.creative')}</SelectItem>
+                    <SelectItem value="life">{t('procrastinationBuster.taskTypes.life')}</SelectItem>
+                    <SelectItem value="health">{t('procrastinationBuster.taskTypes.health')}</SelectItem>
+                    <SelectItem value="other">{t('procrastinationBuster.taskTypes.other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label>预估总时长：{estimatedTime[0]}小时</Label>
+                <Label>{t('procrastinationBuster.timeEstimate')} {estimatedTime[0]}{t('procrastinationBuster.hours')}</Label>
                 <Slider
                   value={estimatedTime}
                   onValueChange={setEstimatedTime}
@@ -195,7 +236,7 @@ const ProcrastinationBuster = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>任务难度：{difficultyLevel[0]}/5 {"⭐".repeat(difficultyLevel[0])}</Label>
+                <Label>{t('procrastinationBuster.difficulty')} {difficultyLevel[0]}/5 {"⭐".repeat(difficultyLevel[0])}</Label>
                 <Slider
                   value={difficultyLevel}
                   onValueChange={setDifficultyLevel}
@@ -208,53 +249,53 @@ const ProcrastinationBuster = () => {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">🧠 拖延分析</h3>
+              <h3 className="text-lg font-semibold">{t('procrastinationBuster.procrastinationAnalysis')}</h3>
 
               <div className="space-y-2">
-                <Label htmlFor="procrastination-reason">主要拖延原因</Label>
+                <Label htmlFor="procrastination-reason">{t('procrastinationBuster.procrastinationReason')}</Label>
                 <Select value={procrastinationReason} onValueChange={setProcrastinationReason}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择拖延原因" />
+                    <SelectValue placeholder={t('procrastinationBuster.procrastinationReasonPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="perfectionism">完美主义</SelectItem>
-                    <SelectItem value="fear-failure">害怕失败</SelectItem>
-                    <SelectItem value="overwhelmed">任务过载</SelectItem>
-                    <SelectItem value="lack-motivation">缺乏动力</SelectItem>
-                    <SelectItem value="unclear-goals">目标不明确</SelectItem>
-                    <SelectItem value="distractions">容易分心</SelectItem>
-                    <SelectItem value="lack-skills">技能不足</SelectItem>
-                    <SelectItem value="other">其他原因</SelectItem>
+                    <SelectItem value="perfectionism">{t('procrastinationBuster.procrastinationReasons.perfectionism')}</SelectItem>
+                    <SelectItem value="fear-failure">{t('procrastinationBuster.procrastinationReasons.fear-failure')}</SelectItem>
+                    <SelectItem value="overwhelmed">{t('procrastinationBuster.procrastinationReasons.overwhelmed')}</SelectItem>
+                    <SelectItem value="lack-motivation">{t('procrastinationBuster.procrastinationReasons.lack-motivation')}</SelectItem>
+                    <SelectItem value="unclear-goals">{t('procrastinationBuster.procrastinationReasons.unclear-goals')}</SelectItem>
+                    <SelectItem value="distractions">{t('procrastinationBuster.procrastinationReasons.distractions')}</SelectItem>
+                    <SelectItem value="lack-skills">{t('procrastinationBuster.procrastinationReasons.lack-skills')}</SelectItem>
+                    <SelectItem value="other">{t('procrastinationBuster.procrastinationReasons.other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="urgency-level">紧急程度</Label>
+                <Label htmlFor="urgency-level">{t('procrastinationBuster.urgencyLevel')}</Label>
                 <Select value={urgencyLevel} onValueChange={setUrgencyLevel}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择紧急程度" />
+                    <SelectValue placeholder={t('procrastinationBuster.urgencyLevelPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">不紧急</SelectItem>
-                    <SelectItem value="medium">中等紧急</SelectItem>
-                    <SelectItem value="high">比较紧急</SelectItem>
-                    <SelectItem value="urgent">非常紧急</SelectItem>
+                    <SelectItem value="low">{t('procrastinationBuster.urgencyLevels.low')}</SelectItem>
+                    <SelectItem value="medium">{t('procrastinationBuster.urgencyLevels.medium')}</SelectItem>
+                    <SelectItem value="high">{t('procrastinationBuster.urgencyLevels.high')}</SelectItem>
+                    <SelectItem value="urgent">{t('procrastinationBuster.urgencyLevels.urgent')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="work-style">工作风格</Label>
+                <Label htmlFor="work-style">{t('procrastinationBuster.workStyle')}</Label>
                 <Select value={workStyle} onValueChange={setWorkStyle}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择您的工作风格" />
+                    <SelectValue placeholder={t('procrastinationBuster.workStylePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="focused">专注型（喜欢长时间专注）</SelectItem>
-                    <SelectItem value="burst">爆发型（短时间高效）</SelectItem>
-                    <SelectItem value="steady">稳定型（匀速推进）</SelectItem>
-                    <SelectItem value="flexible">灵活型（根据状态调整）</SelectItem>
+                    <SelectItem value="focused">{t('procrastinationBuster.workStyles.focused')}</SelectItem>
+                    <SelectItem value="burst">{t('procrastinationBuster.workStyles.burst')}</SelectItem>
+                    <SelectItem value="steady">{t('procrastinationBuster.workStyles.steady')}</SelectItem>
+                    <SelectItem value="flexible">{t('procrastinationBuster.workStyles.flexible')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -262,10 +303,10 @@ const ProcrastinationBuster = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="additional-info">补充信息</Label>
+            <Label htmlFor="additional-info">{t('procrastinationBuster.additionalInfo')}</Label>
             <Textarea
               id="additional-info"
-              placeholder="其他想要补充的信息，如特殊要求、时间限制、资源情况等..."
+              placeholder={t('procrastinationBuster.additionalInfoPlaceholder')}
               value={additionalInfo}
               onChange={(e) => setAdditionalInfo(e.target.value)}
               rows={2}
@@ -278,25 +319,25 @@ const ProcrastinationBuster = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在生成治疗方案...
+                {t('procrastinationBuster.generating')}
               </>
             ) : (
               <>
                 <Zap className="mr-2 h-4 w-4" />
-                生成拖延症治疗方案
+                {t('procrastinationBuster.generateButton')}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" />
-            重新开始
+            {t('procrastinationBuster.resetButton')}
           </Button>
         </div>
 
         {error && (
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{t('procrastinationBuster.errorTitle')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -305,7 +346,7 @@ const ProcrastinationBuster = () => {
       {plan && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">拖延症治疗方案:</h3>
+            <h3 className="text-lg font-semibold">{t('procrastinationBuster.treatmentPlan')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{
@@ -322,7 +363,7 @@ const ProcrastinationBuster = () => {
                   table: ({node, ...props}) => <table className="w-full border-collapse border border-gray-300 my-4" {...props} />,
                   th: ({node, ...props}) => <th className="border border-gray-300 px-2 py-1 bg-gray-100 dark:bg-gray-700" {...props} />,
                   td: ({node, ...props}) => <td className="border border-gray-300 px-2 py-1" {...props} />,
-                  // 自定义复选框样式
+                  // Custom checkbox styles
                   input: ({node, ...props}) => {
                     if (props.type === 'checkbox') {
                       return <input {...props} className="mr-2" />;

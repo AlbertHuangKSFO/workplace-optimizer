@@ -6,31 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Loader2, Mic, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const speechTypes = [
-  { value: 'opening', label: '开场白/欢迎词' },
-  { value: 'summary', label: '总结发言' },
-  { value: 'proposal', label: '提案/建议' },
-  { value: 'question', label: '提问/质疑' },
-  { value: 'opposition', label: '反对意见' },
-  { value: 'support', label: '支持/赞同' },
-  { value: 'closing', label: '结束语' },
-  { value: 'update', label: '进度汇报' },
-];
+interface MeetingSpeechGeneratorProps {
+  locale: ValidLocale;
+}
 
-const speechDurations = [
-  { value: '1', label: '1分钟（简短发言）' },
-  { value: '3', label: '3分钟（标准发言）' },
-  { value: '5', label: '5分钟（详细发言）' },
-  { value: '10', label: '10分钟（深度发言）' },
-];
+function MeetingSpeechGenerator({ locale }: MeetingSpeechGeneratorProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-function MeetingSpeechGenerator(): React.JSX.Element {
   const [meetingTopic, setMeetingTopic] = useState<string>('');
   const [speechType, setSpeechType] = useState<string>('opening');
   const [duration, setDuration] = useState<string>('3');
@@ -39,10 +29,30 @@ function MeetingSpeechGenerator(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // 使用翻译的发言类型
+  const speechTypes = React.useMemo(() => [
+    { value: 'opening', label: t('meetingSpeechGenerator.speechTypes.opening') },
+    { value: 'summary', label: t('meetingSpeechGenerator.speechTypes.summary') },
+    { value: 'proposal', label: t('meetingSpeechGenerator.speechTypes.proposal') },
+    { value: 'question', label: t('meetingSpeechGenerator.speechTypes.question') },
+    { value: 'opposition', label: t('meetingSpeechGenerator.speechTypes.opposition') },
+    { value: 'support', label: t('meetingSpeechGenerator.speechTypes.support') },
+    { value: 'closing', label: t('meetingSpeechGenerator.speechTypes.closing') },
+    { value: 'update', label: t('meetingSpeechGenerator.speechTypes.update') },
+  ], [t, translationsLoading]);
+
+  // 使用翻译的发言时长
+  const speechDurations = React.useMemo(() => [
+    { value: '1', label: t('meetingSpeechGenerator.durations.1') },
+    { value: '3', label: t('meetingSpeechGenerator.durations.3') },
+    { value: '5', label: t('meetingSpeechGenerator.durations.5') },
+    { value: '10', label: t('meetingSpeechGenerator.durations.10') },
+  ], [t, translationsLoading]);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!meetingTopic.trim()) {
-      setError('请输入会议主题！');
+      setError(t('meetingSpeechGenerator.topicRequired'));
       setGeneratedSpeech('');
       return;
     }
@@ -51,13 +61,15 @@ function MeetingSpeechGenerator(): React.JSX.Element {
     setError(null);
     setGeneratedSpeech('');
 
-    const selectedType = speechTypes.find(t => t.value === speechType);
-    const selectedDuration = speechDurations.find(d => d.value === duration);
+    const selectedType = speechTypes.find(type => type.value === speechType);
+    const selectedDuration = speechDurations.find(dur => dur.value === duration);
 
-    let userPrompt = `请为我生成一个${selectedDuration?.label}的${selectedType?.label}，会议主题是：${meetingTopic}`;
-    if (additionalInfo.trim()) {
-      userPrompt += `\n\n补充信息：${additionalInfo}`;
-    }
+    let userPrompt = t('meetingSpeechGenerator.aiPrompt', {
+      duration: selectedDuration?.label,
+      speechType: selectedType?.label,
+      topic: meetingTopic,
+      additionalInfo: additionalInfo.trim() ? `\n\n补充信息：${additionalInfo}` : ''
+    });
 
     try {
       const response = await fetch('/api/chat', {
@@ -68,11 +80,12 @@ function MeetingSpeechGenerator(): React.JSX.Element {
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'meeting-speech-generator',
+          locale: locale,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '发言稿生成失败，可能是AI的演讲课程还在进修中。' }));
+        const errorData = await response.json().catch(() => ({ message: t('meetingSpeechGenerator.errors.generation') }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -82,14 +95,25 @@ function MeetingSpeechGenerator(): React.JSX.Element {
         setGeneratedSpeech(data.assistantMessage);
       } else {
         console.warn('Unexpected API response structure for speech generation:', data);
-        setError('AI返回的发言稿有点奇怪，我暂时理解不了...🎤');
+        setError(t('meetingSpeechGenerator.errors.formatError'));
       }
     } catch (e) {
       console.error('Failed to generate speech:', e);
-      setError(e instanceof Error ? e.message : '生成发言稿时发生未知错误，我的演讲助手失声了！🔇');
+      setError(e instanceof Error ? e.message : t('meetingSpeechGenerator.errors.unknownError'));
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // 如果翻译还在加载，显示加载器
+  if (translationsLoading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -99,20 +123,20 @@ function MeetingSpeechGenerator(): React.JSX.Element {
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">会议发言生成器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('meetingSpeechGenerator.title')}</h1>
         <Users className="w-8 h-8 text-purple-600 dark:text-purple-400 ml-2" />
       </div>
 
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <div>
           <Label htmlFor="meetingTopic" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            会议主题：
+            {t('meetingSpeechGenerator.topicLabel')}
           </Label>
           <Input
             id="meetingTopic"
             value={meetingTopic}
             onChange={(e) => setMeetingTopic(e.target.value)}
-            placeholder="例如：Q4季度业绩回顾、新产品发布计划..."
+            placeholder={t('meetingSpeechGenerator.topicPlaceholder')}
             className={cn(
               "w-full",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -123,7 +147,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="speechType" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              发言类型：
+              {t('meetingSpeechGenerator.speechTypeLabel')}
             </Label>
             <Select value={speechType} onValueChange={setSpeechType}>
               <SelectTrigger className={cn(
@@ -131,7 +155,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
                 "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
               )}>
-                <SelectValue placeholder="选择发言类型..." />
+                <SelectValue placeholder={t('meetingSpeechGenerator.speechTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -154,7 +178,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
           </div>
           <div>
             <Label htmlFor="duration" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              发言时长：
+              {t('meetingSpeechGenerator.durationLabel')}
             </Label>
             <Select value={duration} onValueChange={setDuration}>
               <SelectTrigger className={cn(
@@ -162,7 +186,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
                 "focus:ring-sky-500 focus:border-sky-500 dark:focus:ring-sky-500 dark:focus:border-sky-500"
               )}>
-                <SelectValue placeholder="选择发言时长..." />
+                <SelectValue placeholder={t('meetingSpeechGenerator.durationPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -186,13 +210,13 @@ function MeetingSpeechGenerator(): React.JSX.Element {
         </div>
         <div>
           <Label htmlFor="additionalInfo" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            补充信息（选填）：
+            {t('meetingSpeechGenerator.additionalInfoLabel')}
           </Label>
           <Textarea
             id="additionalInfo"
             value={additionalInfo}
             onChange={(e) => setAdditionalInfo(e.target.value)}
-            placeholder="例如：需要强调的重点、特殊要求、背景信息等..."
+            placeholder={t('meetingSpeechGenerator.additionalInfoPlaceholder')}
             className={cn(
               "w-full min-h-[80px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -210,10 +234,10 @@ function MeetingSpeechGenerator(): React.JSX.Element {
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> AI正在撰写发言稿...
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('meetingSpeechGenerator.generating')}
             </>
           ) : (
-            <><Mic className="mr-2 h-4 w-4" /> 生成发言稿！
+            <><Mic className="mr-2 h-4 w-4" /> {t('meetingSpeechGenerator.generateButton')}
             </>
           )}
         </Button>
@@ -225,7 +249,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
           "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-900/30"
         )}>
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
+            <CardTitle className="text-red-700 dark:text-red-400">{t('meetingSpeechGenerator.errorTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="text-red-600 dark:text-red-300">
             <p>{error}</p>
@@ -236,7 +260,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
       {isLoading && !generatedSpeech && (
          <div className="text-center py-10 flex-grow flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 animate-spin text-purple-600 dark:text-purple-400 mb-4" />
-          <p className="text-neutral-500 dark:text-neutral-400">AI演讲大师正在为您量身定制发言稿...🎯</p>
+          <p className="text-neutral-500 dark:text-neutral-400">{t('meetingSpeechGenerator.loadingMessage')}</p>
         </div>
       )}
 
@@ -247,7 +271,7 @@ function MeetingSpeechGenerator(): React.JSX.Element {
         )}>
           <CardHeader>
             <CardTitle className="text-purple-700 dark:text-purple-400 flex items-center">
-              <Mic className="w-5 h-5 mr-2" /> 您的专属发言稿：
+              <Mic className="w-5 h-5 mr-2" /> {t('meetingSpeechGenerator.resultTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">

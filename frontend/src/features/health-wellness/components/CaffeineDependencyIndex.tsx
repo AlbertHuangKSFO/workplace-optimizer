@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -15,7 +17,13 @@ interface DrinkItem {
   time: string;
 }
 
-export default function CaffeineDependencyIndex() {
+interface CaffeineDependencyIndexProps {
+  locale: ValidLocale;
+}
+
+export default function CaffeineDependencyIndex({ locale }: CaffeineDependencyIndexProps) {
+  const { t, loading: translationsLoading } = useTranslations(locale);
+
   const [drinks, setDrinks] = useState<DrinkItem[]>([{ name: '', amount: '', time: '' }]);
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [result, setResult] = useState('');
@@ -46,9 +54,24 @@ export default function CaffeineDependencyIndex() {
         .join('\n');
 
       if (!consumptionDetails.trim()) {
-        alert('请至少添加一种饮品');
+        alert(t('caffeineDependencyIndex.emptyDrinkAlert'));
         return;
       }
+
+      // Create prompt based on locale
+      const prompt = locale === 'en-US'
+        ? `Please help me analyze my caffeine dependency index.
+
+My drink consumption:
+${consumptionDetails}
+
+Additional information: ${additionalInfo || 'No additional information'}`
+        : `请帮我分析一下咖啡因依赖指数。
+
+我的饮品消费情况：
+${consumptionDetails}
+
+补充信息：${additionalInfo || '无其他信息'}`;
 
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -57,79 +80,86 @@ export default function CaffeineDependencyIndex() {
         },
         body: JSON.stringify({
           toolId: 'caffeine-dependency-index',
+          locale: locale,
           messages: [
             {
               role: 'user',
-              content: `请帮我分析一下咖啡因依赖指数。
-
-我的饮品消费情况：
-${consumptionDetails}
-
-补充信息：${additionalInfo || '无其他信息'}`
+              content: prompt
             }
           ]
         }),
       });
 
       if (!response.ok) {
-        throw new Error('分析失败');
+        throw new Error(t('caffeineDependencyIndex.analysisError'));
       }
 
       const data = await response.json();
       setResult(data.assistantMessage);
     } catch (error) {
       console.error('Error:', error);
-      setResult('分析过程中出现错误，请稍后重试。');
+      setResult(t('caffeineDependencyIndex.generalError'));
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Show loading if translations are still loading
+  if (translationsLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">☕ 咖啡因依赖指数</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('caffeineDependencyIndex.title')}</h1>
         <p className="text-muted-foreground">
-          计算您的每日咖啡因摄入量和依赖程度
+          {t('caffeineDependencyIndex.description')}
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>饮品记录</CardTitle>
+            <CardTitle>{t('caffeineDependencyIndex.drinkRecordTitle')}</CardTitle>
             <CardDescription>
-              记录您今天喝的含咖啡因饮品
+              {t('caffeineDependencyIndex.drinkRecordDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {drinks.map((drink, index) => (
               <div key={index} className="space-y-2 p-4 border rounded-lg">
                 <div className="flex justify-between items-center">
-                  <Label className="text-sm font-medium">饮品 {index + 1}</Label>
+                  <Label className="text-sm font-medium">{t('caffeineDependencyIndex.drinkLabel')} {index + 1}</Label>
                   {drinks.length > 1 && (
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => removeDrink(index)}
                     >
-                      删除
+                      {t('caffeineDependencyIndex.deleteButton')}
                     </Button>
                   )}
                 </div>
                 <div className="grid gap-2">
                   <Input
-                    placeholder="饮品名称 (如：美式咖啡、奶茶、红牛)"
+                    placeholder={t('caffeineDependencyIndex.drinkNamePlaceholder')}
                     value={drink.name}
                     onChange={(e) => updateDrink(index, 'name', e.target.value)}
                   />
                   <Input
-                    placeholder="分量 (如：大杯、500ml、2杯)"
+                    placeholder={t('caffeineDependencyIndex.amountPlaceholder')}
                     value={drink.amount}
                     onChange={(e) => updateDrink(index, 'amount', e.target.value)}
                   />
                   <Input
-                    placeholder="时间 (如：上午9点、下午3点)"
+                    placeholder={t('caffeineDependencyIndex.timePlaceholder')}
                     value={drink.time}
                     onChange={(e) => updateDrink(index, 'time', e.target.value)}
                   />
@@ -138,14 +168,14 @@ ${consumptionDetails}
             ))}
 
             <Button variant="outline" onClick={addDrink} className="w-full">
-              + 添加饮品
+              {t('caffeineDependencyIndex.addDrinkButton')}
             </Button>
 
             <div className="space-y-2">
-              <Label htmlFor="additional-info">补充信息（可选）</Label>
+              <Label htmlFor="additional-info">{t('caffeineDependencyIndex.additionalInfoLabel')}</Label>
               <Textarea
                 id="additional-info"
-                placeholder="如：年龄、体重、是否孕妇、睡眠质量、是否有心脏病等健康状况..."
+                placeholder={t('caffeineDependencyIndex.additionalInfoPlaceholder')}
                 value={additionalInfo}
                 onChange={(e) => setAdditionalInfo(e.target.value)}
                 rows={3}
@@ -160,10 +190,10 @@ ${consumptionDetails}
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  分析中...
+                  {t('caffeineDependencyIndex.analyzing')}
                 </>
               ) : (
-                '开始分析'
+                t('caffeineDependencyIndex.analyzeButton')
               )}
             </Button>
           </CardContent>
@@ -171,9 +201,9 @@ ${consumptionDetails}
 
         <Card>
           <CardHeader>
-            <CardTitle>分析结果</CardTitle>
+            <CardTitle>{t('caffeineDependencyIndex.resultTitle')}</CardTitle>
             <CardDescription>
-              您的咖啡因依赖指数和健康建议
+              {t('caffeineDependencyIndex.resultDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -184,12 +214,12 @@ ${consumptionDetails}
             ) : (
               <div className="text-center text-muted-foreground py-8">
                 <div className="text-4xl mb-4">☕</div>
-                <p>填写您的饮品记录，开始分析咖啡因依赖指数</p>
+                <p>{t('caffeineDependencyIndex.emptyStateText')}</p>
                 <div className="mt-4 text-xs space-y-1">
-                  <p>💡 常见饮品参考：</p>
-                  <p>美式咖啡(中杯) ≈ 150mg咖啡因</p>
-                  <p>奶茶(大杯) ≈ 80mg咖啡因</p>
-                  <p>红牛(250ml) ≈ 80mg咖啡因</p>
+                  <p>{t('caffeineDependencyIndex.referenceTitle')}</p>
+                  <p>{t('caffeineDependencyIndex.americanoCaffeine')}</p>
+                  <p>{t('caffeineDependencyIndex.milkTeaCaffeine')}</p>
+                  <p>{t('caffeineDependencyIndex.redbullCaffeine')}</p>
                 </div>
               </div>
             )}

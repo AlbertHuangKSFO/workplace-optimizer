@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
+import { ValidLocale } from '@/types/global';
 import { Loader2, Mail, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -16,7 +18,20 @@ interface EmailPolisherProps {
 }
 
 function EmailPolisher({ locale }: EmailPolisherProps): React.JSX.Element {
-  const { t } = useTranslations(locale);
+  const { t, loading } = useTranslations(locale);
+  const [originalEmail, setOriginalEmail] = useState<string>('');
+  const [emailType, setEmailType] = useState<string>('formal');
+  const [polishedEmail, setPolishedEmail] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-sky-600 dark:text-sky-400" />
+      </div>
+    );
+  }
 
   const emailTypes = [
     { value: 'formal', label: t('emailPolisher.emailTypes.formal') },
@@ -28,11 +43,6 @@ function EmailPolisher({ locale }: EmailPolisherProps): React.JSX.Element {
     { value: 'announcement', label: t('emailPolisher.emailTypes.announcement') },
     { value: 'complaint', label: t('emailPolisher.emailTypes.complaint') },
   ];
-  const [originalEmail, setOriginalEmail] = useState<string>('');
-  const [emailType, setEmailType] = useState<string>('formal');
-  const [polishedEmail, setPolishedEmail] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,7 +57,9 @@ function EmailPolisher({ locale }: EmailPolisherProps): React.JSX.Element {
     setPolishedEmail('');
 
     const selectedType = emailTypes.find(t => t.value === emailType);
-    const userPrompt = `请帮我润色以下邮件，使其符合${selectedType?.label}的标准和语气：\n\n${originalEmail}`;
+    const userPrompt = locale === 'zh-CN'
+      ? `请帮我润色以下邮件，使其符合${selectedType?.label}的标准和语气：\n\n${originalEmail}`
+      : `Please help me polish the following email to meet the standards and tone of ${selectedType?.label}:\n\n${originalEmail}`;
 
     try {
       const response = await fetch('/api/chat', {
@@ -58,6 +70,7 @@ function EmailPolisher({ locale }: EmailPolisherProps): React.JSX.Element {
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'email-polisher',
+          locale: locale,
         }),
       });
 

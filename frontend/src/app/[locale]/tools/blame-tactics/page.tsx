@@ -9,5 +9,5 @@ interface PageProps {
 
 export default async function BlameTacticsPage({ params }: PageProps) {
   const { locale } = await params;
-  return <BlameTactics />;
+  return <BlameTactics locale={locale} />;
 }

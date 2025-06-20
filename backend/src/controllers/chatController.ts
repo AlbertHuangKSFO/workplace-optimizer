@@ -19,7 +19,7 @@ const PROMPTS_DIR = path.join(__dirname, '../../src/data/prompts');
 // Added Meizu Weather API URL
 const MEIZU_WEATHER_API_URL = 'https://aider.meizu.com/app/weather/listWeather';
 
-function loadSystemPrompt(toolId: string, language: string = 'zh'): string | null {
+function loadSystemPrompt(toolId: string, language: string = 'zh-CN'): string | null {
   // Determine the category based on toolId
   let category = 'office-fun'; // default
   if (
@@ -56,6 +56,7 @@ function loadSystemPrompt(toolId: string, language: string = 'zh'): string | nul
       'weather-mood-link',
       'career-path-forecaster',
       'side-hustle-assessor',
+      'career-leveling-system',
     ].includes(toolId)
   ) {
     category = 'analysis';
@@ -99,7 +100,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId,
     messages,
     modelId: requestedModelId,
-    language = 'zh',
+    language = 'zh-CN',
   } = req.body as ChatRequestBody;
   const modelManager = req.app.get('modelManager') as ModelManager;
 
@@ -2127,6 +2128,71 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   // This should be placed before the generic analysis tools handler if it exists,
   // or alongside other specific tool handlers.
   else if (toolId === 'career-path-forecaster') {
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const systemPrompt = loadSystemPrompt(toolId, language);
+    if (!systemPrompt) {
+      console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
+    }
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(`[ChatController][${toolId}] No available/default models found.`);
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][${toolId}] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(
+        `[ChatController][${toolId}] Using model '${finalModelId}'. User input: ${lastUserMessage?.substring(
+          0,
+          100
+        )}...`
+      );
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      const assistantResponse = await adapter.generateText(lastUserMessage || '', options);
+      console.log(`[ChatController][${toolId}] AI response generated.`);
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
+    } catch (error: any) {
+      console.error(`[ChatController][${toolId}] Error processing tool:`, error.message);
+      if (error.stack) console.error(error.stack);
+      res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+      return;
+    }
+  }
+
+  // ADDING HANDLER FOR CAREER LEVELING SYSTEM
+  else if (toolId === 'career-leveling-system') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
     const systemPrompt = loadSystemPrompt(toolId, language);
     if (!systemPrompt) {

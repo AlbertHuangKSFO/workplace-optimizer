@@ -103,7 +103,7 @@ function PPTPhraseGenerator({ locale = 'zh-CN' }: PPTPhraseGeneratorProps): Reac
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'ppt-phrase-generator',
-          language: locale === 'en-US' ? 'en' : 'zh'
+          language: locale
         }),
       });
 

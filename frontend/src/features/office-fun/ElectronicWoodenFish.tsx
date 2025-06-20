@@ -8,7 +8,7 @@ import Image from 'next/image';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ElectronicWoodenFishProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
 const LOCAL_STORAGE_KEYS = {
@@ -17,7 +17,7 @@ const LOCAL_STORAGE_KEYS = {
   LAST_RECORDED_DATE: 'electronicWoodenFish_lastRecordedDate',
 };
 
-const ElectronicWoodenFish: React.FC<ElectronicWoodenFishProps> = ({ locale = 'zh-CN' }) => {
+const ElectronicWoodenFish: React.FC<ElectronicWoodenFishProps> = ({ locale }) => {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [sessionMerit, setSessionMerit] = useState(0);

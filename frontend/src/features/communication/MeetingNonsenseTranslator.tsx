@@ -43,6 +43,7 @@ const MeetingNonsenseTranslator: React.FC<MeetingNonsenseTranslatorProps> = ({ l
         body: JSON.stringify({
           messages: [{ role: 'user', content: userPrompt }],
           toolId: 'meeting-nonsense-translator',
+          language: locale,
         }),
       });
 

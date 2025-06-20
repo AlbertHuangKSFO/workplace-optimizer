@@ -142,7 +142,7 @@ function MeetingBingoGenerator({ locale = 'zh-CN' }: MeetingBingoGeneratorProps)
               content: aiPrompt
             }],
             toolId: 'meeting-bingo-generator',
-            language: locale === 'en-US' ? 'en' : 'zh'
+            language: locale
           }),
         });
         if (response.ok) {

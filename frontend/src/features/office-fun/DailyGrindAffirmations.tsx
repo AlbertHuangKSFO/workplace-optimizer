@@ -11,10 +11,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface DailyGrindAffirmationsProps {
-  locale?: ValidLocale;
+  locale: ValidLocale;
 }
 
-function DailyGrindAffirmations({ locale = 'zh-CN' }: DailyGrindAffirmationsProps): React.JSX.Element {
+function DailyGrindAffirmations({ locale }: DailyGrindAffirmationsProps): React.JSX.Element {
   const { t, loading: translationsLoading } = useTranslations(locale);
 
   const [affirmation, setAffirmation] = useState<string>('');
@@ -39,6 +39,7 @@ function DailyGrindAffirmations({ locale = 'zh-CN' }: DailyGrindAffirmationsProp
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
           toolId: 'daily-grind-affirmations',
+          locale: locale,
         }),
       });
 

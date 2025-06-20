@@ -1,5 +1,3 @@
-'use client';
-
 import AntiPuaAssistant from '@/features/office-fun/AntiPuaAssistant';
 import { ValidLocale } from '@/lib/i18n';
 import { Loader2 } from 'lucide-react';
@@ -11,7 +9,9 @@ interface PageProps {
   }>;
 }
 
-export default function AntiPuaAssistantPage({ params }: PageProps): React.JSX.Element {
+export default async function AntiPuaAssistantPage({ params }: PageProps): Promise<React.JSX.Element> {
+  const { locale } = await params;
+
   return (
     <Suspense
       fallback={
@@ -20,7 +20,7 @@ export default function AntiPuaAssistantPage({ params }: PageProps): React.JSX.E
         </div>
       }
     >
-      <AntiPuaAssistant />
+      <AntiPuaAssistant locale={locale} />
     </Suspense>
   );
 }

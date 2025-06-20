@@ -104,7 +104,7 @@ const WeatherMoodLink: React.FC<WeatherMoodLinkProps> = ({ locale = 'zh-CN' }) =
         body: JSON.stringify({
           messages: [{ role: 'user', content: selectedCityId }], // Send only the cityId
           toolId: 'weather-mood-link',
-          language: locale === 'en-US' ? 'en' : 'zh'
+          language: locale
         }),
       });
 
