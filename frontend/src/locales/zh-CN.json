@@ -620,6 +620,32 @@
     "namePlaceholder": "请输入您的姓名",
     "currentPosition": "当前职位",
     "currentPositionPlaceholder": "请输入您当前的职位",
+    "currentRoleLabel": "当前职位",
+    "currentRolePlaceholder": "请描述您的当前职位和主要职责",
+    "skillsLabel": "技能专长",
+    "skillsPlaceholder": "请描述您的主要技能、技术专长和专业能力",
+    "experienceLabel": "工作年限",
+    "experiencePlaceholder": "选择您的经验水平",
+    "experienceLevels": {
+      "0": "应届毕业生",
+      "1-3": "1-3年",
+      "3-5": "3-5年",
+      "5-10": "5-10年",
+      "10+": "10年以上"
+    },
+    "aspirationsLabel": "职业理想",
+    "aspirationsPlaceholder": "描述您的职业目标、理想职位或发展方向",
+    "preferencesLabel": "工作偏好",
+    "preferencesPlaceholder": "描述您的工作偏好（环境、团队规模、文化等）",
+    "predictButton": "开始职业预测",
+    "predicting": "正在分析职业路径...",
+    "resultTitle": "职业路径分析",
+    "loadingMessage": "AI正在分析您的职业潜力并预测发展路径...",
+    "requiredFields": "请填写所有必填字段",
+    "apiError": "生成职业预测失败",
+    "formatError": "职业分析格式错误，请重试",
+    "unknownError": "职业分析过程中发生未知错误",
+    "aiPrompt": "基于以下信息，分析潜在的职业发展路径：\n- 当前职位：{currentRole}\n- 技能：{skills}\n- 经验：{experience}\n- 职业理想：{aspirations}\n{preferences}",
     "industry": "所在行业",
     "industryPlaceholder": "请输入您所在的行业",
     "experienceYears": "工作年限",
@@ -631,7 +657,6 @@
     "workPreferences": "工作偏好",
     "workPreferencesPlaceholder": "请描述您的工作偏好（如工作环境、团队规模等）",
     "startPrediction": "开始预测",
-    "predicting": "预测中...",
     "result": "预测结果",
     "fillAllFields": "请填写所有必填字段"
   },
@@ -2106,6 +2131,89 @@
       "moderate": "适中型 - 可承担一定风险",
       "aggressive": "积极型 - 愿意承担较高风险",
       "high": "高风险型 - 追求高回报"
+    }
+  },
+  "weeklyReportSparkleEnhancer": {
+    "title": "周报润色增强器",
+    "description": "将平凡的工作内容包装成亮眼的周报，让你的工作成果闪闪发光",
+    "subtitle": "这周干了啥亮点包装器",
+    "contentLabel": "把你这周平平无奇的工作内容粘贴进来，AI来帮你点石成金！✨",
+    "contentPlaceholder": "例如：\n- 开了5个会\n- 回了50封邮件\n- 写了500行代码\n- 和产品经理沟通了5次...",
+    "enhanceButton": "一键包装，闪亮登场！",
+    "enhancing": "亮点提取 & 魔法包装中...",
+    "resultTitle": "周报亮点闪亮登场！",
+    "emptyContentError": "总得告诉我你这周干了啥，我才能帮你包装呀！✍️",
+    "apiError": "周报包装失败，可能是亮点太多，AI处理不过来了。",
+    "formatError": "AI返回的包装成果有点迷，我暂时解读不了...😵‍💫",
+    "unknownError": "包装周报时发生未知错误，我的辞藻库可能需要更新了！📚",
+    "errorTitle": "包装出错了！",
+    "loadingMessage": "AI正在精心打磨您的周报，力求惊艳老板...✨"
+  },
+  "officeFengshuiDetector": {
+    "title": "办公室风水检测器",
+    "description": "感觉工位磁场不对劲？让赛博玄学大师为您勘测职场“龙脉”，调理“代码气场”！☯️",
+    "completionRate": "完成度",
+    "mysticAnalysis": "玄学分析",
+    "workstationLayout": {
+      "title": "您的工位背靠什么？",
+      "description": "背后有靠山，工作才稳当",
+      "wallBack": "背靠墙壁",
+      "wallBackDesc": "背后有靠山，稳如泰山",
+      "aisleBack": "背靠过道",
+      "aisleBackDesc": "背后人来人往，容易分心",
+      "windowBack": "背靠窗户",
+      "windowBackDesc": "背后空虚，需要化解",
+      "corner": "角落位置",
+      "cornerDesc": "聚气之地，但要防压抑"
+    },
+    "monitorDirection": {
+      "title": "显示器朝向哪个方位？",
+      "description": "选对方位，思路自来",
+      "north": "朝北",
+      "northDesc": "水位，利于思考",
+      "south": "朝南",
+      "southDesc": "火位，精力充沛",
+      "east": "朝东",
+      "eastDesc": "木位，生机勃勃",
+      "west": "朝西",
+      "westDesc": "金位，利于决策",
+      "unknown": "不确定",
+      "unknownDesc": "需要罗盘定位"
+    },
+    "deskItems": {
+      "title": "桌面上摆放了哪些开运好物？ (可选)",
+      "description": "小小物件，大大能量",
+      "plant": "绿植",
+      "plantDesc": "生气旺盛，净化磁场",
+      "coffee": "咖啡杯",
+      "coffeeDesc": "提神醒脑，但要常换水",
+      "figurine": "手办/公仔",
+      "figurineDesc": "招财纳福，增加人气",
+      "books": "技术书籍",
+      "booksDesc": "智慧之源，提升运势",
+      "snacks": "零食",
+      "snacksDesc": "甜蜜加持，但要适量",
+      "mirror": "镜子",
+      "mirrorDesc": "反射煞气，但要小心"
+    },
+    "problems": {
+      "title": "最近遇到什么职场难题？ (可选)",
+      "description": "具体描述，精准化解",
+      "placeholder": "例如：最近总是感觉很疲惫，工作效率不高，和同事沟通不畅..."
+    },
+    "buttons": {
+      "analyze": "开始勘测风水！",
+      "analyzing": "正在勘测...",
+      "reset": "重新填写",
+      "testAgain": "再测一次"
+    },
+    "result": {
+      "title": "风水勘测报告",
+      "description": "您的专属办公室开运指南"
+    },
+    "errors": {
+      "missingRequired": "请至少选择工位布局和显示器朝向！",
+      "analysisFailed": "检测失败"
     }
   }
 }

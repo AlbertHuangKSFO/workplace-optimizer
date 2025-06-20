@@ -83,18 +83,22 @@ function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Elemen
       return;
     }
 
+    // Get translated labels for the selected values
+    const selectedObjectType = objectTypes.find(type => type.value === objectType)?.label || objectType;
+    const selectedNameStyle = nameStyles.find(style => style.value === nameStyle)?.label || nameStyle;
+
     // Create prompt based on locale
     let userPrompt = '';
     if (locale === 'en-US') {
-      userPrompt = `I need to create names/codenames for 【${objectType}】.`;
-      if (nameStyle) userPrompt += ` The style should be 【${nameStyle}】.`;
+      userPrompt = `I need to create names/codenames for 【${selectedObjectType}】.`;
+      if (nameStyle) userPrompt += ` The style should be 【${selectedNameStyle}】.`;
       if (description) userPrompt += ` Brief description or background: 【${description}】.`;
       if (keywords) userPrompt += ` The names should reflect these keywords or concepts: 【${keywords}】.`;
       if (negativeKeywords) userPrompt += ` Please avoid using or implying the following: 【${negativeKeywords}】.`;
       userPrompt += ` Please provide approximately ${quantity} suggestions.`;
     } else {
-      userPrompt = `我需要为【${objectType}】起一些名称/代号。`;
-      if (nameStyle) userPrompt += `风格偏向【${nameStyle}】。`;
+      userPrompt = `我需要为【${selectedObjectType}】起一些名称/代号。`;
+      if (nameStyle) userPrompt += `风格偏向【${selectedNameStyle}】。`;
       if (description) userPrompt += `关于它的简要描述或背景是：【${description}】。`;
       if (keywords) userPrompt += `希望名称能体现以下关键词或概念：【${keywords}】。`;
       if (negativeKeywords) userPrompt += `请避免使用或暗示以下内容：【${negativeKeywords}】。`;
@@ -108,6 +112,7 @@ function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Elemen
         body: JSON.stringify({
           toolId: 'nickname-generator',
           messages: [{ role: 'user', content: userPrompt }],
+          language: locale,
         }),
       });
 
@@ -128,7 +133,7 @@ function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Elemen
     } finally {
       setIsLoading(false);
     }
-  }, [objectType, nameStyle, keywords, description, negativeKeywords, quantity, locale, t]);
+  }, [objectType, nameStyle, keywords, description, negativeKeywords, quantity, locale, t, objectTypes, nameStyles]);
 
   // 如果翻译还在加载，显示加载器
   if (translationsLoading) {
@@ -171,7 +176,7 @@ function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Elemen
                 </SelectTrigger>
                 <SelectContent>
                   {objectTypes.map(type => (
-                    <SelectItem key={type.value} value={type.label}>{type.label}</SelectItem>
+                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -186,7 +191,7 @@ function NicknameGenerator({ locale }: NicknameGeneratorProps): React.JSX.Elemen
                 </SelectTrigger>
                 <SelectContent>
                   {nameStyles.map(style => (
-                    <SelectItem key={style.value} value={style.label}>{style.label}</SelectItem>
+                    <SelectItem key={style.value} value={style.value}>{style.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

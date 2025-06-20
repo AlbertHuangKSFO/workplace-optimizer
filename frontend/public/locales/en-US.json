@@ -620,6 +620,32 @@
     "namePlaceholder": "Please enter your name",
     "currentPosition": "Current Position",
     "currentPositionPlaceholder": "Please enter your current position",
+    "currentRoleLabel": "Current Role",
+    "currentRolePlaceholder": "Please describe your current role and responsibilities",
+    "skillsLabel": "Skills & Expertise",
+    "skillsPlaceholder": "Please describe your main skills, technical expertise, and professional abilities",
+    "experienceLabel": "Years of Experience",
+    "experiencePlaceholder": "Select your experience level",
+    "experienceLevels": {
+      "0": "Fresh Graduate",
+      "1-3": "1-3 years",
+      "3-5": "3-5 years",
+      "5-10": "5-10 years",
+      "10+": "10+ years"
+    },
+    "aspirationsLabel": "Career Aspirations",
+    "aspirationsPlaceholder": "Describe your career goals, ideal positions, or development direction",
+    "preferencesLabel": "Work Preferences",
+    "preferencesPlaceholder": "Describe your work preferences (environment, team size, culture, etc.)",
+    "predictButton": "Start Career Prediction",
+    "predicting": "Analyzing career paths...",
+    "resultTitle": "Career Path Analysis",
+    "loadingMessage": "AI is analyzing your career potential and forecasting development paths...",
+    "requiredFields": "Please fill in all required fields",
+    "apiError": "Failed to generate career forecast",
+    "formatError": "Career analysis format error, please try again",
+    "unknownError": "Unknown error occurred during career analysis",
+    "aiPrompt": "Based on the following information, analyze potential career development paths:\n- Current Role: {currentRole}\n- Skills: {skills}\n- Experience: {experience}\n- Career Aspirations: {aspirations}\n{preferences}",
     "industry": "Industry",
     "industryPlaceholder": "Please enter your industry",
     "experienceYears": "Years of Experience",
@@ -631,7 +657,6 @@
     "workPreferences": "Work Preferences",
     "workPreferencesPlaceholder": "Please describe your work preferences (work environment, team size, etc.)",
     "startPrediction": "Start Prediction",
-    "predicting": "Predicting...",
     "result": "Prediction Result",
     "fillAllFields": "Please fill in all required fields"
   },
@@ -817,152 +842,6 @@
     "errorImageFormat": "AI returned image format is a bit strange, the meme might be too abstract...🖼️",
     "errorUnknown": "Unknown error occurred while generating meme, humor cells need more time to activate!🎭",
     "errorImageUnknown": "Unknown error occurred while generating meme image, AI artist's sense of humor might need charging!🎨"
-  },
-  "nicknameGenerator": {
-    "title": "Nickname Generator",
-    "description": "Generate unique workplace nicknames based on your characteristics and working style",
-    "nameRequired": "Please enter your name",
-    "nameLabel": "Name",
-    "namePlaceholder": "Enter your name",
-    "personalityLabel": "Personality",
-    "personalityPlaceholder": "Select your personality",
-    "personalities": {
-      "outgoing": "Outgoing",
-      "introverted": "Introverted",
-      "serious": "Serious",
-      "humorous": "Humorous",
-      "creative": "Creative",
-      "analytical": "Analytical",
-      "adventurous": "Adventurous",
-      "calm": "Calm"
-    },
-    "workStyleLabel": "Work Style",
-    "workStylePlaceholder": "Select your work style",
-    "workStyles": {
-      "efficient": "Efficient",
-      "detailed": "Detail-oriented",
-      "creative": "Creative",
-      "collaborative": "Collaborative",
-      "independent": "Independent",
-      "leadership": "Leadership",
-      "supportive": "Supportive",
-      "innovative": "Innovative"
-    },
-    "industryLabel": "Industry",
-    "industryPlaceholder": "Select your industry",
-    "industries": {
-      "tech": "Technology",
-      "finance": "Finance",
-      "marketing": "Marketing",
-      "design": "Design",
-      "sales": "Sales",
-      "hr": "HR",
-      "operations": "Operations",
-      "consulting": "Consulting"
-    },
-    "generate": "Generate Nickname",
-    "generating": "Generating...",
-    "result": "Your New Nickname",
-    "explanation": "Nickname Meaning",
-    "regenerate": "Generate Another",
-    "error": "Generation Failed",
-    "errorMessage": "Failed to generate nickname, please try again",
-    "clearForm": "Clear Form",
-    "errorSelectObjectType": "Please select the type of object to name!",
-    "errorGeneration": "An error occurred while generating names, please try again later.",
-    "objectTypes": {
-      "project": "Project/Product",
-      "product": "Goods/Service",
-      "team": "Team/Organization",
-      "event": "Event/Meeting",
-      "pet": "Pet",
-      "character": "Character/Person",
-      "company_feature": "Company Feature",
-      "internal_tool": "Internal Tool",
-      "community": "Community/Group",
-      "media_account": "Media Account"
-    },
-    "nameStyles": {
-      "professional": "Professional",
-      "creative": "Creative",
-      "modern": "Modern",
-      "traditional": "Traditional",
-      "playful": "Playful",
-      "techy": "Tech-savvy",
-      "elegant": "Elegant",
-      "friendly": "Friendly",
-      "powerful": "Powerful",
-      "chinese_cultural": "Chinese Cultural"
-    }
-  },
-  "professionalPersonaGenerator": {
-    "title": "Professional Persona Generator",
-    "description": "Create a complete professional persona based on your career level, industry, and personal style",
-    "currentRoleRequired": "Please enter your current position!",
-    "careerLevelLabel": "Career Level:",
-    "careerLevelPlaceholder": "Select career level...",
-    "industryLabel": "Industry:",
-    "industryPlaceholder": "Select industry...",
-    "personaStyleLabel": "Persona Style:",
-    "personaStylePlaceholder": "Select persona style...",
-    "currentRoleLabel": "Current Position:",
-    "currentRolePlaceholder": "Enter your current position",
-    "targetRoleLabel": "Target Position (Optional):",
-    "targetRolePlaceholder": "Enter your target position",
-    "keySkillsLabel": "Core Skills (Optional):",
-    "keySkillsPlaceholder": "Describe your core skills...",
-    "achievementsLabel": "Major Achievements (Optional):",
-    "achievementsPlaceholder": "Describe your major achievements...",
-    "personalTraitsLabel": "Personal Traits (Optional):",
-    "personalTraitsPlaceholder": "Describe your personal traits...",
-    "generateButton": "Generate Professional Persona",
-    "generating": "Generating...",
-    "resultTitle": "Your Professional Persona:",
-    "error": "Error",
-    "errorFormat": "AI returned persona format error, image designer might be reconsidering...🎭",
-    "unknownError": "Error occurred while generating persona, personal branding faced challenges!💼",
-    "careerLevels": {
-      "junior": "Junior Employee",
-      "mid": "Mid-level Employee",
-      "senior": "Senior Employee",
-      "lead": "Team Lead",
-      "manager": "Department Manager",
-      "director": "Director Level"
-    },
-    "careerLevelDescriptions": {
-      "junior": "1-3 years experience, actively learning and growing",
-      "mid": "3-5 years experience, independent work",
-      "senior": "5-8 years experience, technical expert",
-      "lead": "8+ years experience, team management",
-      "manager": "Management position, strategic planning",
-      "director": "Senior management, decision-making level"
-    },
-    "industries": {
-      "tech": "Internet Technology",
-      "finance": "Financial Services",
-      "consulting": "Consulting Services",
-      "education": "Education & Training",
-      "healthcare": "Healthcare",
-      "retail": "Retail & E-commerce",
-      "manufacturing": "Manufacturing",
-      "media": "Media & Communications"
-    },
-    "personaStyles": {
-      "professional": "Professional & Rigorous",
-      "innovative": "Innovative & Forward-thinking",
-      "collaborative": "Collaborative & Approachable",
-      "results-driven": "Results-oriented",
-      "analytical": "Analytical & Rational",
-      "creative": "Creative & Inspirational"
-    },
-    "personaStyleDescriptions": {
-      "professional": "Formal and professional, authoritative and trustworthy",
-      "innovative": "Active thinking, leading trends",
-      "collaborative": "Team cooperation, interpersonal harmony",
-      "results-driven": "Clear goals, strong execution",
-      "analytical": "Data-driven, logical clarity",
-      "creative": "Full of creativity, innovative thinking"
-    }
   },
   "officeOutfitAdvisor": {
     "title": "\"What to Wear Today?\" Office Edition",
@@ -1843,5 +1722,636 @@
     "errorImageFormat": "AI returned image format is a bit strange, the meme might be too abstract...🖼️",
     "errorUnknown": "Unknown error occurred while generating meme, humor cells need more time to activate!🎭",
     "errorImageUnknown": "Unknown error occurred while generating meme image, AI artist's sense of humor might need charging!🎨"
+  },
+  "dataBeautifier": {
+    "title": "Data Beautifier",
+    "description": "Transform boring data into vivid and persuasive text descriptions to make your reports more impressive",
+    "reportTypeLabel": "Report Type:",
+    "reportTypePlaceholder": "Select report type...",
+    "audienceTypeLabel": "Target Audience:",
+    "audienceTypePlaceholder": "Select target audience...",
+    "beautifyStyleLabel": "Beautify Style:",
+    "beautifyStylePlaceholder": "Select beautify style...",
+    "rawDataLabel": "Raw Data:",
+    "rawDataPlaceholder": "e.g., Monthly sales 12M, YoY growth 15%, user activity 85%, customer satisfaction 4.2...",
+    "contextLabel": "Background Info (Optional):",
+    "contextPlaceholder": "e.g., Fierce market competition, team facing personnel changes, new product launch phase...",
+    "goalsLabel": "Report Goals (Optional):",
+    "goalsPlaceholder": "e.g., Secure more resource support, showcase team achievements, improve performance evaluation...",
+    "beautifyButton": "Beautify Data",
+    "beautifying": "Beautifying data...",
+    "resultTitle": "Data Beautification Result",
+    "loadingMessage": "Analyzing data and adding linguistic charm...📊",
+    "requiredField": "Please enter raw data to beautify!",
+    "apiError": "Data beautification failed, the data analyst might be looking for better expressions.",
+    "formatError": "AI returned beautification result format error, the data analyst might be reorganizing thoughts...📊",
+    "unknownError": "Unknown error occurred while beautifying data, the charm of data needs more time to shine!✨",
+    "errorTitle": "Beautification Failed!",
+    "reportTypes": {
+      "weekly": {
+        "label": "Weekly Report Data",
+        "description": "Weekly work achievement report"
+      },
+      "monthly": {
+        "label": "Monthly Report Data",
+        "description": "Monthly business data summary"
+      },
+      "quarterly": {
+        "label": "Quarterly Report Data",
+        "description": "Quarterly performance report"
+      },
+      "project": {
+        "label": "Project Data",
+        "description": "Project progress and achievements"
+      },
+      "performance": {
+        "label": "Performance Data",
+        "description": "Individual or team performance"
+      },
+      "business": {
+        "label": "Business Data",
+        "description": "Business metrics and analysis"
+      }
+    },
+    "audienceTypes": {
+      "leadership": {
+        "label": "Leadership",
+        "description": "Executives, director level"
+      },
+      "peers": {
+        "label": "Peers",
+        "description": "Same-level colleagues, partners"
+      },
+      "team": {
+        "label": "Team Members",
+        "description": "Subordinates, internal team"
+      },
+      "client": {
+        "label": "Clients",
+        "description": "External clients, partners"
+      },
+      "stakeholders": {
+        "label": "Stakeholders",
+        "description": "Project-related parties"
+      }
+    },
+    "beautifyStyles": {
+      "professional": {
+        "label": "Professional & Rigorous",
+        "description": "Formal and professional, accurate data"
+      },
+      "storytelling": {
+        "label": "Storytelling",
+        "description": "Vivid narrative, engaging"
+      },
+      "achievement": {
+        "label": "Achievement-Oriented",
+        "description": "Highlight results, show value"
+      },
+      "analytical": {
+        "label": "Analytical Insights",
+        "description": "Deep analysis, trend insights"
+      },
+      "visual": {
+        "label": "Visual Description",
+        "description": "Chart-like expression, intuitive"
+      },
+      "inspiring": {
+        "label": "Inspiring",
+        "description": "Full of positive energy, motivating"
+      }
+    }
+  },
+  "emailPolisher": {
+    "title": "Email Polisher",
+    "inputLabel": "Enter email content to polish:",
+    "inputPlaceholder": "e.g., Hi, about that project, I want to share my thoughts...",
+    "emailTypeLabel": "Email Type:",
+    "emailTypePlaceholder": "Select email type...",
+    "polishButton": "Start Polishing Email!",
+    "polishingButton": "AI is carefully polishing...",
+    "polishedTitle": "Polished Email:",
+    "errorTitle": "Polishing Failed!",
+    "loadingText": "AI email expert is adding professional polish to your email...✨",
+    "emptyInputError": "Please enter email content to polish!",
+    "copyButton": "Copy",
+    "copiedButton": "Copied!",
+    "emailTypes": {
+      "formal": "Formal Business Email",
+      "informal": "Informal Internal Email",
+      "apology": "Apology Email",
+      "thank-you": "Thank You Email",
+      "request": "Request/Application Email",
+      "follow-up": "Follow-up Email",
+      "announcement": "Announcement/Notice Email",
+      "complaint": "Complaint/Feedback Email"
+    }
+  },
+  "meetingNonsenseTranslator": {
+    "title": "Meeting Nonsense Translator",
+    "description": "Paste lengthy meeting content and let AI help you extract the essence with one click, cutting straight to the core, no more nonsense!",
+    "placeholder": "e.g., Um... well... what I want to say is, about this project, I think, generally speaking, uh, it's pretty good, but there might be some small issues... you know what I mean... that thing... right...",
+    "translateButton": "Start Translating Nonsense",
+    "translatingButton": "AI is refining...",
+    "resultTitle": "Translation Result:",
+    "loadingText": "AI is filtering out the fluff from the meeting, please wait...",
+    "emptyInputError": "Please enter meeting content to translate!"
+  },
+  "teamMoodDetector": {
+    "title": "Team Mood Detector",
+    "description": "Through team observation and description, AI helps you deeply analyze team atmosphere, providing professional assessment reports and improvement suggestions",
+    "teamSizeLabel": "Team Size:",
+    "teamSizePlaceholder": "Select team size...",
+    "observationPeriodLabel": "Observation Period:",
+    "observationPeriodPlaceholder": "Select observation period...",
+    "analysisTypeLabel": "Analysis Focus:",
+    "analysisTypePlaceholder": "Select analysis focus...",
+    "teamDescriptionLabel": "Team Description:",
+    "teamDescriptionPlaceholder": "Describe your team's basic situation, such as department function, work nature, team composition...",
+    "observedBehaviorsLabel": "Observed Behaviors (Optional):",
+    "observedBehaviorsPlaceholder": "e.g., Reduced interaction between members, low meeting efficiency, increased complaints, normalized overtime...",
+    "specificConcernsLabel": "Specific Concerns (Optional):",
+    "specificConcernsPlaceholder": "e.g., New project pressure, team member turnover, leadership style issues...",
+    "recentEventsLabel": "Recent Important Events (Optional):",
+    "recentEventsPlaceholder": "e.g., Organizational restructuring, important project launch, quarterly performance review...",
+    "analyzeButton": "Detect Team Mood",
+    "analyzing": "Analyzing...",
+    "resultTitle": "Team Mood Analysis Report",
+    "loadingMessage": "Team psychology expert is deeply analyzing team atmosphere...💭",
+    "requiredField": "Please describe your team's basic situation!",
+    "apiError": "Mood analysis failed, the team psychology expert might be deep in thought.",
+    "formatError": "AI returned analysis format error, the team psychology expert might be reorganizing thoughts...👥",
+    "unknownError": "Unknown error occurred while analyzing team mood, team diagnosis needs more time!💭",
+    "errorTitle": "Analysis Failed!",
+    "teamSizes": {
+      "small": {
+        "label": "Small Team (3-8 people)",
+        "description": "Close-knit small team"
+      },
+      "medium": {
+        "label": "Medium Team (9-20 people)",
+        "description": "Medium-sized work team"
+      },
+      "large": {
+        "label": "Large Team (21-50 people)",
+        "description": "Large department or project team"
+      },
+      "department": {
+        "label": "Department Level (50+ people)",
+        "description": "Entire department or business unit"
+      }
+    },
+    "observationPeriods": {
+      "recent": {
+        "label": "Recent Week",
+        "description": "Recent team status"
+      },
+      "monthly": {
+        "label": "Recent Month",
+        "description": "Monthly team performance"
+      },
+      "quarterly": {
+        "label": "Recent Quarter",
+        "description": "Quarterly team development"
+      },
+      "ongoing": {
+        "label": "Ongoing Observation",
+        "description": "Long-term team dynamics"
+      }
+    },
+    "analysisTypes": {
+      "comprehensive": {
+        "label": "Comprehensive Analysis",
+        "description": "Complete team atmosphere assessment"
+      },
+      "communication": {
+        "label": "Communication Status",
+        "description": "Team communication efficiency and quality"
+      },
+      "collaboration": {
+        "label": "Collaboration Effectiveness",
+        "description": "Team collaboration and coordination"
+      },
+      "motivation": {
+        "label": "Work Motivation",
+        "description": "Team members' work enthusiasm"
+      },
+      "stress-level": {
+        "label": "Stress Level",
+        "description": "Overall team stress situation"
+      },
+      "satisfaction": {
+        "label": "Satisfaction",
+        "description": "Work satisfaction and happiness"
+      }
+    }
+  },
+  "colleaguePersonaAnalyzer": {
+    "title": "Colleague Persona Analyzer",
+    "description": "By selecting descriptions from various dimensions below and adding specific examples, AI helps you accurately analyze your colleague's personality traits and behavior patterns.",
+    "communicationStyles": {
+      "title": "What is their core communication style?",
+      "description": "Choose the option that best represents their daily communication approach.",
+      "comm_direct": "Direct & Honest",
+      "comm_direct_desc": "Clear opinions, no beating around the bush",
+      "comm_diplomatic": "Tactful & Subtle",
+      "comm_diplomatic_desc": "Considerate approach, mindful of feelings",
+      "comm_logical": "Logical & Clear",
+      "comm_logical_desc": "Well-organized, focuses on data and facts",
+      "comm_expressive": "Expressive & Vivid",
+      "comm_expressive_desc": "Good at metaphors, infectious communication",
+      "comm_reserved": "Concise & To-the-point",
+      "comm_reserved_desc": "Few words, but hits the key points"
+    },
+    "teamRoles": {
+      "title": "In team collaboration, what role do they usually play?",
+      "description": "Think about their typical contribution style in team projects.",
+      "role_leader": "Leader/Coordinator",
+      "role_leader_desc": "Organizes and guides, drives progress",
+      "role_innovator": "Innovator/Idea Generator",
+      "role_innovator_desc": "Often has new ideas, challenges conventions",
+      "role_executor": "Executor/Doer",
+      "role_executor_desc": "Focuses on implementation, efficient completion",
+      "role_supporter": "Supporter/Collaborator",
+      "role_supporter_desc": "Helpful, creates good atmosphere",
+      "role_detailer": "Detail-oriented/Perfectionist",
+      "role_detailer_desc": "Attention to detail, pursues perfection",
+      "role_independent": "Independent Contributor",
+      "role_independent_desc": "Prefers to complete tasks independently"
+    },
+    "pressureReactions": {
+      "title": "When facing pressure or challenges, what is their typical reaction?",
+      "description": "Recall their performance under difficult or high-pressure situations.",
+      "pressure_calm": "Calm & Focused",
+      "pressure_calm_desc": "Stays composed, focuses on solutions",
+      "pressure_proactive": "Proactive Response",
+      "pressure_proactive_desc": "Quick action, seeks solutions",
+      "pressure_anxious": "Slightly Anxious",
+      "pressure_anxious_desc": "May be nervous, but still tries hard",
+      "pressure_seeker": "Seeks Support",
+      "pressure_seeker_desc": "Will ask others for help or talk",
+      "pressure_avoidant": "Temporarily Avoidant",
+      "pressure_avoidant_desc": "May avoid problems in the short term"
+    },
+    "conflictApproaches": {
+      "title": "How do they tend to handle work conflicts or disagreements?",
+      "description": "Think about their common practices in controversial situations.",
+      "conflict_direct": "Direct Confrontation",
+      "conflict_direct_desc": "Addresses issues directly, seeks resolution",
+      "conflict_collaborative": "Collaborative Win-Win",
+      "conflict_collaborative_desc": "Seeks mutually satisfactory solutions",
+      "conflict_compromising": "Compromising",
+      "conflict_compromising_desc": "Willing to make concessions for agreement",
+      "conflict_avoiding": "Avoiding",
+      "conflict_avoiding_desc": "Dislikes conflict, tries to avoid",
+      "conflict_assertive": "Assertive",
+      "conflict_assertive_desc": "Strongly defends their position"
+    },
+    "taskManagementStyles": {
+      "title": "In task management and execution, what is their style?",
+      "description": "Consider how they arrange and complete work tasks.",
+      "task_planner": "Thorough Planner",
+      "task_planner_desc": "Plans ahead, follows step by step",
+      "task_flexible": "Flexible & Adaptable",
+      "task_flexible_desc": "Adapts to changes, adjusts as needed",
+      "task_detail_oriented": "Detail-oriented",
+      "task_detail_oriented_desc": "Meticulous, strives for precision",
+      "task_result_driven": "Result-driven",
+      "task_result_driven_desc": "Focuses on goals, prioritizes efficiency",
+      "task_procrastinator": "Occasional Procrastinator",
+      "task_procrastinator_desc": "Sometimes delays, but can catch up"
+    },
+    "adaptabilityToChanges": {
+      "title": "How well do they adapt to work changes (process adjustments, technology updates)?",
+      "description": "Assess their acceptance and adjustment ability to new situations and environments.",
+      "change_embracer": "Embraces Change",
+      "change_embracer_desc": "Views change as opportunity, enjoys trying new things",
+      "change_cautious": "Cautious Adaptation",
+      "change_cautious_desc": "Observes and understands before gradually accepting",
+      "change_resistant": "Slightly Resistant",
+      "change_resistant_desc": "Prefers stability, doesn't like changes much",
+      "change_passive": "Passive Acceptance",
+      "change_passive_desc": "Can keep up, but won't actively seek change"
+    },
+    "learningAttitudes": {
+      "title": "What is their attitude towards learning new knowledge and skills, seeking personal growth?",
+      "description": "Observe their performance in professional development and skill improvement.",
+      "learn_proactive": "Proactive",
+      "learn_proactive_desc": "Actively learns new skills and knowledge",
+      "learn_receptive": "Receptive",
+      "learn_receptive_desc": "Open attitude towards new things",
+      "learn_practical": "Practical",
+      "learn_practical_desc": "Focuses on skills that solve real problems",
+      "learn_complacent": "Content with Status Quo",
+      "learn_complacent_desc": "Lacks motivation to learn new things"
+    },
+    "supplementDescription": {
+      "title": "Supplementary Description and Examples (Optional)",
+      "description": "Please provide detailed descriptions of specific examples, behaviors, or other important information you've observed about this colleague. The more specific, the more accurate the analysis may be.",
+      "placeholder": "e.g., Once during an urgent project, John voluntarily took on the most difficult part, worked overtime continuously and also helped other colleagues... He always brings up key points that others overlook in meetings...",
+      "guidingPromptsTitle": "Or click the questions below to quickly add to the description box (content will be appended to existing text):"
+    },
+    "guidingPrompts": [
+      "What are the three most impressive behaviors or traits of this colleague in daily work?",
+      "Describe their typical performance in meetings or group discussions.",
+      "How do they usually respond and perform when facing work pressure, urgent tasks, or emergencies?",
+      "Give a specific example of their role and communication style in team collaboration or projects.",
+      "How do they react when receiving positive feedback (praise) and negative feedback (criticism)?",
+      "How do they usually handle disagreements or work conflicts with others?",
+      "If you had to use three words to describe their communication style, which three would you choose? Why?",
+      "Please describe a specific example that you think best demonstrates their personality traits."
+    ],
+    "analyzeButton": "Start Persona Analysis",
+    "analyzing": "AI deep analysis in progress...",
+    "resetButton": "Reset All Options",
+    "resultTitle": "AI Analysis Report:",
+    "loadingMessage": "AI master is deconstructing colleague personality for you, please wait...",
+    "requiredFields": "Please select at least one dimension trait, or fill in supplementary description!",
+    "apiError": "Colleague persona analyzer is a bit 'confused' today, temporarily unable to serve.",
+    "formatError": "AI returned analysis result is a bit 'mysterious'...",
+    "unknownError": "Unknown error occurred while analyzing colleague persona, AI's 'mind reading' might have short-circuited!"
+  },
+  "weatherMoodLink": {
+    "title": "Weather-Mood Correlation Analysis",
+    "description": "Select a city and let AI analyze the subtle impact of real-time weather on your work mood!",
+    "selectCityLabel": "Select City",
+    "selectCityPlaceholder": "Please select a city",
+    "searchCityPlaceholder": "Search city...",
+    "cityNotFound": "City not found.",
+    "loadingCities": "Loading city list...",
+    "loadCityError": "Unable to load city list. Please ensure `public/data/Meizu_cities.json` file exists and is properly formatted.",
+    "analyzeMoodButton": "Analyze Mood",
+    "analyzing": "AI is sensing weather and mood...",
+    "resultTitle": "AI Mood Insights:",
+    "loadingMessage": "AI is analyzing with real-time weather data, please wait...",
+    "selectCityError": "Please select a city!",
+    "apiError": "Weather-mood analyzer service is temporarily unavailable.",
+    "formatError": "AI returned analysis result format is incorrect.",
+    "unknownError": "Unknown error occurred while analyzing weather and mood."
+  },
+  "meetingNotesOrganizer": {
+    "title": "Meeting Notes Organizer",
+    "description": "Organize messy meeting notes into clear, structured meeting minutes to improve work efficiency",
+    "meetingTypeLabel": "Meeting Type:",
+    "meetingTypePlaceholder": "Select meeting type...",
+    "organizationStyleLabel": "Organization Style:",
+    "organizationStylePlaceholder": "Select organization style...",
+    "outputFormatLabel": "Output Format:",
+    "outputFormatPlaceholder": "Select output format...",
+    "meetingTitleLabel": "Meeting Topic (Optional):",
+    "meetingTitlePlaceholder": "e.g., Q3 Product Planning Review",
+    "meetingDateLabel": "Meeting Time (Optional):",
+    "meetingDatePlaceholder": "e.g., October 26, 2023, 2 PM",
+    "participantsLabel": "Participants (Optional):",
+    "participantsPlaceholder": "e.g., John, Jane, Bob (separated by commas)",
+    "rawNotesLabel": "Raw Meeting Notes:",
+    "rawNotesPlaceholder": "Please paste or enter your raw meeting notes content here...",
+    "keyDecisionsLabel": "Key Decisions (Optional):",
+    "keyDecisionsPlaceholder": "Important decisions made in the meeting (AI will try to extract automatically, you can also add manually)",
+    "actionItemsLabel": "Action Items (Optional):",
+    "actionItemsPlaceholder": "To-do items and responsible persons from the meeting (AI will try to extract automatically, you can also add manually)",
+    "organizeButton": "Organize Meeting Notes",
+    "organizing": "Organizing...",
+    "resultTitle": "Organized Meeting Minutes",
+    "loadingMessage": "Meeting secretary is working hard to organize meeting minutes...📝",
+    "requiredField": "Please enter raw meeting notes!",
+    "apiError": "Meeting notes organization failed, the secretary might be carefully reviewing content.",
+    "formatError": "AI returned organization result format error, the secretary might be reorganizing content...📝",
+    "unknownError": "Unknown error occurred while organizing meeting notes, meeting minutes need more time!📋",
+    "errorTitle": "Organization Failed!",
+    "meetingTypes": {
+      "standup": {
+        "label": "Stand-up/Morning Meeting",
+        "description": "Daily team sync meeting"
+      },
+      "project-review": {
+        "label": "Project Review",
+        "description": "Project progress and results review"
+      },
+      "brainstorming": {
+        "label": "Brainstorming",
+        "description": "Creative discussion and solution design"
+      },
+      "decision-making": {
+        "label": "Decision Meeting",
+        "description": "Important decision discussion and determination"
+      },
+      "planning": {
+        "label": "Planning Meeting",
+        "description": "Project planning and task allocation"
+      },
+      "retrospective": {
+        "label": "Retrospective Meeting",
+        "description": "Project review and experience summary"
+      },
+      "client-meeting": {
+        "label": "Client Meeting",
+        "description": "Communication meeting with clients"
+      },
+      "training": {
+        "label": "Training Meeting",
+        "description": "Knowledge sharing and training"
+      }
+    },
+    "organizationStyles": {
+      "structured": {
+        "label": "Structured Organization",
+        "description": "Categorized by topics, decisions, action items"
+      },
+      "timeline": {
+        "label": "Timeline Organization",
+        "description": "Organized by chronological order of meeting flow"
+      },
+      "action-focused": {
+        "label": "Action-oriented",
+        "description": "Highlights action items and responsible persons"
+      },
+      "summary": {
+        "label": "Summary",
+        "description": "Extracts key information and points"
+      },
+      "detailed": {
+        "label": "Detailed Record",
+        "description": "Preserves complete discussion details"
+      },
+      "executive": {
+        "label": "Executive Summary",
+        "description": "Concise version suitable for senior management reporting"
+      }
+    },
+    "outputFormats": {
+      "markdown": {
+        "label": "Markdown Format",
+        "description": "Suitable for documents and collaboration platforms"
+      },
+      "email": {
+        "label": "Email Format",
+        "description": "Format suitable for email sending"
+      },
+      "presentation": {
+        "label": "Presentation",
+        "description": "Key points suitable for PPT presentation"
+      },
+      "task-list": {
+        "label": "Task List",
+        "description": "Highlights tasks and deadlines"
+      },
+      "report": {
+        "label": "Formal Report",
+        "description": "Formal meeting minutes format"
+      }
+    }
+  },
+  "professionalPersonaGenerator": {
+    "title": "Professional Persona Generator",
+    "description": "Generate a complete professional persona based on your career level, industry background, and personal style",
+    "currentRoleRequired": "Please enter your current position!",
+    "careerLevelLabel": "Career Level:",
+    "careerLevelPlaceholder": "Select career level...",
+    "industryLabel": "Industry:",
+    "industryPlaceholder": "Select industry...",
+    "personaStyleLabel": "Persona Style:",
+    "personaStylePlaceholder": "Select persona style...",
+    "currentRoleLabel": "Current Position:",
+    "currentRolePlaceholder": "Enter your current position",
+    "targetRoleLabel": "Target Position (Optional):",
+    "targetRolePlaceholder": "Enter your target position",
+    "keySkillsLabel": "Core Skills (Optional):",
+    "keySkillsPlaceholder": "Describe your core skills...",
+    "achievementsLabel": "Key Achievements (Optional):",
+    "achievementsPlaceholder": "Describe your key achievements...",
+    "personalTraitsLabel": "Personal Traits (Optional):",
+    "personalTraitsPlaceholder": "Describe your personal traits...",
+    "generateButton": "Generate Professional Persona",
+    "generating": "Crafting persona...",
+    "resultTitle": "Your Exclusive Professional Persona:",
+    "error": "Generation failed!",
+    "errorFormat": "AI returned persona format error, image designer might be reconceptualizing...🎭",
+    "unknownError": "Unknown error occurred while generating persona, personal branding encountered challenges!💼",
+    "careerLevels": {
+      "junior": "Junior Employee",
+      "mid": "Mid-level Employee",
+      "senior": "Senior Employee",
+      "lead": "Team Lead",
+      "manager": "Department Manager",
+      "director": "Director Level"
+    },
+    "careerLevelDescriptions": {
+      "junior": "1-3 years experience, actively learning and growing",
+      "mid": "3-5 years experience, independent contributor",
+      "senior": "5-8 years experience, technical expert",
+      "lead": "8+ years experience, team management",
+      "manager": "Management role, strategic planning",
+      "director": "Senior management, decision-making level"
+    },
+    "industries": {
+      "tech": "Internet & Technology",
+      "finance": "Finance",
+      "consulting": "Consulting Services",
+      "education": "Education & Training",
+      "healthcare": "Healthcare",
+      "retail": "Retail & E-commerce",
+      "manufacturing": "Manufacturing",
+      "media": "Media & Communications"
+    },
+    "personaStyles": {
+      "professional": "Professional & Rigorous",
+      "innovative": "Innovative & Forward-thinking",
+      "collaborative": "Collaborative & Approachable",
+      "results-driven": "Results-oriented",
+      "analytical": "Rational & Analytical",
+      "creative": "Creative & Inspiring"
+    },
+    "personaStyleDescriptions": {
+      "professional": "Formal and professional, authoritative and trustworthy",
+      "innovative": "Active thinking, leading trends",
+      "collaborative": "Team cooperation, harmonious relationships",
+      "results-driven": "Clear goals, strong execution",
+      "analytical": "Data-driven, logical thinking",
+      "creative": "Creative and inspiring, innovative thinking"
+    }
+  },
+  "weeklyReportSparkleEnhancer": {
+    "title": "Weekly Report Sparkle Enhancer",
+    "description": "Transform ordinary work content into brilliant weekly reports, making your achievements shine",
+    "subtitle": "This Week's Highlight Packager",
+    "contentLabel": "Paste your ordinary work content from this week, and AI will help you turn it into gold!✨",
+    "contentPlaceholder": "For example:\n- Attended 5 meetings\n- Replied to 50 emails\n- Wrote 500 lines of code\n- Communicated with product manager 5 times...",
+    "enhanceButton": "One-click packaging, shine bright!",
+    "enhancing": "Extracting highlights & magical packaging...",
+    "resultTitle": "Weekly Report Highlights Shine!",
+    "emptyContentError": "You need to tell me what you did this week so I can help you package it!✍️",
+    "apiError": "Weekly report packaging failed, might be too many highlights for AI to process.",
+    "formatError": "AI returned packaging result is a bit confusing, I can't interpret it for now...😵‍💫",
+    "unknownError": "Unknown error occurred while packaging weekly report, my vocabulary library might need updating!📚",
+    "errorTitle": "Packaging Error!",
+    "loadingMessage": "AI is carefully polishing your weekly report to amaze your boss...✨"
+  },
+  "officeFengshuiDetector": {
+    "title": "Office Feng Shui Detector",
+    "description": "Feeling off vibes at your workstation? Let the cyber mysticism master survey your workplace 'dragon lines' and adjust your 'code aura'! ☯️",
+    "completionRate": "Completion Rate",
+    "mysticAnalysis": "Mystical Analysis",
+    "workstationLayout": {
+      "title": "What's behind your workstation?",
+      "description": "Having support behind you keeps work stable",
+      "wallBack": "Back against wall",
+      "wallBackDesc": "Solid backing, stable as a mountain",
+      "aisleBack": "Back to aisle",
+      "aisleBackDesc": "People coming and going behind, easily distracted",
+      "windowBack": "Back to window",
+      "windowBackDesc": "Empty behind, needs resolution",
+      "corner": "Corner position",
+      "cornerDesc": "Energy gathering spot, but beware of oppression"
+    },
+    "monitorDirection": {
+      "title": "Which direction does your monitor face?",
+      "description": "Choose the right direction, ideas flow naturally",
+      "north": "Facing North",
+      "northDesc": "Water position, good for thinking",
+      "south": "Facing South",
+      "southDesc": "Fire position, energetic",
+      "east": "Facing East",
+      "eastDesc": "Wood position, vibrant",
+      "west": "Facing West",
+      "westDesc": "Metal position, good for decisions",
+      "unknown": "Uncertain",
+      "unknownDesc": "Need compass positioning"
+    },
+    "deskItems": {
+      "title": "What lucky items are on your desk? (Optional)",
+      "description": "Small items, big energy",
+      "plant": "Green plants",
+      "plantDesc": "Vigorous vitality, purify aura",
+      "coffee": "Coffee cup",
+      "coffeeDesc": "Refresh mind, but change water regularly",
+      "figurine": "Figurines/dolls",
+      "figurineDesc": "Attract wealth and fortune, increase popularity",
+      "books": "Technical books",
+      "booksDesc": "Source of wisdom, enhance fortune",
+      "snacks": "Snacks",
+      "snacksDesc": "Sweet blessing, but in moderation",
+      "mirror": "Mirror",
+      "mirrorDesc": "Reflect negative energy, but be careful"
+    },
+    "problems": {
+      "title": "What workplace challenges are you facing recently? (Optional)",
+      "description": "Specific description for precise resolution",
+      "placeholder": "For example: Recently feeling very tired, low work efficiency, poor communication with colleagues..."
+    },
+    "buttons": {
+      "analyze": "Start Feng Shui Survey!",
+      "analyzing": "Surveying...",
+      "reset": "Refill",
+      "testAgain": "Test Again"
+    },
+    "result": {
+      "title": "Feng Shui Survey Report",
+      "description": "Your exclusive office fortune guide"
+    },
+    "errors": {
+      "missingRequired": "Please select at least workstation layout and monitor direction!",
+      "analysisFailed": "Detection failed"
+    }
   }
 }

@@ -38,7 +38,7 @@ function loadSystemPrompt(toolId: string, language: string = 'zh-CN'): string | 
   } else if (
     ['nickname-generator', 'worker-meme-generator', 'worker-meme-generator-pro'].includes(toolId)
   ) {
-    category = 'content'; // Changed 'content-creation' to 'content' to match dir
+    category = 'content-creation';
   } else if (
     ['ppt-phrase-generator', 'professional-persona-generator', 'data-beautifier'].includes(toolId)
   ) {
@@ -462,8 +462,15 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         '[ChatController][worker-meme-generator] AI response generated (expected JSON string).'
       );
 
+      // 提取JSON内容（处理markdown代码块格式）
+      let jsonContent = assistantJsonResponse;
+      const jsonMatch = assistantJsonResponse.match(/```json\s*\n([\s\S]*?)\n```/);
+      if (jsonMatch) {
+        jsonContent = jsonMatch[1].trim();
+      }
+
       try {
-        JSON.parse(assistantJsonResponse);
+        JSON.parse(jsonContent);
       } catch (jsonError) {
         console.error(
           '[ChatController][worker-meme-generator] AI did not return a valid JSON string:',
@@ -477,7 +484,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         return;
       }
 
-      res.status(200).json({ assistantMessage: assistantJsonResponse, modelUsed: finalModelId });
+      res.status(200).json({ assistantMessage: jsonContent, modelUsed: finalModelId });
     } catch (error: any) {
       console.error(
         `[ChatController][worker-meme-generator] Error processing tool '${toolId}':`,

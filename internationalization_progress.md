@@ -1,17 +1,33 @@
 # 职场优化器工具国际化进度报告
 
-## 已完成国际化的工具 (35 个)
+## 已完成国际化的工具 (38 个)
 
-### 本次会话新完成的工具 (4 个)
+### 本次会话新完成的工具 (8 个)
 
-1. **CaffeineDependencyIndex** (咖啡因依赖指数) ✅
+1. **ProfessionalPersonaGenerator** (职场人设生成器) ✅
+
+   - 修复中文翻译文件缺失问题
+   - 修复后端 API 参数错误（locale → language）
+   - 修复英文 prompt 文件结构错误（system → default_system_prompt）
+   - 完成完整的国际化支持
+   - 状态: 307 (中文), 200 (英文), API: 200
+
+2. **WeeklyReportSparkleEnhancer** (周报润色增强器) ✅
+
+   - 完成组件国际化改造，添加 locale 参数和 useTranslations
+   - 添加完整的翻译键到 zh-CN.json 和 en-US.json
+   - 更新 page.tsx 支持 Next.js 15 的 async params
+   - 同步翻译文件到 public 目录
+   - 状态: 307 (中文), 200 (英文), API: 200
+
+3. **CaffeineDependencyIndex** (咖啡因依赖指数) ✅
 
    - 完成组件国际化改造
    - 添加翻译键到 zh-CN.json 和 en-US.json
    - 创建英文 prompt 文件
    - 状态: 307 (中文), 200 (英文), API: 200
 
-2. **FireCountdown** (财务自由倒计时) ✅
+4. **FireCountdown** (财务自由倒计时) ✅
 
    - 完成复杂组件的全面国际化改造
    - 处理大量翻译键和 UI 文本
@@ -19,7 +35,7 @@
    - 创建英文 prompt 文件
    - 状态: 307 (中文), 200 (英文), API: 200
 
-3. **ProcrastinationBuster** (拖延症克星) ✅
+5. **ProcrastinationBuster** (拖延症克星) ✅
 
    - 最复杂的工具，345 行组件完全重写
    - 添加全面的翻译键支持
@@ -27,45 +43,66 @@
    - 创建英文 prompt 文件
    - 状态: 307 (中文), 200 (英文), API: 200
 
-4. **EmailPolisher** (邮件润色器) ✅
+6. **EmailPolisher** (邮件润色器) ✅
+
    - 修复 useTranslations 导入路径错误
    - 完成组件国际化改造
    - 添加翻译键同步
    - 创建英文 prompt 文件
    - 状态: 307 (中文), 200 (英文), API: 200
 
+7. **NicknameGenerator** (花名生成器) ✅ - 修复版
+
+   - 修复 Select 组件值映射错误（value 使用 type.label 而不是 type.value）
+   - 修复用户提示构建逻辑，正确使用翻译标签
+   - 修复 API 调用缺少 language 参数
+   - 删除英文翻译文件中的重复条目
+   - 修复依赖数组，添加 objectTypes 和 nameStyles
+   - 状态: 307 (中文), 200 (英文), API: 200
+
+8. **WorkerMemeGeneratorPro** (打工人表情包生成器 Pro 版) ✅
+   - 完成组件完整国际化改造，添加 locale 参数和 useTranslations
+   - 修复 quickScenarios 数组类型错误，添加备用硬编码数组
+   - 修复后端 API 数据格式问题：从纯文本改为 JSON 格式
+   - 修复后端 prompt 路径映射：content → content-creation
+   - 修复英文 prompt 文件结构：system → default_system_prompt
+   - 修复 API 调用，添加 language 参数
+   - 更新 page.tsx 支持 Next.js 15 的 async params
+   - 翻译键已存在，直接使用
+   - 状态: 307 (中文), 200 (英文), API: 200
+
 ### 之前已完成的工具 (31 个)
 
-5. **BullshitFortuneTelling** (今日运势胡说版) ✅
-6. **AwesomeComplimentGenerator** (彩虹屁生成器) ✅
-7. **MeetingDoodleBuddy** (会议涂鸦伙伴) ✅
-8. **MeetingSpeechGenerator** (会议发言生成器) ✅
-9. **DailyGrindAffirmations** (日常鸡血肯定语) ✅
-10. **ElectronicWoodenFish** (电子木鱼) ✅
-11. **SoupSwitcher** (换汤不换药生成器) ✅
-12. **UniversalExcuseGenerator** (万能借口生成器) ✅
-13. **MeetingNonsenseTranslator** (会议废话翻译器) ✅
-14. **AntiPuaAssistant** (反 PUA 助手) ✅
-15. **BossRadar** (老板雷达) ✅
-16. **BlameGameMaster** (甩锅大师) ✅
-17. **BlameTactics** (背锅战术) ✅
-18. **CareerLevelingSystem** (职场等级系统) ✅
-19. **CareerPathForecaster** (职场命运预测器) ✅
-20. **ColleaguePersonaAnalyzer** (同事人格分析器) ✅
-21. **CrisisCommunicationTemplates** (危机公关模板) ✅
-22. **CrossDepartmentTranslator** (跨部门翻译器) ✅
-23. **DataBeautifier** (数据美化器) ✅
-24. **DailySlackingAlmanac** (摸鱼日历) ✅
-25. **EqAssistant** (情商助手) ✅
-26. **ImpressiveMeetingPhrases** (会议金句生成器) ✅
-27. **IntroductionToSlacking** (摸鱼入门指南) ✅
-28. **JargonTranslator** (黑话翻译器) ✅
-29. **LunchDecisionOverlord** (午餐决策霸主) ✅
-30. **MeetingBingoGenerator** (会议 BINGO 生成器) ✅
-31. **MeetingNotesOrganizer** (会议纪要整理器) ✅
-32. **NicknameGenerator** (花名生成器) ✅
-33. **OfficeFengshuiDetector** (办公室风水探测器) ✅
-34. **OfficeGhostStories** (办公室灵异事件) ✅
+7. **BullshitFortuneTelling** (今日运势胡说版) ✅
+8. **AwesomeComplimentGenerator** (彩虹屁生成器) ✅
+9. **MeetingDoodleBuddy** (会议涂鸦伙伴) ✅
+10. **MeetingSpeechGenerator** (会议发言生成器) ✅
+11. **DailyGrindAffirmations** (日常鸡血肯定语) ✅
+12. **ElectronicWoodenFish** (电子木鱼) ✅
+13. **SoupSwitcher** (换汤不换药生成器) ✅
+14. **UniversalExcuseGenerator** (万能借口生成器) ✅
+15. **MeetingNonsenseTranslator** (会议废话翻译器) ✅
+16. **AntiPuaAssistant** (反 PUA 助手) ✅
+17. **BossRadar** (老板雷达) ✅
+18. **BlameGameMaster** (甩锅大师) ✅
+19. **BlameTactics** (背锅战术) ✅
+20. **CareerLevelingSystem** (职场等级系统) ✅
+21. **CareerPathForecaster** (职场命运预测器) ✅
+22. **ColleaguePersonaAnalyzer** (同事人格分析器) ✅
+23. **CrisisCommunicationTemplates** (危机公关模板) ✅
+24. **CrossDepartmentTranslator** (跨部门翻译器) ✅
+25. **DataBeautifier** (数据美化器) ✅
+26. **DailySlackingAlmanac** (摸鱼日历) ✅
+27. **EqAssistant** (情商助手) ✅
+28. **ImpressiveMeetingPhrases** (会议金句生成器) ✅
+29. **IntroductionToSlacking** (摸鱼入门指南) ✅
+30. **JargonTranslator** (黑话翻译器) ✅
+31. **LunchDecisionOverlord** (午餐决策霸主) ✅
+32. **MeetingBingoGenerator** (会议 BINGO 生成器) ✅
+33. **MeetingNotesOrganizer** (会议纪要整理器) ✅
+34. **NicknameGenerator** (花名生成器) ✅
+35. **OfficeFengshuiDetector** (办公室风水探测器) ✅
+36. **OfficeGhostStories** (办公室灵异事件) ✅
 
 ## 待处理的工具 (约 25 个)
 
@@ -76,7 +113,7 @@
 - parallel-universe-work-simulator (平行宇宙工作模拟器)
 - ppt-phrase-generator (PPT 金句生成器)
 - pro-slackers-time-manager (专业摸鱼时间管理)
-- professional-persona-generator (职业人格生成器)
+
 - resignation-templates (辞职信模板)
 - salary-ticker (工资计时器)
 - sanity-check-meter (理智检测仪)
@@ -87,11 +124,11 @@
 - team-mood-detector (团队氛围检测器)
 - universal-excuse-generator (万能借口生成器)
 - weather-mood-link (天气心情关联器)
-- weekly-report-sparkle-enhancer (周报润色增强器)
+
 - work-time-machine (工作时光机)
 - workday-countdown (下班倒计时)
 - worker-meme-generator (打工人表情包生成器)
-- worker-meme-generator-pro (打工人表情包生成器 Pro)
+
 - workplace-meme-generator (职场表情包生成器)
 
 ## 国际化工作流程
