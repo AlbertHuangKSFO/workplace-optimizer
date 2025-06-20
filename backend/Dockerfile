@@ -38,6 +38,9 @@ COPY --from=builder /app/node_modules ./node_modules
 # Copy package.json (might be needed for some runtimes or utilities)
 COPY --from=builder /app/package.json ./package.json
 
+# Copy the data directory with prompts and models
+COPY --from=builder /app/src/data ./src/data
+
 # Create a placeholder .env file - actual environment variables should be passed via Docker
 # This prevents the app from crashing when trying to load .env from relative paths
 RUN touch .env
