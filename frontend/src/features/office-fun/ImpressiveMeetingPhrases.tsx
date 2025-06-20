@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Briefcase, Lightbulb, RotateCcw, Target, Users, Zap } from 'lucide-react';
 import React, { useState } from 'react';
@@ -25,25 +27,13 @@ interface PerformanceEffect {
   description: string;
 }
 
-const meetingTypes: MeetingType[] = [
-  { id: 'strategy', label: '战略规划会', emoji: '🎯', description: '高屋建瓴，指点江山' },
-  { id: 'product', label: '产品讨论会', emoji: '💡', description: '创新思维，用户至上' },
-  { id: 'project', label: '项目推进会', emoji: '📊', description: '数据驱动，执行力强' },
-  { id: 'review', label: '复盘总结会', emoji: '🔍', description: '深度思考，举一反三' },
-  { id: 'brainstorm', label: '头脑风暴会', emoji: '🌪️', description: '天马行空，碰撞火花' },
-  { id: 'general', label: '通用场景', emoji: '🎭', description: '万能话术，随机应变' }
-];
+interface ImpressiveMeetingPhrasesProps {
+  locale: ValidLocale;
+}
 
-const performanceEffects: PerformanceEffect[] = [
-  { id: 'thoughtful', label: '深思熟虑型', emoji: '🤔', description: '显得很有想法，思考深入' },
-  { id: 'proactive', label: '积极参与型', emoji: '🙋‍♂️', description: '主动发言，展现参与度' },
-  { id: 'strategic', label: '把握大局型', emoji: '🎯', description: '站在高度，看得长远' },
-  { id: 'analytical', label: '数据分析型', emoji: '📈', description: '用数据说话，逻辑清晰' },
-  { id: 'innovative', label: '创新思维型', emoji: '💡', description: '脑洞大开，与众不同' },
-  { id: 'safe', label: '安全过关型', emoji: '🛡️', description: '不出错，稳妥应对' }
-];
+function ImpressiveMeetingPhrases({ locale }: ImpressiveMeetingPhrasesProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-function ImpressiveMeetingPhrases(): React.JSX.Element {
   const [meetingType, setMeetingType] = useState<string>('');
   const [effect, setEffect] = useState<string>('');
   const [customTopic, setCustomTopic] = useState<string>('');
@@ -52,9 +42,98 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
   const [error, setError] = useState<string>('');
   const [showResult, setShowResult] = useState<boolean>(false);
 
+  if (translationsLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-neutral-600 dark:text-neutral-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const meetingTypes: MeetingType[] = [
+    {
+      id: 'strategy',
+      label: t('impressiveMeetingPhrases.meetingTypes.strategy.label'),
+      emoji: '🎯',
+      description: t('impressiveMeetingPhrases.meetingTypes.strategy.description')
+    },
+    {
+      id: 'product',
+      label: t('impressiveMeetingPhrases.meetingTypes.product.label'),
+      emoji: '💡',
+      description: t('impressiveMeetingPhrases.meetingTypes.product.description')
+    },
+    {
+      id: 'project',
+      label: t('impressiveMeetingPhrases.meetingTypes.project.label'),
+      emoji: '📊',
+      description: t('impressiveMeetingPhrases.meetingTypes.project.description')
+    },
+    {
+      id: 'review',
+      label: t('impressiveMeetingPhrases.meetingTypes.review.label'),
+      emoji: '🔍',
+      description: t('impressiveMeetingPhrases.meetingTypes.review.description')
+    },
+    {
+      id: 'brainstorm',
+      label: t('impressiveMeetingPhrases.meetingTypes.brainstorm.label'),
+      emoji: '🌪️',
+      description: t('impressiveMeetingPhrases.meetingTypes.brainstorm.description')
+    },
+    {
+      id: 'general',
+      label: t('impressiveMeetingPhrases.meetingTypes.general.label'),
+      emoji: '🎭',
+      description: t('impressiveMeetingPhrases.meetingTypes.general.description')
+    }
+  ];
+
+  const performanceEffects: PerformanceEffect[] = [
+    {
+      id: 'thoughtful',
+      label: t('impressiveMeetingPhrases.performanceEffects.thoughtful.label'),
+      emoji: '🤔',
+      description: t('impressiveMeetingPhrases.performanceEffects.thoughtful.description')
+    },
+    {
+      id: 'proactive',
+      label: t('impressiveMeetingPhrases.performanceEffects.proactive.label'),
+      emoji: '🙋‍♂️',
+      description: t('impressiveMeetingPhrases.performanceEffects.proactive.description')
+    },
+    {
+      id: 'strategic',
+      label: t('impressiveMeetingPhrases.performanceEffects.strategic.label'),
+      emoji: '🎯',
+      description: t('impressiveMeetingPhrases.performanceEffects.strategic.description')
+    },
+    {
+      id: 'analytical',
+      label: t('impressiveMeetingPhrases.performanceEffects.analytical.label'),
+      emoji: '📈',
+      description: t('impressiveMeetingPhrases.performanceEffects.analytical.description')
+    },
+    {
+      id: 'innovative',
+      label: t('impressiveMeetingPhrases.performanceEffects.innovative.label'),
+      emoji: '💡',
+      description: t('impressiveMeetingPhrases.performanceEffects.innovative.description')
+    },
+    {
+      id: 'safe',
+      label: t('impressiveMeetingPhrases.performanceEffects.safe.label'),
+      emoji: '🛡️',
+      description: t('impressiveMeetingPhrases.performanceEffects.safe.description')
+    }
+  ];
+
   const handleSubmit = async () => {
     if (!meetingType || !effect) {
-      setError('请选择会议类型和表演效果');
+      setError(t('impressiveMeetingPhrases.selectionRequired'));
       return;
     }
 
@@ -82,7 +161,7 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
         body: JSON.stringify({
           messages: [{ role: 'user', content: prompt }],
           toolId: 'impressive-meeting-phrases',
-          language: 'zh'
+          language: locale === 'zh-CN' ? 'zh' : 'en'
         }),
       });
 
@@ -95,7 +174,7 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
       setShowResult(true);
     } catch (error) {
       console.error('Error:', error);
-      setError('生成失败，请稍后重试');
+      setError(t('impressiveMeetingPhrases.errors.generation'));
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +197,7 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
   };
 
   return (
-    <div className={cn("max-w-4xl mx-auto p-6 space-y-6", "bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100")}>
+    <div className={cn("max-w-7xl mx-auto p-6 space-y-6", "bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100")}>
       {!showResult ? (
         <div className="space-y-6">
           {/* 标题部分 */}
@@ -126,12 +205,12 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
             <div className="flex items-center justify-center gap-2">
               <Briefcase className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                高大上会议用语生成器
+                {t('impressiveMeetingPhrases.title')}
               </h1>
               <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             </div>
             <p className="text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-              开会时不知道说什么？让AI为您准备专业话术，助您在会议中"谈笑风生"！🎭✨
+              {t('impressiveMeetingPhrases.description')}
             </p>
             <div className="flex items-center justify-center gap-4">
               <div className={cn(
@@ -139,14 +218,14 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
                 "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
               )}>
                 <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                完成度: {getCompletionRate()}%
+                {t('impressiveMeetingPhrases.completionRate')}: {getCompletionRate()}%
               </div>
               <div className={cn(
                 "rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors flex items-center gap-1",
                 "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300"
               )}>
                 <Lightbulb className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
-                装B神器
+                {t('impressiveMeetingPhrases.badge')}
               </div>
             </div>
           </div>
@@ -167,9 +246,11 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
                   )}>
                     1
                   </span>
-                  选择会议类型
+                  {t('impressiveMeetingPhrases.step1Title')}
                 </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-400">不同类型的会议需要不同的话术风格</CardDescription>
+                <CardDescription className="text-neutral-600 dark:text-neutral-400">
+                  {t('impressiveMeetingPhrases.step1Description')}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -211,9 +292,11 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
                   )}>
                     2
                   </span>
-                  选择表演效果
+                  {t('impressiveMeetingPhrases.step2Title')}
                 </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-400">您希望在会议中给人留下什么印象？</CardDescription>
+                <CardDescription className="text-neutral-600 dark:text-neutral-400">
+                  {t('impressiveMeetingPhrases.step2Description')}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -255,17 +338,19 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
                   )}>
                     ?⃝
                   </span>
-                  自定义会议主题（可选）
+                  {t('impressiveMeetingPhrases.step3Title')}
                 </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-400">更具体的主题能生成更精准的话术</CardDescription>
+                <CardDescription className="text-neutral-600 dark:text-neutral-400">
+                  {t('impressiveMeetingPhrases.step3Description')}
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <Label htmlFor="customTopic" className="sr-only">自定义会议主题</Label>
+                <Label htmlFor="customTopic" className="sr-only">{t('impressiveMeetingPhrases.step3Title')}</Label>
                 <Textarea
                   id="customTopic"
                   value={customTopic}
                   onChange={(e) => setCustomTopic(e.target.value)}
-                  placeholder="例如：关于Q3季度营销策略的讨论、如何提升团队协作效率..."
+                  placeholder={t('impressiveMeetingPhrases.customTopicPlaceholder')}
                   rows={3}
                   className={cn(
                     "w-full",
@@ -292,30 +377,30 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <Zap className="w-5 h-5 animate-spin" />
-                    AI正在生成话术...
+                    {t('impressiveMeetingPhrases.generating')}
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
                     <Zap className="w-5 h-5" />
-                    生成高大上话术
+                    {t('impressiveMeetingPhrases.generateButton')}
                   </div>
                 )}
               </Button>
             </div>
           </div>
         </div>
-      ) : (
+      ) :
         <div className="space-y-6">
           {/* 结果页标题 */}
           <div className="text-center space-y-2">
              <div className="flex items-center justify-center gap-2">
               <Zap className="w-8 h-8 text-yellow-500 dark:text-yellow-400" />
               <h1 className="text-3xl font-bold text-neutral-800 dark:text-neutral-200">
-                您的会议话术已生成！
+                {t('impressiveMeetingPhrases.resultTitle')}
               </h1>
             </div>
             <p className="text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-              请查收AI为您精心准备的会议发言锦囊，助您掌控全场！
+              {t('impressiveMeetingPhrases.resultDescription')}
             </p>
           </div>
 
@@ -328,7 +413,7 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
             <CardHeader>
               <CardTitle className={cn("text-xl flex items-center gap-2", "text-blue-700 dark:text-blue-300")}>
                 <Lightbulb className="w-6 h-6" />
-                会议话术锦囊
+                {t('impressiveMeetingPhrases.phrasesTitle')}
               </CardTitle>
             </CardHeader>
             <CardContent className={cn(
@@ -339,22 +424,21 @@ function ImpressiveMeetingPhrases(): React.JSX.Element {
             </CardContent>
           </Card>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center gap-4 pt-4">
             <Button
               onClick={handleReset}
               variant="outline"
               className={cn(
-                "px-8 py-3 text-lg font-semibold rounded-lg shadow hover:shadow-md transition-shadow",
-                "border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-900/30",
-                "dark:hover:text-blue-200"
+                "px-6 py-2 text-sm font-medium",
+                "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
               )}
             >
-              <RotateCcw className="w-5 h-5 mr-2" />
-              重新生成
+              <RotateCcw className="w-4 h-4 mr-2" />
+              {t('impressiveMeetingPhrases.resetButton')}
             </Button>
           </div>
         </div>
-      )}
+      }
     </div>
   );
 }

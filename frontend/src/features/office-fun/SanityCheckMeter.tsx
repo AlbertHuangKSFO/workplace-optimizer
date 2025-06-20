@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Separator } from '@/components/ui/separator';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Brain, Clock, Coffee, Lightbulb, RefreshCcw, Zap } from 'lucide-react';
 import React, { useState } from 'react';
@@ -16,58 +18,73 @@ interface SanityQuestion {
   options: { value: string; label: string; emoji: string }[];
 }
 
-const sanityQuestions: SanityQuestion[] = [
-  {
-    id: 'energy',
-    question: '现在的精神状态如何？',
-    options: [
-      { value: 'zombie', label: '行尸走肉模式', emoji: '🧟‍♀️' },
-      { value: 'tired', label: '疲惫但清醒', emoji: '😴' },
-      { value: 'normal', label: '还算正常', emoji: '😐' },
-      { value: 'energetic', label: '精力充沛', emoji: '⚡' },
-      { value: 'hyperactive', label: '亢奋到想跳舞', emoji: '🕺' }
-    ]
-  },
-  {
-    id: 'workload',
-    question: '今天的工作量感觉如何？',
-    options: [
-      { value: 'overwhelming', label: '被工作淹没了', emoji: '🌊' },
-      { value: 'heavy', label: '压力山大', emoji: '⛰️' },
-      { value: 'moderate', label: '刚好合适', emoji: '👌' },
-      { value: 'light', label: '轻松愉快', emoji: '🎈' },
-      { value: 'bored', label: '无聊到发霉', emoji: '🦠' }
-    ]
-  },
-  {
-    id: 'mood',
-    question: '心情指数是多少？',
-    options: [
-      { value: 'depressed', label: '想找个角落哭', emoji: '😭' },
-      { value: 'frustrated', label: '烦躁不安', emoji: '😤' },
-      { value: 'neutral', label: '平静如水', emoji: '😑' },
-      { value: 'happy', label: '心情不错', emoji: '😊' },
-      { value: 'ecstatic', label: '开心到飞起', emoji: '🚀' }
-    ]
-  },
-  {
-    id: 'focus',
-    question: '注意力集中程度？',
-    options: [
-      { value: 'scattered', label: '思绪飞到外太空', emoji: '🛸' },
-      { value: 'distracted', label: '容易分心', emoji: '🦋' },
-      { value: 'okay', label: '还算专注', emoji: '🎯' },
-      { value: 'focused', label: '专注力MAX', emoji: '🔍' },
-      { value: 'laser', label: '激光般精准', emoji: '🔥' }
-    ]
-  }
-];
+interface SanityCheckMeterProps {
+  locale: ValidLocale;
+}
 
-function SanityCheckMeter(): React.JSX.Element {
+function SanityCheckMeter({ locale }: SanityCheckMeterProps): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<string>('');
   const [error, setError] = useState<string>('');
+
+  // 如果翻译还在加载中，显示加载状态
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
+
+  // 动态构建问题数组，使用翻译
+  const sanityQuestions: SanityQuestion[] = [
+    {
+      id: 'energy',
+      question: t('sanityCheckMeter.questions.energy.question'),
+      options: [
+        { value: 'zombie', label: t('sanityCheckMeter.questions.energy.options.zombie.label'), emoji: t('sanityCheckMeter.questions.energy.options.zombie.emoji') },
+        { value: 'tired', label: t('sanityCheckMeter.questions.energy.options.tired.label'), emoji: t('sanityCheckMeter.questions.energy.options.tired.emoji') },
+        { value: 'normal', label: t('sanityCheckMeter.questions.energy.options.normal.label'), emoji: t('sanityCheckMeter.questions.energy.options.normal.emoji') },
+        { value: 'energetic', label: t('sanityCheckMeter.questions.energy.options.energetic.label'), emoji: t('sanityCheckMeter.questions.energy.options.energetic.emoji') },
+        { value: 'hyperactive', label: t('sanityCheckMeter.questions.energy.options.hyperactive.label'), emoji: t('sanityCheckMeter.questions.energy.options.hyperactive.emoji') }
+      ]
+    },
+    {
+      id: 'workload',
+      question: t('sanityCheckMeter.questions.workload.question'),
+      options: [
+        { value: 'overwhelming', label: t('sanityCheckMeter.questions.workload.options.overwhelming.label'), emoji: t('sanityCheckMeter.questions.workload.options.overwhelming.emoji') },
+        { value: 'heavy', label: t('sanityCheckMeter.questions.workload.options.heavy.label'), emoji: t('sanityCheckMeter.questions.workload.options.heavy.emoji') },
+        { value: 'moderate', label: t('sanityCheckMeter.questions.workload.options.moderate.label'), emoji: t('sanityCheckMeter.questions.workload.options.moderate.emoji') },
+        { value: 'light', label: t('sanityCheckMeter.questions.workload.options.light.label'), emoji: t('sanityCheckMeter.questions.workload.options.light.emoji') },
+        { value: 'bored', label: t('sanityCheckMeter.questions.workload.options.bored.label'), emoji: t('sanityCheckMeter.questions.workload.options.bored.emoji') }
+      ]
+    },
+    {
+      id: 'mood',
+      question: t('sanityCheckMeter.questions.mood.question'),
+      options: [
+        { value: 'depressed', label: t('sanityCheckMeter.questions.mood.options.depressed.label'), emoji: t('sanityCheckMeter.questions.mood.options.depressed.emoji') },
+        { value: 'frustrated', label: t('sanityCheckMeter.questions.mood.options.frustrated.label'), emoji: t('sanityCheckMeter.questions.mood.options.frustrated.emoji') },
+        { value: 'neutral', label: t('sanityCheckMeter.questions.mood.options.neutral.label'), emoji: t('sanityCheckMeter.questions.mood.options.neutral.emoji') },
+        { value: 'happy', label: t('sanityCheckMeter.questions.mood.options.happy.label'), emoji: t('sanityCheckMeter.questions.mood.options.happy.emoji') },
+        { value: 'ecstatic', label: t('sanityCheckMeter.questions.mood.options.ecstatic.label'), emoji: t('sanityCheckMeter.questions.mood.options.ecstatic.emoji') }
+      ]
+    },
+    {
+      id: 'focus',
+      question: t('sanityCheckMeter.questions.focus.question'),
+      options: [
+        { value: 'scattered', label: t('sanityCheckMeter.questions.focus.options.scattered.label'), emoji: t('sanityCheckMeter.questions.focus.options.scattered.emoji') },
+        { value: 'distracted', label: t('sanityCheckMeter.questions.focus.options.distracted.label'), emoji: t('sanityCheckMeter.questions.focus.options.distracted.emoji') },
+        { value: 'okay', label: t('sanityCheckMeter.questions.focus.options.okay.label'), emoji: t('sanityCheckMeter.questions.focus.options.okay.emoji') },
+        { value: 'focused', label: t('sanityCheckMeter.questions.focus.options.focused.label'), emoji: t('sanityCheckMeter.questions.focus.options.focused.emoji') },
+        { value: 'laser', label: t('sanityCheckMeter.questions.focus.options.laser.label'), emoji: t('sanityCheckMeter.questions.focus.options.laser.emoji') }
+      ]
+    }
+  ];
 
   const handleAnswerChange = (questionId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
@@ -75,7 +92,7 @@ function SanityCheckMeter(): React.JSX.Element {
 
   const handleSubmit = async () => {
     if (Object.keys(answers).length < sanityQuestions.length) {
-      setError('请回答所有问题才能获得精神状态诊断！');
+      setError(t('sanityCheckMeter.errors.incompleteAnswers'));
       return;
     }
 
@@ -94,7 +111,7 @@ function SanityCheckMeter(): React.JSX.Element {
         body: JSON.stringify({
           messages: [{ role: 'user', content: userInput }],
           toolId: 'sanity-check-meter',
-          language: 'zh'
+          language: locale === 'zh-CN' ? 'zh' : 'en'
         })
       });
 
@@ -107,10 +124,10 @@ function SanityCheckMeter(): React.JSX.Element {
         throw new Error(data.error);
       }
 
-      setResult(data.assistantMessage || '诊断结果生成失败');
+      setResult(data.assistantMessage || t('sanityCheckMeter.errors.resultGenerationFailed'));
     } catch (err: any) {
-      console.error('精神状态检查失败:', err);
-      setError(`诊断失败: ${err.message}`);
+      console.error(t('sanityCheckMeter.errors.checkFailed'), err);
+      setError(`${t('sanityCheckMeter.errors.diagnosisFailed')}: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -132,21 +149,21 @@ function SanityCheckMeter(): React.JSX.Element {
         <div className="flex items-center justify-center gap-2">
           <Brain className="w-8 h-8 text-purple-600 dark:text-purple-400" />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-            下班前精神状态检查器
+            {t('sanityCheckMeter.title')}
           </h1>
           <AlertTriangle className="w-8 h-8 text-yellow-500 dark:text-yellow-400" />
         </div>
         <p className="text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-          辛苦了打工人！让我们来做个"精神状态大盘点"，看看你的san值还剩多少 🫠
+          {t('sanityCheckMeter.description')}
         </p>
         <div className="flex items-center justify-center gap-4">
           <Badge variant="outline" className={cn("flex items-center gap-1", "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300")}>
             <Clock className="w-4 h-4" />
-            完成度: {getCompletionRate()}%
+            {t('sanityCheckMeter.completionRate')}: {getCompletionRate()}%
           </Badge>
           <Badge variant="outline" className={cn("flex items-center gap-1", "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300")}>
             <Coffee className="w-4 h-4" />
-            非正式诊断
+            {t('sanityCheckMeter.informalDiagnosis')}
           </Badge>
         </div>
       </div>
@@ -218,10 +235,10 @@ function SanityCheckMeter(): React.JSX.Element {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Zap className="w-5 h-5 animate-spin" />
-                  AI诊断中...
+                  {t('sanityCheckMeter.buttons.submitting')}
                 </div>
               ) : (
-                '获取精神诊断'
+                t('sanityCheckMeter.buttons.submit')
               )}
             </Button>
           </div>
@@ -231,17 +248,17 @@ function SanityCheckMeter(): React.JSX.Element {
           <CardHeader className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
                 <Lightbulb className="w-8 h-8 text-yellow-500 dark:text-yellow-400" />
-                <CardTitle className="text-2xl font-bold text-purple-700 dark:text-purple-300">您的精神状态诊断报告</CardTitle>
+                <CardTitle className="text-2xl font-bold text-purple-700 dark:text-purple-300">{t('sanityCheckMeter.result.title')}</CardTitle>
             </div>
             <CardDescription className="text-neutral-600 dark:text-neutral-400">
-              仅供娱乐，如有不适请立即停止摸鱼并认真工作 (或看医生)。
+              {t('sanityCheckMeter.result.description')}
             </CardDescription>
             <div className="mt-4 flex items-center justify-center gap-2">
               <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-800/30 dark:text-purple-300">
-                AI 生成结果
+                {t('sanityCheckMeter.result.aiGenerated')}
               </Badge>
               <Badge variant="outline" className="border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300">
-                Sanity Level: Over 9000?!
+                {t('sanityCheckMeter.result.sanityLevel')}
               </Badge>
             </div>
           </CardHeader>
@@ -260,7 +277,7 @@ function SanityCheckMeter(): React.JSX.Element {
               "border-purple-500 text-purple-600 hover:bg-purple-50 dark:border-purple-400 dark:text-purple-300 dark:hover:bg-purple-900/30"
             )}>
               <RefreshCcw className="w-4 h-4 mr-2" />
-              再测一次
+              {t('sanityCheckMeter.buttons.reset')}
             </Button>
           </div>
         </Card>

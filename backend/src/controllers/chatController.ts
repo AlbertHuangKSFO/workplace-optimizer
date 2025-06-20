@@ -20,6 +20,16 @@ const PROMPTS_DIR = path.join(__dirname, '../../src/data/prompts');
 const MEIZU_WEATHER_API_URL = 'https://aider.meizu.com/app/weather/listWeather';
 
 function loadSystemPrompt(toolId: string, language: string = 'zh-CN'): string | null {
+  // Map language codes to directory names
+  const languageMap: { [key: string]: string } = {
+    zh: 'zh-CN',
+    'zh-CN': 'zh-CN',
+    en: 'en-US',
+    'en-US': 'en-US',
+  };
+
+  const mappedLanguage = languageMap[language] || 'zh-CN';
+
   // Determine the category based on toolId
   let category = 'office-fun'; // default
   if (
@@ -78,7 +88,7 @@ function loadSystemPrompt(toolId: string, language: string = 'zh-CN'): string | 
   }
   // Note: parallel-universe-work-simulator uses default 'office-fun' category
 
-  const filePath = path.join(PROMPTS_DIR, language, category, `${toolId}.yaml`);
+  const filePath = path.join(PROMPTS_DIR, mappedLanguage, category, `${toolId}.yaml`);
   try {
     if (!fs.existsSync(filePath)) {
       console.error(`Prompt file not found: ${filePath}`);

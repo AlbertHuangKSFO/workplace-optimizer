@@ -2353,5 +2353,165 @@
       "missingRequired": "Please select at least workstation layout and monitor direction!",
       "analysisFailed": "Detection failed"
     }
+  },
+  "sanityCheckMeter": {
+    "title": "Pre-Clock-Out Sanity Check Meter",
+    "description": "Hard work, worker! Let's do a 'mental state inventory' and see how much of your sanity value is left 🫠",
+    "completionRate": "Completion Rate",
+    "informalDiagnosis": "Informal Diagnosis",
+    "questions": {
+      "energy": {
+        "question": "How is your current mental state?",
+        "options": {
+          "zombie": { "label": "Walking dead mode", "emoji": "🧟‍♀️" },
+          "tired": { "label": "Tired but awake", "emoji": "😴" },
+          "normal": { "label": "Pretty normal", "emoji": "😐" },
+          "energetic": { "label": "Full of energy", "emoji": "⚡" },
+          "hyperactive": { "label": "So excited I want to dance", "emoji": "🕺" }
+        }
+      },
+      "workload": {
+        "question": "How does today's workload feel?",
+        "options": {
+          "overwhelming": { "label": "Drowning in work", "emoji": "🌊" },
+          "heavy": { "label": "Under pressure", "emoji": "⛰️" },
+          "moderate": { "label": "Just right", "emoji": "👌" },
+          "light": { "label": "Easy and pleasant", "emoji": "🎈" },
+          "bored": { "label": "Bored to mold", "emoji": "🦠" }
+        }
+      },
+      "mood": {
+        "question": "What's your mood index?",
+        "options": {
+          "depressed": { "label": "Want to find a corner to cry", "emoji": "😭" },
+          "frustrated": { "label": "Irritated and restless", "emoji": "😤" },
+          "neutral": { "label": "Calm as water", "emoji": "😑" },
+          "happy": { "label": "In a good mood", "emoji": "😊" },
+          "ecstatic": { "label": "Happy enough to fly", "emoji": "🚀" }
+        }
+      },
+      "focus": {
+        "question": "How's your concentration level?",
+        "options": {
+          "scattered": { "label": "Mind flew to outer space", "emoji": "🛸" },
+          "distracted": { "label": "Easily distracted", "emoji": "🦋" },
+          "okay": { "label": "Pretty focused", "emoji": "🎯" },
+          "focused": { "label": "Focus level MAX", "emoji": "🔍" },
+          "laser": { "label": "Laser-like precision", "emoji": "🔥" }
+        }
+      }
+    },
+    "buttons": {
+      "submit": "Get Mental Diagnosis",
+      "submitting": "AI diagnosing...",
+      "reset": "Test Again"
+    },
+    "result": {
+      "title": "Your Mental State Diagnosis Report",
+      "description": "For entertainment only. If you feel unwell, please stop slacking immediately and work seriously (or see a doctor).",
+      "aiGenerated": "AI Generated Result",
+      "sanityLevel": "Sanity Level: Over 9000?!"
+    },
+    "errors": {
+      "incompleteAnswers": "Please answer all questions to get your mental state diagnosis!",
+      "checkFailed": "Mental state check failed",
+      "diagnosisFailed": "Diagnosis failed",
+      "resultGenerationFailed": "Diagnosis result generation failed"
+    }
+  },
+  "dailySlackingAlmanac": {
+    "title": "\"Today's Slacking Do's and Don'ts\" Almanac",
+    "todayDate": "📅 Today's Date",
+    "refreshButton": "Refresh Today's Almanac",
+    "refreshing": "Re-divining...",
+    "loadingMessage": "AI fortune teller is observing celestial phenomena, calculating today's do's and don'ts...🔮",
+    "todayGuidance": "Today's Almanac Guidance:",
+    "errors": {
+      "loadFailed": "Almanac loading failed!",
+      "formatError": "AI returned almanac format is a bit strange, I can't interpret it for now...📅",
+      "unknownError": "Unknown error occurred while getting almanac, my divination crystal ball is broken!🔮",
+      "defaultError": "Almanac generation failed, perhaps the heavenly secrets cannot be revealed."
+    },
+    "apiRequest": {
+      "prompt": "Generate today's slacking almanac, including things that are suitable and unsuitable to do."
+    }
+  },
+  "impressiveMeetingPhrases": {
+    "title": "Impressive Meeting Phrases Generator",
+    "description": "Don't know what to say in meetings? Let AI prepare professional phrases to help you 'speak with confidence'! 🎭✨",
+    "completionRate": "Completion Rate",
+    "badge": "Professional Toolkit",
+    "step1Title": "Select Meeting Type",
+    "step1Description": "Different types of meetings require different phrase styles",
+    "step2Title": "Select Performance Effect",
+    "step2Description": "What impression do you want to make in the meeting?",
+    "step3Title": "Custom Meeting Topic (Optional)",
+    "step3Description": "More specific topics can generate more precise phrases",
+    "customTopicPlaceholder": "e.g., Discussion about Q3 marketing strategy, How to improve team collaboration efficiency...",
+    "generateButton": "Generate Impressive Phrases",
+    "generating": "AI is generating phrases...",
+    "resultTitle": "Your Meeting Phrases Are Ready!",
+    "resultDescription": "Please check the meeting speech toolkit carefully prepared by AI to help you control the whole meeting!",
+    "phrasesTitle": "Meeting Phrase Toolkit",
+    "resetButton": "Regenerate",
+    "backButton": "Back to Settings",
+    "selectionRequired": "Please select meeting type and performance effect",
+    "meetingTypes": {
+      "strategy": {
+        "label": "Strategic Planning",
+        "description": "High-level perspective, commanding view"
+      },
+      "product": {
+        "label": "Product Discussion",
+        "description": "Innovative thinking, user-centric"
+      },
+      "project": {
+        "label": "Project Progress",
+        "description": "Data-driven, strong execution"
+      },
+      "review": {
+        "label": "Review & Retrospective",
+        "description": "Deep thinking, learn from experience"
+      },
+      "brainstorm": {
+        "label": "Brainstorming",
+        "description": "Creative ideas, spark innovation"
+      },
+      "general": {
+        "label": "General Scenario",
+        "description": "Universal phrases, adapt to any situation"
+      }
+    },
+    "performanceEffects": {
+      "thoughtful": {
+        "label": "Thoughtful Type",
+        "description": "Appear insightful and deep-thinking"
+      },
+      "proactive": {
+        "label": "Proactive Type",
+        "description": "Active participation, show engagement"
+      },
+      "strategic": {
+        "label": "Strategic Type",
+        "description": "Big picture thinking, long-term vision"
+      },
+      "analytical": {
+        "label": "Analytical Type",
+        "description": "Data-driven, logical and clear"
+      },
+      "innovative": {
+        "label": "Innovative Type",
+        "description": "Creative thinking, stand out from crowd"
+      },
+      "safe": {
+        "label": "Safe Type",
+        "description": "Error-free, steady approach"
+      }
+    },
+    "errors": {
+      "generation": "Generation failed, please try again later",
+      "network": "Network error, please check your connection",
+      "unknown": "Unknown error, please try again later"
+    }
   }
 }
