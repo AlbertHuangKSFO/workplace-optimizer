@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { Loader2, Sparkles, Terminal } from "lucide-react";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -15,15 +17,28 @@ type CodeProps = React.ComponentPropsWithoutRef<'code'> & {
   inline?: boolean;
 };
 
-const ParallelUniverseWorkSimulator = () => {
+interface Props {
+  locale: ValidLocale;
+}
+
+const ParallelUniverseWorkSimulator = ({ locale }: Props) => {
+  const { t, loading: translationsLoading } = useTranslations(locale);
   const [workSituation, setWorkSituation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
 
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+      </div>
+    );
+  }
+
   const handleSimulate = async () => {
     if (!workSituation.trim()) {
-      setError("请描述你的工作状况或困扰。");
+      setError(t('parallelUniverseWorkSimulator.errorEmptyInput'));
       return;
     }
     setIsLoading(true);
@@ -38,6 +53,7 @@ const ParallelUniverseWorkSimulator = () => {
         },
         body: JSON.stringify({
           toolId: "parallel-universe-work-simulator",
+          locale: locale,
           messages: [
             {
               role: "user",
@@ -49,13 +65,13 @@ const ParallelUniverseWorkSimulator = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "模拟平行宇宙时发生错误。");
+        throw new Error(errorData.error || t('parallelUniverseWorkSimulator.errorSimulation'));
       }
 
       const data = await response.json();
       setResult(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "模拟平行宇宙时发生未知错误。");
+      setError(err.message || t('parallelUniverseWorkSimulator.errorUnknown'));
     } finally {
       setIsLoading(false);
     }
@@ -66,18 +82,18 @@ const ParallelUniverseWorkSimulator = () => {
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="universe" className="mr-2 text-4xl">🌌</span>
-          平行宇宙工作模拟器
+          {t('parallelUniverseWorkSimulator.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          描述你的工作困扰，看看在其他平行宇宙中会发生什么有趣的事情！
+          {t('parallelUniverseWorkSimulator.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="work-situation">当前工作状况或困扰</Label>
+          <Label htmlFor="work-situation">{t('parallelUniverseWorkSimulator.workSituationLabel')}</Label>
           <Textarea
             id="work-situation"
-            placeholder="例如：老板总是在下班时间安排紧急任务，让我很困扰..."
+            placeholder={t('parallelUniverseWorkSimulator.workSituationPlaceholder')}
             value={workSituation}
             onChange={(e) => setWorkSituation(e.target.value)}
             rows={4}
@@ -88,12 +104,12 @@ const ParallelUniverseWorkSimulator = () => {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              正在扫描平行宇宙...
+              {t('parallelUniverseWorkSimulator.simulating')}
             </>
           ) : (
             <>
               <Sparkles className="mr-2 h-4 w-4" />
-              开始模拟
+              {t('parallelUniverseWorkSimulator.simulateButton')}
             </>
           )}
         </Button>
@@ -103,7 +119,7 @@ const ParallelUniverseWorkSimulator = () => {
         <CardFooter>
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{t('parallelUniverseWorkSimulator.errorTitle')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         </CardFooter>
@@ -112,7 +128,7 @@ const ParallelUniverseWorkSimulator = () => {
       {result && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">平行宇宙模拟结果:</h3>
+            <h3 className="text-lg font-semibold">{t('parallelUniverseWorkSimulator.resultTitle')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

@@ -11,6 +11,7 @@ interface ChatRequestBody {
   toolId?: string;
   modelId?: string;
   language?: string;
+  locale?: string;
 }
 
 // Path to the prompts directory
@@ -111,7 +112,11 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     messages,
     modelId: requestedModelId,
     language = 'zh-CN',
+    locale,
   } = req.body as ChatRequestBody;
+
+  // Prefer locale over language parameter
+  const selectedLanguage = locale || language;
   const modelManager = req.app.get('modelManager') as ModelManager;
 
   if (!modelManager) {
@@ -185,7 +190,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         return;
       }
 
-      const systemPrompt = loadSystemPrompt(toolId, language);
+      const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
       if (!systemPrompt) {
         console.error(
           `[ChatController][weather-mood-link] System prompt for tool '${toolId}' could not be loaded.`
@@ -253,13 +258,70 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
       return;
     }
   } else if (toolId === 'introduction-to-slacking') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
-    if (systemPrompt) {
-      res.status(200).json({ assistantMessage: systemPrompt });
-    } else {
-      res.status(404).json({ error: `Content for tool '${toolId}' not found or failed to load.` });
+    console.log(`[ChatController] Handling toolId: ${toolId}`);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
+    if (!systemPrompt) {
+      res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
+      return;
     }
-    return;
+
+    try {
+      let adapter: AIAdapter | undefined;
+      let finalModelId = requestedModelId;
+
+      if (finalModelId) {
+        adapter = modelManager.getAdapterForModel(finalModelId);
+      }
+
+      if (!adapter) {
+        const availableModels = modelManager.getAvailableModels();
+        const defaultModel = availableModels.find((m) => m.isDefault) || availableModels[0];
+        if (defaultModel) {
+          finalModelId = defaultModel.id;
+          adapter = modelManager.getAdapterForModel(finalModelId);
+        } else {
+          console.error(
+            '[ChatController][introduction-to-slacking] No available/default models found.'
+          );
+          res.status(500).json({ error: 'No AI models available to handle the request.' });
+          return;
+        }
+      }
+
+      if (!adapter || !finalModelId) {
+        console.error(
+          `[ChatController][introduction-to-slacking] Could not find adapter or model ID. Attempted model: ${finalModelId}`
+        );
+        res.status(500).json({ error: 'Failed to find a suitable AI model or adapter.' });
+        return;
+      }
+
+      console.info(`[ChatController][introduction-to-slacking] Using model '${finalModelId}'.`);
+
+      const options: GenerateOptions = {
+        modelId: finalModelId,
+        systemPrompt: systemPrompt,
+      };
+
+      // Generate comprehensive content based on the prompt
+      const aiUserMessage =
+        lastUserMessage ||
+        'Please provide comprehensive content for Introduction to Slacking based on the prompt template.';
+      const assistantResponse = await adapter.generateText(aiUserMessage, options);
+      console.log('[ChatController][introduction-to-slacking] AI response generated.');
+      res.status(200).json({ assistantMessage: assistantResponse, modelUsed: finalModelId });
+      return;
+    } catch (error: any) {
+      console.error(
+        `[ChatController][introduction-to-slacking] Error processing tool '${toolId}':`,
+        error.message
+      );
+      if (error.stack) console.error(error.stack);
+      res.status(500).json({
+        error: `Failed to generate content for '${toolId}': ${error.message}`,
+      });
+      return;
+    }
   } else if (toolId === 'nickname-generator') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
     try {
@@ -272,7 +334,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         return;
       }
 
-      const systemPrompt = loadSystemPrompt(toolId, language);
+      const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
       if (!systemPrompt) {
         console.error(
           `[ChatController][nickname-generator] System prompt for tool '${toolId}' could not be loaded.`
@@ -353,7 +415,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
       return;
     }
   } else if (toolId === 'bullshit-fortune-telling' || toolId === 'daily-slacking-almanac') {
-    const systemPrompt = loadSystemPrompt('daily-slacking-almanac', language);
+    const systemPrompt = loadSystemPrompt('daily-slacking-almanac', selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -418,7 +480,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
         return;
       }
 
-      const systemPrompt = loadSystemPrompt(toolId, language);
+      const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
       if (!systemPrompt) {
         console.error(
           `[ChatController][worker-meme-generator] System prompt for tool '${toolId}' could not be loaded.`
@@ -514,7 +576,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'awesome-compliment-generator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -573,7 +635,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'weekly-report-sparkle-enhancer') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -635,7 +697,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'universal-excuse-generator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -697,7 +759,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'lunch-decision-overlord') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -759,7 +821,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'meeting-doodle-buddy') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -821,7 +883,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'daily-grind-affirmations') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -883,7 +945,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'meeting-bingo-generator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -945,7 +1007,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'office-outfit-advisor') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1005,7 +1067,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     console.log(
       `[APA_DEBUG] Entered block. Lang: ${language}, User msg length: ${lastUserMessage?.length}`
     );
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     console.log(`[APA_DEBUG] SystemPrompt loaded: ${systemPrompt ? 'OK' : 'null'}`);
 
     if (!systemPrompt) {
@@ -1078,7 +1140,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'sanity-check-meter') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1135,7 +1197,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'office-fengshui-detector') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1192,7 +1254,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   }
 
   if (toolId === 'impressive-meeting-phrases') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1254,7 +1316,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'email-polisher' ||
     toolId === 'meeting-speech-generator'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1316,7 +1378,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'cross-department-translator' ||
     toolId === 'eq-assistant'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1378,7 +1440,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'professional-persona-generator' ||
     toolId === 'data-beautifier'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1440,7 +1502,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'crisis-communication-templates' ||
     toolId === 'resignation-templates'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1505,7 +1567,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'career-path-forecaster' ||
     toolId === 'side-hustle-assessor'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1563,7 +1625,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Soup Switcher
   if (toolId === 'soup-switcher') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1621,7 +1683,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Parallel Universe Work Simulator
   if (toolId === 'parallel-universe-work-simulator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1679,7 +1741,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Office Ghost Stories
   if (toolId === 'office-ghost-stories') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1737,7 +1799,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Work Time Machine
   if (toolId === 'work-time-machine') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1795,7 +1857,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Workday Countdown
   if (toolId === 'workday-countdown') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1853,7 +1915,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Slacking Index Calculator
   if (toolId === 'slacking-index-calculator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1911,7 +1973,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Salary Ticker
   if (toolId === 'salary-ticker') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -1969,7 +2031,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Fire Countdown
   if (toolId === 'fire-countdown') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -2027,7 +2089,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Procrastination Buster
   if (toolId === 'procrastination-buster') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -2085,7 +2147,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
 
   // Handler for Meeting Nonsense Translator
   if (toolId === 'meeting-nonsense-translator') {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;
@@ -2146,7 +2208,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   // or alongside other specific tool handlers.
   else if (toolId === 'career-path-forecaster') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -2211,7 +2273,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   // ADDING HANDLER FOR CAREER LEVELING SYSTEM
   else if (toolId === 'career-leveling-system') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -2276,7 +2338,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   // ADDING HANDLER FOR SIDE HUSTLE ASSESSOR
   else if (toolId === 'side-hustle-assessor') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -2341,7 +2403,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
   // ADDING HANDLER FOR NICKNAME GENERATOR
   else if (toolId === 'nickname-generator') {
     console.log(`[ChatController] Handling toolId: ${toolId}`);
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       console.error(`[ChatController][${toolId}] System prompt could not be loaded.`);
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
@@ -2414,7 +2476,7 @@ export async function handleChatRequest(req: Request, res: Response): Promise<vo
     toolId === 'stealth-spending-log' ||
     toolId === 'caffeine-dependency-index'
   ) {
-    const systemPrompt = loadSystemPrompt(toolId, language);
+    const systemPrompt = loadSystemPrompt(toolId, selectedLanguage);
     if (!systemPrompt) {
       res.status(500).json({ error: `System prompt for tool '${toolId}' could not be loaded.` });
       return;

@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { CalendarClock, Clock, Loader2, Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -17,7 +19,12 @@ interface CountdownData {
   seconds: number;
 }
 
-const WorkdayCountdown = () => {
+interface Props {
+  locale: ValidLocale;
+}
+
+const WorkdayCountdown: React.FC<Props> = ({ locale }) => {
+  const { t, loading } = useTranslations(locale);
   const [countdownType, setCountdownType] = useState("");
   const [customDate, setCustomDate] = useState("");
   const [customTime, setCustomTime] = useState("");
@@ -96,38 +103,23 @@ const WorkdayCountdown = () => {
 
     if (countdownType === "custom") {
       if (!customDate || !customTime || !customEvent) {
-        setError("请填写完整的自定义倒计时信息。");
+        setError(t('workdayCountdown.errors.fillCustomInfo'));
         return;
       }
       target = new Date(`${customDate}T${customTime}`);
       eventName = customEvent;
     } else {
       target = getPresetTargetDate(countdownType);
-      switch (countdownType) {
-        case "end-of-workday":
-          eventName = "下班";
-          break;
-        case "weekend":
-          eventName = "周末";
-          break;
-        case "payday":
-          eventName = "发薪日";
-          break;
-        case "spring-festival":
-          eventName = "春节";
-          break;
-        default:
-          eventName = "目标时间";
-      }
+      eventName = t(`workdayCountdown.eventNames.${countdownType}` as any) || countdownType;
     }
 
     if (!target) {
-      setError("请选择倒计时类型。");
+      setError(t('workdayCountdown.errors.selectType'));
       return;
     }
 
     if (target <= new Date()) {
-      setError("目标时间必须在未来。");
+      setError(t('workdayCountdown.errors.futureTime'));
       return;
     }
 
@@ -137,6 +129,14 @@ const WorkdayCountdown = () => {
     // 获取AI建议
     setIsLoading(true);
     try {
+      const currentTime = new Date().toLocaleString(locale === 'zh-CN' ? 'zh-CN' : 'en-US');
+      const targetTime = target.toLocaleString(locale === 'zh-CN' ? 'zh-CN' : 'en-US');
+
+            const apiRequest = t('workdayCountdown.apiRequest')
+        .replace('{{eventName}}', eventName)
+        .replace('{{targetTime}}', targetTime)
+        .replace('{{currentTime}}', currentTime);
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -144,10 +144,11 @@ const WorkdayCountdown = () => {
         },
         body: JSON.stringify({
           toolId: "workday-countdown",
+          locale: locale,
           messages: [
             {
               role: "user",
-              content: `我想要一个倒计时到"${eventName}"的激励建议。目标时间是：${target.toLocaleString('zh-CN')}，当前时间是：${new Date().toLocaleString('zh-CN')}。`,
+              content: apiRequest,
             },
           ],
         }),
@@ -155,7 +156,7 @@ const WorkdayCountdown = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "获取建议时发生错误。");
+        throw new Error(errorData.error || t('workdayCountdown.errors.getAdviceError'));
       }
 
       const data = await response.json();
@@ -179,32 +180,42 @@ const WorkdayCountdown = () => {
     setError(null);
   };
 
+  if (loading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="countdown" className="mr-2 text-4xl">⏰</span>
-          工作日倒计时
+          {t('workdayCountdown.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          看看距离下班/周末/假期还有多久，让等待变得有盼头
+          {t('workdayCountdown.description')}
         </CardDescription>
       </CardHeader>
 
       {!targetDate ? (
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="countdown-type">倒计时类型</Label>
+            <Label htmlFor="countdown-type">{t('workdayCountdown.countdownTypeLabel')}</Label>
             <Select value={countdownType} onValueChange={setCountdownType}>
               <SelectTrigger>
-                <SelectValue placeholder="选择倒计时类型" />
+                <SelectValue placeholder={t('workdayCountdown.countdownTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="end-of-workday">今日下班</SelectItem>
-                <SelectItem value="weekend">本周末</SelectItem>
-                <SelectItem value="payday">发薪日</SelectItem>
-                <SelectItem value="spring-festival">春节</SelectItem>
-                <SelectItem value="custom">自定义</SelectItem>
+                <SelectItem value="end-of-workday">{t('workdayCountdown.countdownTypes.end-of-workday')}</SelectItem>
+                <SelectItem value="weekend">{t('workdayCountdown.countdownTypes.weekend')}</SelectItem>
+                <SelectItem value="payday">{t('workdayCountdown.countdownTypes.payday')}</SelectItem>
+                <SelectItem value="spring-festival">{t('workdayCountdown.countdownTypes.spring-festival')}</SelectItem>
+                <SelectItem value="custom">{t('workdayCountdown.countdownTypes.custom')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -213,7 +224,7 @@ const WorkdayCountdown = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="custom-date">目标日期</Label>
+                  <Label htmlFor="custom-date">{t('workdayCountdown.targetDateLabel')}</Label>
                   <Input
                     id="custom-date"
                     type="date"
@@ -222,7 +233,7 @@ const WorkdayCountdown = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="custom-time">目标时间</Label>
+                  <Label htmlFor="custom-time">{t('workdayCountdown.targetTimeLabel')}</Label>
                   <Input
                     id="custom-time"
                     type="time"
@@ -232,10 +243,10 @@ const WorkdayCountdown = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="custom-event">事件名称</Label>
+                <Label htmlFor="custom-event">{t('workdayCountdown.eventNameLabel')}</Label>
                 <Input
                   id="custom-event"
-                  placeholder="例如：年假开始、项目截止、生日等"
+                  placeholder={t('workdayCountdown.eventNamePlaceholder')}
                   value={customEvent}
                   onChange={(e) => setCustomEvent(e.target.value)}
                 />
@@ -245,13 +256,13 @@ const WorkdayCountdown = () => {
 
           <Button onClick={handleStartCountdown} disabled={!countdownType} className="w-full">
             <CalendarClock className="mr-2 h-4 w-4" />
-            开始倒计时
+            {t('workdayCountdown.startCountdownButton')}
           </Button>
 
           {error && (
             <Alert variant="destructive">
               <Terminal className="h-4 w-4" />
-              <AlertTitle>错误</AlertTitle>
+              <AlertTitle>{t('workdayCountdown.errorTitle')}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -265,31 +276,31 @@ const WorkdayCountdown = () => {
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {countdown.days}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">天</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{t('workdayCountdown.timeUnits.days')}</div>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {countdown.hours}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">小时</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{t('workdayCountdown.timeUnits.hours')}</div>
                 </div>
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     {countdown.minutes}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">分钟</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{t('workdayCountdown.timeUnits.minutes')}</div>
                 </div>
                 <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
                   <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                     {countdown.seconds}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">秒</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{t('workdayCountdown.timeUnits.seconds')}</div>
                 </div>
               </div>
 
               {countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0 && (
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  🎉 时间到了！
+                  {t('workdayCountdown.timeUpMessage')}
                 </div>
               )}
             </div>
@@ -297,18 +308,18 @@ const WorkdayCountdown = () => {
 
           <div className="flex gap-3">
             <Button onClick={resetCountdown} variant="outline" className="flex-1">
-              重新设置
+              {t('workdayCountdown.resetButton')}
             </Button>
             <Button onClick={handleStartCountdown} disabled={isLoading} className="flex-1">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  获取建议中...
+                  {t('workdayCountdown.gettingAdvice')}
                 </>
               ) : (
                 <>
                   <Clock className="mr-2 h-4 w-4" />
-                  刷新建议
+                  {t('workdayCountdown.refreshAdviceButton')}
                 </>
               )}
             </Button>
@@ -319,7 +330,7 @@ const WorkdayCountdown = () => {
       {aiAdvice && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">AI 激励建议:</h3>
+            <h3 className="text-lg font-semibold">{t('workdayCountdown.aiAdviceTitle')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-64 overflow-y-auto">
               <ReactMarkdown
                 components={{

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { Ghost, Loader2, Terminal } from "lucide-react";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -15,11 +17,26 @@ type CodeProps = React.ComponentPropsWithoutRef<'code'> & {
   inline?: boolean;
 };
 
-const OfficeGhostStories = () => {
+interface Props {
+  locale: ValidLocale;
+}
+
+const OfficeGhostStories: React.FC<Props> = ({ locale }) => {
+  const { t, loading } = useTranslations(locale);
   const [storyRequest, setStoryRequest] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [story, setStory] = useState<string | null>(null);
+
+  if (loading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const handleGenerateStory = async () => {
     setIsLoading(true);
@@ -34,10 +51,11 @@ const OfficeGhostStories = () => {
         },
         body: JSON.stringify({
           toolId: "office-ghost-stories",
+          locale: locale,
           messages: [
             {
               role: "user",
-              content: storyRequest.trim() || "请为我创作一个办公室鬼故事",
+              content: storyRequest.trim() || t('officeGhostStories.defaultRequest'),
             },
           ],
         }),
@@ -45,13 +63,13 @@ const OfficeGhostStories = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "生成鬼故事时发生错误。");
+        throw new Error(errorData.error || t('officeGhostStories.generateError'));
       }
 
       const data = await response.json();
       setStory(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "生成鬼故事时发生未知错误。");
+      setError(err.message || t('officeGhostStories.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -67,24 +85,24 @@ const OfficeGhostStories = () => {
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="ghost" className="mr-2 text-4xl">👻</span>
-          办公室鬼故事
+          {t('officeGhostStories.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          上班族专属恐怖故事，提神醒脑，让疲惫的工作日变得刺激一些
+          {t('officeGhostStories.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="story-request">故事要求（可选）</Label>
+          <Label htmlFor="story-request">{t('officeGhostStories.storyRequestLabel')}</Label>
           <Textarea
             id="story-request"
-            placeholder="例如：我想听一个关于深夜加班时电梯里发生的恐怖故事..."
+            placeholder={t('officeGhostStories.storyRequestPlaceholder')}
             value={storyRequest}
             onChange={(e) => setStoryRequest(e.target.value)}
             rows={3}
           />
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            留空将随机生成一个办公室鬼故事
+            {t('officeGhostStories.storyRequestHint')}
           </p>
         </div>
 
@@ -93,12 +111,12 @@ const OfficeGhostStories = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在创作恐怖故事...
+                {t('officeGhostStories.generating')}
               </>
             ) : (
               <>
                 <Ghost className="mr-2 h-4 w-4" />
-                生成故事
+                {t('officeGhostStories.generateButton')}
               </>
             )}
           </Button>
@@ -108,7 +126,7 @@ const OfficeGhostStories = () => {
             variant="outline"
             className="flex-1"
           >
-            随机故事
+            {t('officeGhostStories.randomButton')}
           </Button>
         </div>
       </CardContent>
@@ -117,7 +135,7 @@ const OfficeGhostStories = () => {
         <CardFooter>
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{t('officeGhostStories.errorTitle')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         </CardFooter>
@@ -126,7 +144,7 @@ const OfficeGhostStories = () => {
       {story && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">恐怖故事:</h3>
+            <h3 className="text-lg font-semibold">{t('officeGhostStories.storyTitle')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

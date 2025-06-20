@@ -7,11 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { Calculator, Loader2, Terminal, Waves } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const SlackingIndexCalculator = () => {
+interface Props {
+  locale: ValidLocale;
+}
+
+const SlackingIndexCalculator = ({ locale }: Props) => {
+  const { t, loading } = useTranslations(locale);
   const [workHours, setWorkHours] = useState([8]);
   const [actualWorkHours, setActualWorkHours] = useState([6]);
   const [slackingFrequency, setSlackingFrequency] = useState("");
@@ -24,9 +31,19 @@ const SlackingIndexCalculator = () => {
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<string | null>(null);
 
+  if (loading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center p-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   const handleCalculate = async () => {
     if (!slackingFrequency || !workEfficiency || !riskLevel) {
-      setError("请填写所有必填项。");
+      setError(t("slackingIndexCalculator.requiredFieldsError"));
       return;
     }
 
@@ -37,11 +54,11 @@ const SlackingIndexCalculator = () => {
     const analysisData = {
       workHours: workHours[0],
       actualWorkHours: actualWorkHours[0],
-      slackingFrequency,
+      slackingFrequency: t(`slackingIndexCalculator.frequencies.${slackingFrequency}`),
       slackingDuration: slackingDuration[0],
-      slackingActivities: slackingActivities || "未指定",
-      workEfficiency,
-      riskLevel,
+      slackingActivities: slackingActivities || t("slackingIndexCalculator.slackingActivitiesPlaceholder"),
+      workEfficiency: t(`slackingIndexCalculator.efficiencyLevels.${workEfficiency}`),
+      riskLevel: t(`slackingIndexCalculator.riskLevels.${riskLevel}`),
       additionalInfo: additionalInfo || "无"
     };
 
@@ -56,38 +73,31 @@ const SlackingIndexCalculator = () => {
           messages: [
             {
               role: "user",
-              content: `请帮我计算划水指数。我的工作数据如下：
-
-工作时间安排：
-- 每日上班时间：${analysisData.workHours}小时
-- 实际工作时间：${analysisData.actualWorkHours}小时
-
-摸鱼行为分析：
-- 摸鱼频率：${analysisData.slackingFrequency}
-- 每次摸鱼时长：约${analysisData.slackingDuration}分钟
-- 主要摸鱼活动：${analysisData.slackingActivities}
-
-工作表现：
-- 工作效率：${analysisData.workEfficiency}
-- 被发现风险：${analysisData.riskLevel}
-
-补充信息：${analysisData.additionalInfo}
-
-请根据这些信息计算我的划水指数并提供详细分析。`,
+              content: t("slackingIndexCalculator.apiRequest", {
+                workHours: analysisData.workHours,
+                actualWorkHours: analysisData.actualWorkHours,
+                slackingFrequency: analysisData.slackingFrequency,
+                slackingDuration: analysisData.slackingDuration,
+                slackingActivities: analysisData.slackingActivities,
+                workEfficiency: analysisData.workEfficiency,
+                riskLevel: analysisData.riskLevel,
+                additionalInfo: analysisData.additionalInfo
+              }),
             },
           ],
+          locale: locale,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "计算划水指数时发生错误。");
+        throw new Error(errorData.error || t("slackingIndexCalculator.calculationError"));
       }
 
       const data = await response.json();
       setReport(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "计算划水指数时发生未知错误。");
+      setError(err.message || t("slackingIndexCalculator.unknownError"));
     } finally {
       setIsLoading(false);
     }
@@ -111,20 +121,20 @@ const SlackingIndexCalculator = () => {
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="swimming" className="mr-2 text-4xl">🏊‍♂️</span>
-          划水指数计算器
+          {t("slackingIndexCalculator.title")}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          科学量化您的摸鱼程度，让划水变得更有艺术感
+          {t("slackingIndexCalculator.description")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 工作时间设置 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">⏰ 工作时间</h3>
+            <h3 className="text-lg font-semibold">⏰ {t("slackingIndexCalculator.workTimeSection")}</h3>
 
             <div className="space-y-2">
-              <Label>每日上班时间：{workHours[0]}小时</Label>
+              <Label>{t("slackingIndexCalculator.workHoursLabel", { hours: workHours[0] })}</Label>
               <Slider
                 value={workHours}
                 onValueChange={setWorkHours}
@@ -136,7 +146,7 @@ const SlackingIndexCalculator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>实际工作时间：{actualWorkHours[0]}小时</Label>
+              <Label>{t("slackingIndexCalculator.actualWorkHoursLabel", { hours: actualWorkHours[0] })}</Label>
               <Slider
                 value={actualWorkHours}
                 onValueChange={setActualWorkHours}
@@ -150,26 +160,26 @@ const SlackingIndexCalculator = () => {
 
           {/* 摸鱼行为 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">🎣 摸鱼行为</h3>
+            <h3 className="text-lg font-semibold">🎣 {t("slackingIndexCalculator.slackingBehaviorSection")}</h3>
 
             <div className="space-y-2">
-              <Label htmlFor="slacking-frequency">摸鱼频率 *</Label>
+              <Label htmlFor="slacking-frequency">{t("slackingIndexCalculator.slackingFrequencyLabel")} *</Label>
               <Select value={slackingFrequency} onValueChange={setSlackingFrequency}>
                 <SelectTrigger>
-                  <SelectValue placeholder="选择摸鱼频率" />
+                  <SelectValue placeholder={t("slackingIndexCalculator.slackingFrequencyPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="rarely">很少（一周1-2次）</SelectItem>
-                  <SelectItem value="occasionally">偶尔（每天1-2次）</SelectItem>
-                  <SelectItem value="frequently">经常（每天3-5次）</SelectItem>
-                  <SelectItem value="constantly">频繁（每天5次以上）</SelectItem>
-                  <SelectItem value="professional">专业级（几乎一直在摸鱼）</SelectItem>
+                  <SelectItem value="rarely">{t("slackingIndexCalculator.frequencies.rarely")}</SelectItem>
+                  <SelectItem value="occasionally">{t("slackingIndexCalculator.frequencies.occasionally")}</SelectItem>
+                  <SelectItem value="frequently">{t("slackingIndexCalculator.frequencies.frequently")}</SelectItem>
+                  <SelectItem value="constantly">{t("slackingIndexCalculator.frequencies.constantly")}</SelectItem>
+                  <SelectItem value="professional">{t("slackingIndexCalculator.frequencies.professional")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>每次摸鱼时长：{slackingDuration[0]}分钟</Label>
+              <Label>{t("slackingIndexCalculator.slackingDurationLabel", { duration: slackingDuration[0] })}</Label>
               <Slider
                 value={slackingDuration}
                 onValueChange={setSlackingDuration}
@@ -184,10 +194,10 @@ const SlackingIndexCalculator = () => {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="slacking-activities">主要摸鱼活动</Label>
+            <Label htmlFor="slacking-activities">{t("slackingIndexCalculator.slackingActivitiesLabel")}</Label>
             <Textarea
               id="slacking-activities"
-              placeholder="例如：刷微博、看视频、聊天、网购、玩游戏、看小说等"
+              placeholder={t("slackingIndexCalculator.slackingActivitiesPlaceholder")}
               value={slackingActivities}
               onChange={(e) => setSlackingActivities(e.target.value)}
               rows={2}
@@ -196,43 +206,43 @@ const SlackingIndexCalculator = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="work-efficiency">工作效率 *</Label>
+              <Label htmlFor="work-efficiency">{t("slackingIndexCalculator.workEfficiencyLabel")} *</Label>
               <Select value={workEfficiency} onValueChange={setWorkEfficiency}>
                 <SelectTrigger>
-                  <SelectValue placeholder="评估您的工作效率" />
+                  <SelectValue placeholder={t("slackingIndexCalculator.workEfficiencyPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="very-high">非常高（总能提前完成任务）</SelectItem>
-                  <SelectItem value="high">较高（按时完成任务）</SelectItem>
-                  <SelectItem value="medium">一般（偶尔延期）</SelectItem>
-                  <SelectItem value="low">较低（经常延期）</SelectItem>
-                  <SelectItem value="very-low">很低（任务堆积如山）</SelectItem>
+                  <SelectItem value="veryHigh">{t("slackingIndexCalculator.efficiencyLevels.veryHigh")}</SelectItem>
+                  <SelectItem value="high">{t("slackingIndexCalculator.efficiencyLevels.high")}</SelectItem>
+                  <SelectItem value="medium">{t("slackingIndexCalculator.efficiencyLevels.medium")}</SelectItem>
+                  <SelectItem value="low">{t("slackingIndexCalculator.efficiencyLevels.low")}</SelectItem>
+                  <SelectItem value="veryLow">{t("slackingIndexCalculator.efficiencyLevels.veryLow")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="risk-level">被发现风险 *</Label>
+              <Label htmlFor="risk-level">{t("slackingIndexCalculator.riskLevelLabel")} *</Label>
               <Select value={riskLevel} onValueChange={setRiskLevel}>
                 <SelectTrigger>
-                  <SelectValue placeholder="评估被发现的风险" />
+                  <SelectValue placeholder={t("slackingIndexCalculator.riskLevelPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="very-low">很低（摸鱼技巧高超）</SelectItem>
-                  <SelectItem value="low">较低（比较谨慎）</SelectItem>
-                  <SelectItem value="medium">一般（偶尔被发现）</SelectItem>
-                  <SelectItem value="high">较高（经常被发现）</SelectItem>
-                  <SelectItem value="very-high">很高（明目张胆摸鱼）</SelectItem>
+                  <SelectItem value="veryLow">{t("slackingIndexCalculator.riskLevels.veryLow")}</SelectItem>
+                  <SelectItem value="low">{t("slackingIndexCalculator.riskLevels.low")}</SelectItem>
+                  <SelectItem value="medium">{t("slackingIndexCalculator.riskLevels.medium")}</SelectItem>
+                  <SelectItem value="high">{t("slackingIndexCalculator.riskLevels.high")}</SelectItem>
+                  <SelectItem value="veryHigh">{t("slackingIndexCalculator.riskLevels.veryHigh")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="additional-info">补充信息</Label>
+            <Label htmlFor="additional-info">{t("slackingIndexCalculator.additionalInfoLabel")}</Label>
             <Textarea
               id="additional-info"
-              placeholder="其他想要补充的工作或摸鱼相关信息..."
+              placeholder={t("slackingIndexCalculator.additionalInfoPlaceholder")}
               value={additionalInfo}
               onChange={(e) => setAdditionalInfo(e.target.value)}
               rows={2}
@@ -245,18 +255,18 @@ const SlackingIndexCalculator = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在计算划水指数...
+                {t("slackingIndexCalculator.calculatingButton")}
               </>
             ) : (
               <>
                 <Calculator className="mr-2 h-4 w-4" />
-                计算划水指数
+                {t("slackingIndexCalculator.calculateButton")}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <Waves className="mr-2 h-4 w-4" />
-            重新评估
+            {t("slackingIndexCalculator.resetButton")}
           </Button>
         </div>
 
@@ -272,7 +282,7 @@ const SlackingIndexCalculator = () => {
       {report && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">划水指数报告:</h3>
+            <h3 className="text-lg font-semibold">{t("slackingIndexCalculator.reportTitle")}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

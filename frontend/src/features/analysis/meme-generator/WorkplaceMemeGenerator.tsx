@@ -6,41 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
+import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
 import { Image as ImageIcon, Loader2, Smile, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const memeCategories = [
-  { value: 'meeting-humor', label: '会议搞笑', emoji: '😂', description: '会议中的各种搞笑瞬间' },
-  { value: 'deadline-stress', label: '截止日期焦虑', emoji: '😰', description: 'DDL临近的紧张心情' },
-  { value: 'boss-interaction', label: '老板互动', emoji: '👔', description: '与领导相处的趣事' },
-  { value: 'overtime-life', label: '加班生活', emoji: '🌙', description: '加班狗的日常写照' },
-  { value: 'code-debugging', label: '代码调试', emoji: '🐛', description: '程序员的调试日常' },
-  { value: 'office-politics', label: '办公室政治', emoji: '🎭', description: '职场人际关系' },
-  { value: 'work-from-home', label: '居家办公', emoji: '🏠', description: '远程工作的酸甜苦辣' },
-  { value: 'salary-dreams', label: '薪资梦想', emoji: '💰', description: '关于涨薪的美好幻想' },
-];
+interface Props {
+  locale: ValidLocale;
+}
 
-const memeStyles = [
-  { value: 'classic-template', label: '经典模板', emoji: '🖼️', description: '使用经典梗图模板' },
-  { value: 'text-based', label: '文字梗', emoji: '📝', description: '纯文字的搞笑内容' },
-  { value: 'dialogue', label: '对话形式', emoji: '💬', description: '人物对话的形式' },
-  { value: 'comparison', label: '对比梗', emoji: '⚖️', description: '理想vs现实的对比' },
-  { value: 'progression', label: '递进式', emoji: '📈', description: '情况逐步恶化/好转' },
-  { value: 'reaction', label: '反应梗', emoji: '😱', description: '各种情况下的反应' },
-];
+function WorkplaceMemeGenerator({ locale }: Props): React.JSX.Element {
+  const { t, loading: translationsLoading } = useTranslations(locale);
 
-const humorLevels = [
-  { value: 'mild', label: '温和幽默', emoji: '😊', description: '轻松愉快，适合分享' },
-  { value: 'sarcastic', label: '讽刺幽默', emoji: '😏', description: '带有讽刺意味的幽默' },
-  { value: 'self-deprecating', label: '自嘲式', emoji: '🤷', description: '自我调侃的幽默' },
-  { value: 'absurd', label: '荒诞幽默', emoji: '🤪', description: '夸张荒诞的搞笑' },
-  { value: 'relatable', label: '共鸣式', emoji: '🎯', description: '引起强烈共鸣的幽默' },
-];
-
-function WorkplaceMemeGenerator(): React.JSX.Element {
   const [memeCategory, setMemeCategory] = useState<string>('meeting-humor');
   const [memeStyle, setMemeStyle] = useState<string>('classic-template');
   const [humorLevel, setHumorLevel] = useState<string>('mild');
@@ -54,10 +34,47 @@ function WorkplaceMemeGenerator(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Get translated category, style, and humor level data
+  const memeCategories = [
+    { value: 'meeting-humor', label: t('workplaceMemeGenerator.categories.meeting-humor.label'), emoji: '😂', description: t('workplaceMemeGenerator.categories.meeting-humor.description') },
+    { value: 'deadline-stress', label: t('workplaceMemeGenerator.categories.deadline-stress.label'), emoji: '😰', description: t('workplaceMemeGenerator.categories.deadline-stress.description') },
+    { value: 'boss-interaction', label: t('workplaceMemeGenerator.categories.boss-interaction.label'), emoji: '👔', description: t('workplaceMemeGenerator.categories.boss-interaction.description') },
+    { value: 'overtime-life', label: t('workplaceMemeGenerator.categories.overtime-life.label'), emoji: '🌙', description: t('workplaceMemeGenerator.categories.overtime-life.description') },
+    { value: 'code-debugging', label: t('workplaceMemeGenerator.categories.code-debugging.label'), emoji: '🐛', description: t('workplaceMemeGenerator.categories.code-debugging.description') },
+    { value: 'office-politics', label: t('workplaceMemeGenerator.categories.office-politics.label'), emoji: '🎭', description: t('workplaceMemeGenerator.categories.office-politics.description') },
+    { value: 'work-from-home', label: t('workplaceMemeGenerator.categories.work-from-home.label'), emoji: '🏠', description: t('workplaceMemeGenerator.categories.work-from-home.description') },
+    { value: 'salary-dreams', label: t('workplaceMemeGenerator.categories.salary-dreams.label'), emoji: '💰', description: t('workplaceMemeGenerator.categories.salary-dreams.description') },
+  ];
+
+  const memeStyles = [
+    { value: 'classic-template', label: t('workplaceMemeGenerator.styles.classic-template.label'), emoji: '🖼️', description: t('workplaceMemeGenerator.styles.classic-template.description') },
+    { value: 'text-based', label: t('workplaceMemeGenerator.styles.text-based.label'), emoji: '📝', description: t('workplaceMemeGenerator.styles.text-based.description') },
+    { value: 'dialogue', label: t('workplaceMemeGenerator.styles.dialogue.label'), emoji: '💬', description: t('workplaceMemeGenerator.styles.dialogue.description') },
+    { value: 'comparison', label: t('workplaceMemeGenerator.styles.comparison.label'), emoji: '⚖️', description: t('workplaceMemeGenerator.styles.comparison.description') },
+    { value: 'progression', label: t('workplaceMemeGenerator.styles.progression.label'), emoji: '📈', description: t('workplaceMemeGenerator.styles.progression.description') },
+    { value: 'reaction', label: t('workplaceMemeGenerator.styles.reaction.label'), emoji: '😱', description: t('workplaceMemeGenerator.styles.reaction.description') },
+  ];
+
+  const humorLevels = [
+    { value: 'mild', label: t('workplaceMemeGenerator.humorLevels.mild.label'), emoji: '😊', description: t('workplaceMemeGenerator.humorLevels.mild.description') },
+    { value: 'sarcastic', label: t('workplaceMemeGenerator.humorLevels.sarcastic.label'), emoji: '😏', description: t('workplaceMemeGenerator.humorLevels.sarcastic.description') },
+    { value: 'self-deprecating', label: t('workplaceMemeGenerator.humorLevels.self-deprecating.label'), emoji: '🤷', description: t('workplaceMemeGenerator.humorLevels.self-deprecating.description') },
+    { value: 'absurd', label: t('workplaceMemeGenerator.humorLevels.absurd.label'), emoji: '🤪', description: t('workplaceMemeGenerator.humorLevels.absurd.description') },
+    { value: 'relatable', label: t('workplaceMemeGenerator.humorLevels.relatable.label'), emoji: '🎯', description: t('workplaceMemeGenerator.humorLevels.relatable.description') },
+  ];
+
+  if (translationsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!situation.trim()) {
-      setError('请描述要制作梗图的情况！');
+      setError(t('workplaceMemeGenerator.errorValidation'));
       setGeneratedMeme('');
       return;
     }
@@ -72,7 +89,7 @@ function WorkplaceMemeGenerator(): React.JSX.Element {
     const selectedHumor = humorLevels.find(h => h.value === humorLevel);
 
     if (mode === 'text') {
-      // 生成文字梗图
+      // Generate text meme
       const userPrompt = `
 梗图类别：${selectedCategory?.label} - ${selectedCategory?.description}
 梗图风格：${selectedStyle?.label} - ${selectedStyle?.description}
@@ -97,11 +114,12 @@ ${targetAudience.trim() ? `目标受众：${targetAudience}` : ''}
           body: JSON.stringify({
             messages: [{ role: 'user', content: userPrompt }],
             toolId: 'workplace-meme-generator',
+            locale: locale,
           }),
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: '梗图生成失败，可能是段子手在思考更搞笑的内容。' }));
+          const errorData = await response.json().catch(() => ({ message: t('workplaceMemeGenerator.errorTitle') }));
           throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
@@ -111,14 +129,14 @@ ${targetAudience.trim() ? `目标受众：${targetAudience}` : ''}
           setGeneratedMeme(data.assistantMessage);
         } else {
           console.warn('Unexpected API response structure:', data);
-          setError('AI返回的梗图格式有误，段子手可能在重新构思笑点...😂');
+          setError(t('workplaceMemeGenerator.errorTitle'));
         }
       } catch (e) {
         console.error('Failed to generate meme:', e);
-        setError(e instanceof Error ? e.message : '生成梗图时发生未知错误，幽默细胞还需要更多时间激活！🎭');
+        setError(e instanceof Error ? e.message : t('workplaceMemeGenerator.errorTitle'));
       }
     } else {
-      // 生成图片梗图
+      // Generate image meme
       const imagePrompt = `
 Create a funny workplace meme image about: ${situation}
 Category: ${selectedCategory?.label}
@@ -143,7 +161,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: '梗图图片生成失败，可能是AI画师在摸鱼。' }));
+          const errorData = await response.json().catch(() => ({ message: t('workplaceMemeGenerator.errorTitle') }));
           throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
 
@@ -153,11 +171,11 @@ Create a humorous, relatable workplace scenario that would make office workers l
           setGeneratedImage(data.imageUrl);
         } else {
           console.warn('Unexpected API response structure for image generation:', data);
-          setError('AI返回的图片格式有点奇怪，梗图可能太抽象了...🖼️');
+          setError(t('workplaceMemeGenerator.errorTitle'));
         }
       } catch (e) {
         console.error('Failed to generate meme image:', e);
-        setError(e instanceof Error ? e.message : '生成梗图图片时发生未知错误，AI画师的幽默感可能需要充电！🎨');
+        setError(e instanceof Error ? e.message : t('workplaceMemeGenerator.errorTitle'));
       }
     }
 
@@ -171,7 +189,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
     )}>
       <div className="flex items-center justify-center mb-6 text-center">
         <ImageIcon className="w-8 h-8 text-yellow-500 dark:text-yellow-400 mr-2" />
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">职场梗图生成器</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-600 dark:text-sky-400">{t('workplaceMemeGenerator.title')}</h1>
         <Smile className="w-8 h-8 text-yellow-500 dark:text-yellow-400 ml-2" />
       </div>
 
@@ -179,7 +197,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <Label htmlFor="mode" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              生成模式：
+              {t('workplaceMemeGenerator.modeLabel')}
             </Label>
             <Select value={mode} onValueChange={(value: 'text' | 'image') => setMode(value)}>
               <SelectTrigger className={cn(
@@ -187,7 +205,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
               )}>
-                <SelectValue placeholder="选择生成模式..." />
+                <SelectValue placeholder={t('workplaceMemeGenerator.modeLabel')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -200,7 +218,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
                     "data-[state=checked]:bg-yellow-200 dark:data-[state=checked]:bg-yellow-600/50"
                   )}
                 >
-                  📝 文字梗图（文案描述）
+                  📝 {t('workplaceMemeGenerator.textMode')}
                 </SelectItem>
                 <SelectItem
                   value="image"
@@ -210,8 +228,8 @@ Create a humorous, relatable workplace scenario that would make office workers l
                   )}
                 >
                   <div className="flex flex-col">
-                    <span>🎨 图片梗图（AI生成）</span>
-                    <span className="text-xs text-orange-600 dark:text-orange-400"> OpenAI Key required</span>
+                    <span>🎨 {t('workplaceMemeGenerator.imageMode')}</span>
+                    <span className="text-xs text-orange-600 dark:text-orange-400"> {t('workplaceMemeGenerator.imageModeHint')}</span>
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -219,7 +237,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
           </div>
           <div>
             <Label htmlFor="memeCategory" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              梗图类别：
+              {t('workplaceMemeGenerator.categoryLabel')}
             </Label>
             <Select value={memeCategory} onValueChange={setMemeCategory}>
               <SelectTrigger className={cn(
@@ -227,7 +245,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
               )}>
-                <SelectValue placeholder="选择梗图类别..." />
+                <SelectValue placeholder={t('workplaceMemeGenerator.categoryPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -253,7 +271,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
           </div>
           <div>
             <Label htmlFor="memeStyle" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              梗图风格：
+              {t('workplaceMemeGenerator.styleLabel')}
             </Label>
             <Select value={memeStyle} onValueChange={setMemeStyle}>
               <SelectTrigger className={cn(
@@ -261,7 +279,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
               )}>
-                <SelectValue placeholder="选择梗图风格..." />
+                <SelectValue placeholder={t('workplaceMemeGenerator.stylePlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -287,7 +305,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
           </div>
           <div>
             <Label htmlFor="humorLevel" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              幽默程度：
+              {t('workplaceMemeGenerator.humorLabel')}
             </Label>
             <Select value={humorLevel} onValueChange={setHumorLevel}>
               <SelectTrigger className={cn(
@@ -295,7 +313,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100",
                 "focus:ring-yellow-500 focus:border-yellow-500 dark:focus:ring-yellow-500 dark:focus:border-yellow-500"
               )}>
-                <SelectValue placeholder="选择幽默程度..." />
+                <SelectValue placeholder={t('workplaceMemeGenerator.humorPlaceholder')} />
               </SelectTrigger>
               <SelectContent className={cn(
                 "border-neutral-200 dark:border-neutral-700",
@@ -322,13 +340,13 @@ Create a humorous, relatable workplace scenario that would make office workers l
         </div>
         <div>
           <Label htmlFor="situation" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-            情况描述：
+            {t('workplaceMemeGenerator.situationLabel')}
           </Label>
           <Textarea
             id="situation"
             value={situation}
             onChange={(e) => setSituation(e.target.value)}
-            placeholder="例如：周一早上开会，老板突然点名要你发言，但你还没睡醒..."
+            placeholder={t('workplaceMemeGenerator.situationPlaceholder')}
             className={cn(
               "w-full min-h-[100px]",
               "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -341,13 +359,13 @@ Create a humorous, relatable workplace scenario that would make office workers l
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="characters" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              涉及角色（选填）：
+              {t('workplaceMemeGenerator.charactersLabel')}
             </Label>
             <Input
               id="characters"
               value={characters}
               onChange={(e) => setCharacters(e.target.value)}
-              placeholder="例如：我，老板，同事小李"
+              placeholder={t('workplaceMemeGenerator.charactersPlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -358,13 +376,13 @@ Create a humorous, relatable workplace scenario that would make office workers l
           </div>
           <div>
             <Label htmlFor="specificDetails" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              具体细节（选填）：
+              {t('workplaceMemeGenerator.detailsLabel')}
             </Label>
             <Input
               id="specificDetails"
               value={specificDetails}
               onChange={(e) => setSpecificDetails(e.target.value)}
-              placeholder="例如：老板戴着墨镜，会议室很暗"
+              placeholder={t('workplaceMemeGenerator.detailsPlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -375,13 +393,13 @@ Create a humorous, relatable workplace scenario that would make office workers l
           </div>
           <div>
             <Label htmlFor="targetAudience" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-              目标受众（选填）：
+              {t('workplaceMemeGenerator.audienceLabel')}
             </Label>
             <Input
               id="targetAudience"
               value={targetAudience}
               onChange={(e) => setTargetAudience(e.target.value)}
-              placeholder="例如：程序员，市场部同事"
+              placeholder={t('workplaceMemeGenerator.audiencePlaceholder')}
               className={cn(
                 "w-full",
                 "bg-neutral-50 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700",
@@ -401,9 +419,9 @@ Create a humorous, relatable workplace scenario that would make office workers l
           )}
         >
           {isLoading ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 生成中...</>
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('workplaceMemeGenerator.generating')}</>
           ) : (
-            <><Zap className="mr-2 h-4 w-4" /> 生成梗图</>
+            <><Zap className="mr-2 h-4 w-4" /> {t('workplaceMemeGenerator.generateButton')}</>
           )}
         </Button>
       </form>
@@ -419,7 +437,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
             "flex-grow flex flex-col"
           )}>
             <CardHeader>
-              <CardTitle className="text-red-700 dark:text-red-400">生成失败！</CardTitle>
+              <CardTitle className="text-red-700 dark:text-red-400">{t('workplaceMemeGenerator.errorTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="text-red-600 dark:text-red-300 flex-grow">
               <p>{error}</p>
@@ -430,7 +448,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
         {!error && isLoading && !generatedMeme && !generatedImage && (
           <div className="flex-grow flex flex-col items-center justify-center text-center py-10">
             <Loader2 className="h-12 w-12 animate-spin text-yellow-500 dark:text-yellow-400 mb-4" />
-            <p className="text-neutral-500 dark:text-neutral-400">梗图大师正在冥思苦想...😂</p>
+            <p className="text-neutral-500 dark:text-neutral-400">{t('workplaceMemeGenerator.loadingText')}</p>
           </div>
         )}
 
@@ -441,7 +459,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
           )}>
             <CardHeader>
               <CardTitle className="text-yellow-600 dark:text-yellow-400 flex items-center">
-                <Smile className="w-5 h-5 mr-2" /> 你的梗图文案
+                <Smile className="w-5 h-5 mr-2" /> {t('workplaceMemeGenerator.resultTextTitle')}
               </CardTitle>
             </CardHeader>
             <CardContent className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words max-h-[600px] overflow-y-auto p-4 sm:p-6 text-neutral-800 dark:text-neutral-200">
@@ -457,7 +475,7 @@ Create a humorous, relatable workplace scenario that would make office workers l
           )}>
             <CardHeader className="pb-2 pt-0">
               <CardTitle className="text-yellow-600 dark:text-yellow-400 flex items-center">
-                <ImageIcon className="w-5 h-5 mr-2" /> 你的梗图图片
+                <ImageIcon className="w-5 h-5 mr-2" /> {t('workplaceMemeGenerator.resultImageTitle')}
               </CardTitle>
             </CardHeader>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -465,9 +483,9 @@ Create a humorous, relatable workplace scenario that would make office workers l
               src={generatedImage}
               alt="Generated Meme"
               className="max-w-full max-h-[calc(100vh-450px)] object-contain rounded-md shadow-md bg-neutral-200 dark:bg-neutral-700"
-              onError={() => setError('图片加载失败，可能URL无效或已过期。')}
+              onError={() => setError(t('workplaceMemeGenerator.errorImageLoad'))}
             />
-            <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">由 AI 生成，如有雷同，纯属巧合！</p>
+            <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">{t('workplaceMemeGenerator.imageCaption')}</p>
           </div>
         )}
 
@@ -478,8 +496,8 @@ Create a humorous, relatable workplace scenario that would make office workers l
             "bg-neutral-50 border border-dashed border-neutral-300 dark:border-neutral-600"
           )}>
             <ImageIcon size={48} className="text-neutral-400 dark:text-neutral-500 mb-3" />
-            <p className="text-sm text-center text-neutral-500 dark:text-neutral-400">
-              填写以上信息，点击"生成梗图"<br />AI 将会在这里展示你的专属职场梗图！
+            <p className="text-sm text-center text-neutral-500 dark:text-neutral-400 whitespace-pre-line">
+              {t('workplaceMemeGenerator.emptyStateText')}
             </p>
           </div>
         )}

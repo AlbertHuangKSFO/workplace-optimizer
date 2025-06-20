@@ -7,11 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { Calculator, Loader2, Play, Square, Terminal, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const SalaryTicker = () => {
+interface Props {
+  locale: ValidLocale;
+}
+
+const SalaryTicker = ({ locale }: Props) => {
+  const { t, loading } = useTranslations(locale);
   const [salaryType, setSalaryType] = useState("");
   const [salaryAmount, setSalaryAmount] = useState("");
   const [workHoursPerDay, setWorkHoursPerDay] = useState("8");
@@ -77,6 +84,17 @@ const SalaryTicker = () => {
     };
   }, [isTickerRunning, basicData, startTime]);
 
+  // 如果翻译还在加载，显示加载状态
+  if (loading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center p-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    );
+  }
+
   const startTicker = () => {
     setStartTime(new Date());
     setCurrentEarnings(0);
@@ -89,7 +107,7 @@ const SalaryTicker = () => {
 
   const handleAnalyze = async () => {
     if (!salaryAmount || !salaryType) {
-      setError("请填写薪资信息。");
+      setError(t("salaryTicker.requiredFieldsError"));
       return;
     }
 
@@ -98,7 +116,7 @@ const SalaryTicker = () => {
     setReport(null);
 
     const analysisData = {
-      salaryType,
+      salaryType: t(`salaryTicker.salaryTypes.${salaryType}`),
       salaryAmount: parseFloat(salaryAmount),
       workHoursPerDay: parseFloat(workHoursPerDay),
       workDaysPerWeek: parseFloat(workDaysPerWeek),
@@ -118,40 +136,36 @@ const SalaryTicker = () => {
           messages: [
             {
               role: "user",
-              content: `请帮我分析工资时间价值。我的薪资信息如下：
-
-薪资信息：
-- 薪资类型：${analysisData.salaryType === 'yearly' ? '年薪' : '月薪'}
-- 薪资金额：¥${analysisData.salaryAmount}
-- 每日工作时间：${analysisData.workHoursPerDay}小时
-- 每周工作天数：${analysisData.workDaysPerWeek}天
-- 所在城市：${analysisData.city}
-
-计算结果：
-- 年收入：¥${analysisData.yearlyIncome?.toFixed(2)}
-- 月收入：¥${analysisData.monthlyIncome?.toFixed(2)}
-- 日收入：¥${analysisData.dailyIncome?.toFixed(2)}
-- 时薪：¥${analysisData.hourlyRate?.toFixed(2)}
-- 分薪：¥${analysisData.minuteRate?.toFixed(4)}
-- 秒薪：¥${analysisData.secondRate?.toFixed(6)}
-
-补充信息：${analysisData.additionalInfo}
-
-请根据这些信息生成详细的工资倒推分析报告，包括时间成本对比、工作效率分析和时间管理建议。`,
+              content: t("salaryTicker.apiRequest", {
+                salaryType: analysisData.salaryType,
+                currency: t("salaryTicker.currency"),
+                salaryAmount: analysisData.salaryAmount,
+                workHoursPerDay: analysisData.workHoursPerDay,
+                workDaysPerWeek: analysisData.workDaysPerWeek,
+                city: analysisData.city,
+                yearlyIncome: analysisData.yearlyIncome?.toFixed(2),
+                monthlyIncome: analysisData.monthlyIncome?.toFixed(2),
+                dailyIncome: analysisData.dailyIncome?.toFixed(2),
+                hourlyRate: analysisData.hourlyRate?.toFixed(2),
+                minuteRate: analysisData.minuteRate?.toFixed(4),
+                secondRate: analysisData.secondRate?.toFixed(6),
+                additionalInfo: analysisData.additionalInfo
+              }),
             },
           ],
+          locale: locale,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "分析工资时间价值时发生错误。");
+        throw new Error(errorData.error || t("salaryTicker.analysisError"));
       }
 
       const data = await response.json();
       setReport(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "分析工资时间价值时发生未知错误。");
+      setError(err.message || t("salaryTicker.unknownError"));
     } finally {
       setIsLoading(false);
     }
@@ -171,15 +185,17 @@ const SalaryTicker = () => {
     setStartTime(null);
   };
 
+  const currency = t("salaryTicker.currency");
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="money" className="mr-2 text-4xl">💰</span>
-          工资倒推计算器
+          {t("salaryTicker.title")}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          实时显示"这分钟您赚了多少钱"，让时间变得更有价值感
+          {t("salaryTicker.description")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -187,41 +203,41 @@ const SalaryTicker = () => {
         {basicData && (
           <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-6 rounded-lg border">
             <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold">💸 实时收入计时器</h3>
+              <h3 className="text-xl font-semibold">💸 {t("salaryTicker.realtimeTimerSection")}</h3>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-green-600">时薪</div>
-                  <div>¥{basicData.hourlyRate.toFixed(2)}</div>
+                  <div className="font-semibold text-green-600">{t("salaryTicker.hourlyRate")}</div>
+                  <div>{currency}{basicData.hourlyRate.toFixed(2)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-blue-600">分薪</div>
-                  <div>¥{basicData.minuteRate.toFixed(4)}</div>
+                  <div className="font-semibold text-blue-600">{t("salaryTicker.minuteRate")}</div>
+                  <div>{currency}{basicData.minuteRate.toFixed(4)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-purple-600">秒薪</div>
-                  <div>¥{basicData.secondRate.toFixed(6)}</div>
+                  <div className="font-semibold text-purple-600">{t("salaryTicker.secondRate")}</div>
+                  <div>{currency}{basicData.secondRate.toFixed(6)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-orange-600">日薪</div>
-                  <div>¥{basicData.dailyIncome.toFixed(2)}</div>
+                  <div className="font-semibold text-orange-600">{t("salaryTicker.dailyRate")}</div>
+                  <div>{currency}{basicData.dailyIncome.toFixed(2)}</div>
                 </div>
               </div>
 
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600 mb-2">
-                  当前已赚: ¥{currentEarnings.toFixed(4)}
+                  {t("salaryTicker.currentEarnings", { amount: currentEarnings.toFixed(4) })}
                 </div>
                 <div className="flex justify-center gap-2">
                   {!isTickerRunning ? (
                     <Button onClick={startTicker} className="bg-green-600 hover:bg-green-700">
                       <Play className="mr-2 h-4 w-4" />
-                      开始计时
+                      {t("salaryTicker.startTimer")}
                     </Button>
                   ) : (
                     <Button onClick={stopTicker} variant="destructive">
                       <Square className="mr-2 h-4 w-4" />
-                      停止计时
+                      {t("salaryTicker.stopTimer")}
                     </Button>
                   )}
                 </div>
@@ -233,37 +249,37 @@ const SalaryTicker = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 薪资信息 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">💼 薪资信息</h3>
+            <h3 className="text-lg font-semibold">💼 {t("salaryTicker.salaryInfoSection")}</h3>
 
             <div className="space-y-2">
-              <Label htmlFor="salary-type">薪资类型 *</Label>
+              <Label htmlFor="salary-type">{t("salaryTicker.salaryTypeLabel")} *</Label>
               <Select value={salaryType} onValueChange={setSalaryType}>
                 <SelectTrigger>
-                  <SelectValue placeholder="选择薪资类型" />
+                  <SelectValue placeholder={t("salaryTicker.salaryTypePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="monthly">月薪</SelectItem>
-                  <SelectItem value="yearly">年薪</SelectItem>
+                  <SelectItem value="monthly">{t("salaryTicker.salaryTypes.monthly")}</SelectItem>
+                  <SelectItem value="yearly">{t("salaryTicker.salaryTypes.yearly")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="salary-amount">薪资金额 *</Label>
+              <Label htmlFor="salary-amount">{t("salaryTicker.salaryAmountLabel")} *</Label>
               <Input
                 id="salary-amount"
                 type="number"
-                placeholder="请输入薪资金额"
+                placeholder={t("salaryTicker.salaryAmountPlaceholder")}
                 value={salaryAmount}
                 onChange={(e) => setSalaryAmount(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city">所在城市</Label>
+              <Label htmlFor="city">{t("salaryTicker.cityLabel")}</Label>
               <Input
                 id="city"
-                placeholder="例如：北京、上海、深圳等"
+                placeholder={t("salaryTicker.cityPlaceholder")}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
@@ -272,10 +288,10 @@ const SalaryTicker = () => {
 
           {/* 工作时间 */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">⏰ 工作时间</h3>
+            <h3 className="text-lg font-semibold">⏰ {t("salaryTicker.workTimeSection")}</h3>
 
             <div className="space-y-2">
-              <Label htmlFor="work-hours">每日工作时间（小时）</Label>
+              <Label htmlFor="work-hours">{t("salaryTicker.workHoursPerDayLabel")}</Label>
               <Input
                 id="work-hours"
                 type="number"
@@ -288,7 +304,7 @@ const SalaryTicker = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="work-days">每周工作天数</Label>
+              <Label htmlFor="work-days">{t("salaryTicker.workDaysPerWeekLabel")}</Label>
               <Input
                 id="work-days"
                 type="number"
@@ -301,10 +317,10 @@ const SalaryTicker = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="additional-info">补充信息</Label>
+              <Label htmlFor="additional-info">{t("salaryTicker.additionalInfoLabel")}</Label>
               <Textarea
                 id="additional-info"
-                placeholder="其他想要补充的薪资或工作相关信息..."
+                placeholder={t("salaryTicker.additionalInfoPlaceholder")}
                 value={additionalInfo}
                 onChange={(e) => setAdditionalInfo(e.target.value)}
                 rows={2}
@@ -318,18 +334,18 @@ const SalaryTicker = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在分析时间价值...
+                {t("salaryTicker.analyzingButton")}
               </>
             ) : (
               <>
                 <Calculator className="mr-2 h-4 w-4" />
-                分析时间价值
+                {t("salaryTicker.analyzeButton")}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <TrendingUp className="mr-2 h-4 w-4" />
-            重新计算
+            {t("salaryTicker.resetButton")}
           </Button>
         </div>
 
@@ -345,7 +361,7 @@ const SalaryTicker = () => {
       {report && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">时间价值分析报告:</h3>
+            <h3 className="text-lg font-semibold">{t("salaryTicker.reportTitle")}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{

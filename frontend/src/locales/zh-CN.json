@@ -111,7 +111,20 @@
     "office-yoga-guide": "办公室瑜伽指导",
     "stealth-spending-log": "隐形消费追踪",
     "caffeine-dependency-index": "咖啡因依赖指数",
-    "career-path-forecaster": "职场命运预测器"
+    "career-path-forecaster": "职场命运预测器",
+    "categories": {
+      "all": "全部工具",
+      "analysis": "数据分析",
+      "communication": "沟通协作",
+      "content-creation": "内容创作",
+      "crisis": "危机处理",
+      "generation": "智能生成",
+      "health-wellness": "健康养生",
+      "office-fun": "办公乐趣",
+      "time-efficiency": "效率管理",
+      "translation": "翻译服务",
+      "workplace-survival": "职场生存"
+    }
   },
   "toolDescriptions": {
     "email-polisher": "专业优化您的邮件内容",
@@ -189,6 +202,26 @@
     "stealth-spending-log": "计算奶茶、外卖等小额消费的年度总开销",
     "caffeine-dependency-index": "计算您的每日咖啡因摄入量",
     "career-path-forecaster": "AI为你分析潜在职业发展路径、机遇与挑战"
+  },
+  "introductionToSlacking": {
+    "title": "摸鱼学导论",
+    "loading": "正在加载旷世巨作《摸鱼学导论》...",
+    "errorTitle": "加载失败",
+    "errorHint": "（请确保后端服务正常，并且 'introduction-to-slacking' 的 prompt 文件已就绪。）",
+    "emptyContent": "未找到《摸鱼学导论》的内容。是不是被哪个大神偷偷藏起来了？🤔"
+  },
+  "lunchDecisionOverlord": {
+    "title": "\"今天中午吃什么？\"终极选择器",
+    "description": "还在为\"中午吃啥\"这一世纪难题而纠结吗？让本霸主为你一锤定音！你只管放空大脑，等待圣旨！",
+    "decideButton": "立即决定！听我号令！",
+    "decidingButton": "本霸主正在为你钦点御膳...",
+    "loading": "御膳房正在紧急备料，圣旨即将下达...🍲",
+    "resultTitle": "本霸主钦定：今日午餐！",
+    "errorTitle": "选择失败！",
+    "errorFetch": "午餐圣旨传达失败，可能是御膳房太忙了。",
+    "errorUnexpected": "AI返回的午餐建议有点神秘，本霸主暂时无法解读...👑",
+    "errorUnknown": "决定午餐时发生未知错误，选择困难症又犯了！🤯",
+    "userMessage": "本霸主，速速为我决定今日午餐！可加入一些随机、有趣的选项或条件。"
   },
   "sidebar": {
     "appTitle": "打工人必备工具",
@@ -1667,6 +1700,19 @@
       "creative": "富有创意，思维跳跃"
     }
   },
+  "parallelUniverseWorkSimulator": {
+    "title": "平行宇宙工作模拟器",
+    "description": "描述你的工作困扰，看看在其他平行宇宙中会发生什么有趣的事情！",
+    "workSituationLabel": "当前工作状况或困扰",
+    "workSituationPlaceholder": "例如：老板总是在下班时间安排紧急任务，让我很困扰...",
+    "simulateButton": "开始模拟",
+    "simulating": "正在扫描平行宇宙...",
+    "resultTitle": "平行宇宙模拟结果:",
+    "errorTitle": "错误",
+    "errorEmptyInput": "请描述你的工作状况或困扰。",
+    "errorSimulation": "模拟平行宇宙时发生错误。",
+    "errorUnknown": "模拟平行宇宙时发生未知错误。"
+  },
   "officeOutfitAdvisor": {
     "title": "\"今天穿什么？\"职场版",
     "description": "根据天气、会议场合和心情状态，为您推荐最合适的职场穿搭",
@@ -2151,7 +2197,7 @@
   },
   "officeFengshuiDetector": {
     "title": "办公室风水检测器",
-    "description": "感觉工位磁场不对劲？让赛博玄学大师为您勘测职场“龙脉”，调理“代码气场”！☯️",
+    "description": "感觉工位磁场不对劲？让赛博玄学大师为您勘测职场龙脉，调理代码气场！☯️",
     "completionRate": "完成度",
     "mysticAnalysis": "玄学分析",
     "workstationLayout": {
@@ -2218,7 +2264,7 @@
   },
   "sanityCheckMeter": {
     "title": "下班前精神状态检查器",
-    "description": "辛苦了打工人！让我们来做个“精神状态大盘点”，看看你的san值还剩多少 🫠",
+    "description": "辛苦了打工人！让我们来做个精神状态大盘点，看看你的san值还剩多少 🫠",
     "completionRate": "完成度",
     "informalDiagnosis": "非正式诊断",
     "questions": {
@@ -2298,9 +2344,122 @@
       "prompt": "生成今日的摸鱼黄历，包含宜做和忌做的事项。"
     }
   },
+  "workplaceMemeGenerator": {
+    "title": "职场梗图生成器",
+    "modeLabel": "生成模式：",
+    "textMode": "文字梗图（文案描述）",
+    "imageMode": "图片梗图（AI生成）",
+    "imageModeHint": "OpenAI Key required",
+    "categoryLabel": "梗图类别：",
+    "categoryPlaceholder": "选择梗图类别...",
+    "styleLabel": "梗图风格：",
+    "stylePlaceholder": "选择梗图风格...",
+    "humorLabel": "幽默程度：",
+    "humorPlaceholder": "选择幽默程度...",
+    "situationLabel": "情况描述：",
+    "situationPlaceholder": "例如：周一早上开会，老板突然点名要你发言，但你还没睡醒...",
+    "charactersLabel": "涉及角色（选填）：",
+    "charactersPlaceholder": "例如：我，老板，同事小李",
+    "detailsLabel": "具体细节（选填）：",
+    "detailsPlaceholder": "例如：老板戴着墨镜，会议室很暗",
+    "audienceLabel": "目标受众（选填）：",
+    "audiencePlaceholder": "例如：程序员，市场部同事",
+    "generateButton": "生成梗图",
+    "generating": "生成中...",
+    "errorTitle": "生成失败！",
+    "errorValidation": "请描述要制作梗图的情况！",
+    "errorImageLoad": "图片加载失败，可能URL无效或已过期。",
+    "loadingText": "梗图大师正在冥思苦想...😂",
+    "resultTextTitle": "你的梗图文案",
+    "resultImageTitle": "你的梗图图片",
+    "imageCaption": "由 AI 生成，如有雷同，纯属巧合！",
+    "emptyStateText": "填写以上信息，点击生成梗图\\nAI 将会在这里展示你的专属职场梗图！",
+    "categories": {
+      "meeting-humor": {
+        "label": "会议搞笑",
+        "description": "会议中的各种搞笑瞬间"
+      },
+      "deadline-stress": {
+        "label": "截止日期焦虑",
+        "description": "DDL临近的紧张心情"
+      },
+      "boss-interaction": {
+        "label": "老板互动",
+        "description": "与领导相处的趣事"
+      },
+      "overtime-life": {
+        "label": "加班生活",
+        "description": "加班狗的日常写照"
+      },
+      "code-debugging": {
+        "label": "代码调试",
+        "description": "程序员的调试日常"
+      },
+      "office-politics": {
+        "label": "办公室政治",
+        "description": "职场人际关系"
+      },
+      "work-from-home": {
+        "label": "居家办公",
+        "description": "远程工作的酸甜苦辣"
+      },
+      "salary-dreams": {
+        "label": "薪资梦想",
+        "description": "关于涨薪的美好幻想"
+      }
+    },
+    "styles": {
+      "classic-template": {
+        "label": "经典模板",
+        "description": "使用经典梗图模板"
+      },
+      "text-based": {
+        "label": "文字梗",
+        "description": "纯文字的搞笑内容"
+      },
+      "dialogue": {
+        "label": "对话形式",
+        "description": "人物对话的形式"
+      },
+      "comparison": {
+        "label": "对比梗",
+        "description": "理想vs现实的对比"
+      },
+      "progression": {
+        "label": "递进式",
+        "description": "情况逐步恶化/好转"
+      },
+      "reaction": {
+        "label": "反应梗",
+        "description": "各种情况下的反应"
+      }
+    },
+    "humorLevels": {
+      "mild": {
+        "label": "温和幽默",
+        "description": "轻松愉快，适合分享"
+      },
+      "sarcastic": {
+        "label": "讽刺幽默",
+        "description": "带有讽刺意味的幽默"
+      },
+      "self-deprecating": {
+        "label": "自嘲式",
+        "description": "自我调侃的幽默"
+      },
+      "absurd": {
+        "label": "荒诞幽默",
+        "description": "夸张荒诞的搞笑"
+      },
+      "relatable": {
+        "label": "共鸣式",
+        "description": "引起强烈共鸣的幽默"
+      }
+    }
+  },
   "impressiveMeetingPhrases": {
     "title": "高大上会议用语生成器",
-    "description": "开会时不知道说什么？让AI为您准备专业话术，助您在会议中“谈笑风生”！🎭✨",
+    "description": "开会时不知道说什么？让AI为您准备专业话术，助您在会议中谈笑风生！🎭✨",
     "completionRate": "完成度",
     "badge": "装B神器",
     "step1Title": "选择会议类型",
@@ -2374,6 +2533,266 @@
       "generation": "生成失败，请稍后重试",
       "network": "网络错误，请检查网络连接",
       "unknown": "未知错误，请稍后重试"
+    }
+  },
+  "officeGhostStories": {
+    "title": "办公室鬼故事",
+    "description": "上班族专属恐怖故事，提神醒脑，让疲惫的工作日变得刺激一些",
+    "storyRequestLabel": "故事要求（可选）",
+    "storyRequestPlaceholder": "例如：我想听一个关于深夜加班时电梯里发生的恐怖故事...",
+    "storyRequestHint": "留空将随机生成一个办公室鬼故事",
+    "generateButton": "生成故事",
+    "randomButton": "随机故事",
+    "generating": "正在创作恐怖故事...",
+    "errorTitle": "错误",
+    "storyTitle": "恐怖故事:",
+    "defaultRequest": "请为我创作一个办公室鬼故事",
+    "generateError": "生成鬼故事时发生错误。",
+    "unknownError": "生成鬼故事时发生未知错误。"
+  },
+  "proSlackersTimeManager": {
+    "title": "专业摸鱼时间管理器",
+    "description": "科学摸鱼，高效工作。基于番茄工作法和52-17法则的智能时间管理工具",
+    "currentTime": "当前时间",
+    "workSettings": "工作设置",
+    "workStartTime": "上班时间",
+    "workEndTime": "下班时间",
+    "workMode": "工作模式",
+    "customWorkMinutes": "工作时长（分钟）",
+    "customBreakMinutes": "休息时长（分钟）",
+    "currentTask": "当前任务",
+    "taskPlaceholder": "输入你正在做的任务...",
+    "nextBreakPeriod": "下一个休息时段",
+    "timeToNextBreak": "距离下次休息",
+    "timeToWork": "距离开始工作",
+    "currentlyWorking": "正在工作",
+    "currentlyResting": "正在休息",
+    "workingRemaining": "工作剩余",
+    "restingRemaining": "休息剩余",
+    "startWork": "开始工作",
+    "startBreak": "开始休息",
+    "reset": "重置",
+    "todayStats": "今日统计",
+    "totalWorkTime": "总工作时长",
+    "totalBreakTime": "总休息时长",
+    "completedSessions": "完成会话",
+    "efficiency": "工作效率",
+    "modes": {
+      "pomodoro": "番茄工作法 (25/5)",
+      "extended": "延长专注 (45/15)",
+      "sprint": "冲刺模式 (52/17)",
+      "custom": "自定义模式"
+    },
+    "status": {
+      "beforeWork": "还没到班点呢",
+      "afterWork": "已下班，自由摸鱼！🎉",
+      "invalidTime": "请正确设置有效的上班和下班时间",
+      "workFinished": "今日工作已完成，努力奋斗到下班！"
+    },
+    "notifications": {
+      "workTime": "工作时间到！专注开始 💪",
+      "breakTime": "休息时间到！放松一下 ☕",
+      "workComplete": "工作会话完成！",
+      "breakComplete": "休息结束，继续加油！"
+    }
+  },
+  "workdayCountdown": {
+    "title": "下班倒计时",
+    "description": "精确计算距离下班的时间，为您提供专属的时间管理和激励建议！⏰",
+    "completionRate": "完成度",
+    "countdownType": "倒计时类型",
+    "countdownTypes": {
+      "endOfWorkday": "今日下班",
+      "weekend": "本周末",
+      "payday": "发薪日",
+      "springFestival": "春节",
+      "custom": "自定义"
+    },
+    "customEventName": "自定义事件名称",
+    "customEventNamePlaceholder": "例如：项目截止日期、年假开始等",
+    "targetDate": "目标日期",
+    "targetTime": "目标时间",
+    "startCountdown": "开始倒计时",
+    "getMotivation": "获取激励建议",
+    "countdown": {
+      "days": "天",
+      "hours": "小时",
+      "minutes": "分钟",
+      "seconds": "秒"
+    },
+    "motivationTitle": "AI 激励建议",
+    "loadingMotivation": "正在生成激励建议...",
+    "errors": {
+      "selectType": "请选择倒计时类型。",
+      "enterEventName": "请输入自定义事件名称。",
+      "selectDate": "请选择目标日期。",
+      "selectTime": "请选择目标时间。",
+      "pastTime": "目标时间不能是过去的时间。",
+      "getAdviceError": "获取建议时发生错误。"
+    },
+    "apiRequest": "我想要一个倒计时到{{eventName}}的激励建议。目标时间是：{{targetTime}}，当前时间是：{{currentTime}}。"
+  },
+  "slackingIndexCalculator": {
+    "title": "划水指数计算器",
+    "description": "科学量化您的摸鱼程度，让划水变得更有艺术感",
+    "completionRate": "完成度",
+    "workTimeSection": "工作时间",
+    "slackingBehaviorSection": "摸鱼行为",
+    "workHoursLabel": "每日上班时间：{{hours}}小时",
+    "actualWorkHoursLabel": "实际工作时间：{{hours}}小时",
+    "slackingFrequencyLabel": "摸鱼频率",
+    "slackingFrequencyPlaceholder": "选择摸鱼频率",
+    "slackingDurationLabel": "每次摸鱼时长：{{duration}}分钟",
+    "slackingActivitiesLabel": "主要摸鱼活动",
+    "slackingActivitiesPlaceholder": "例如：刷微博、看视频、聊天、网购、玩游戏、看小说等",
+    "workEfficiencyLabel": "工作效率",
+    "workEfficiencyPlaceholder": "评估您的工作效率",
+    "riskLevelLabel": "被发现风险",
+    "riskLevelPlaceholder": "评估被发现的风险",
+    "additionalInfoLabel": "补充信息",
+    "additionalInfoPlaceholder": "其他想要补充的工作或摸鱼相关信息...",
+    "calculateButton": "计算划水指数",
+    "calculatingButton": "正在计算划水指数...",
+    "resetButton": "重新评估",
+    "reportTitle": "划水指数报告:",
+    "requiredFieldsError": "请填写所有必填项。",
+    "calculationError": "计算划水指数时发生错误。",
+    "unknownError": "计算划水指数时发生未知错误。",
+    "frequencies": {
+      "rarely": "很少（一周1-2次）",
+      "occasionally": "偶尔（每天1-2次）",
+      "frequently": "经常（每天3-5次）",
+      "constantly": "频繁（每天5次以上）",
+      "professional": "专业级（几乎一直在摸鱼）"
+    },
+    "efficiencyLevels": {
+      "veryHigh": "非常高（总能提前完成任务）",
+      "high": "较高（按时完成任务）",
+      "medium": "一般（偶尔延期）",
+      "low": "较低（经常延期）",
+      "veryLow": "很低（任务堆积如山）"
+    },
+    "riskLevels": {
+      "veryLow": "很低（摸鱼技巧高超）",
+      "low": "较低（比较谨慎）",
+      "medium": "一般（偶尔被发现）",
+      "high": "较高（经常被发现）",
+      "veryHigh": "很高（明目张胆摸鱼）"
+    },
+    "apiRequest": "请帮我计算划水指数。我的工作数据如下：\n\n工作时间安排：\n- 每日上班时间：{{workHours}}小时\n- 实际工作时间：{{actualWorkHours}}小时\n\n摸鱼行为分析：\n- 摸鱼频率：{{slackingFrequency}}\n- 每次摸鱼时长：约{{slackingDuration}}分钟\n- 主要摸鱼活动：{{slackingActivities}}\n\n工作表现：\n- 工作效率：{{workEfficiency}}\n- 被发现风险：{{riskLevel}}\n\n补充信息：{{additionalInfo}}\n\n请根据这些信息计算我的划水指数并提供详细分析。"
+  },
+  "salaryTicker": {
+    "title": "工资倒推计算器",
+    "description": "实时显示“这分钟您赚了多少钱”，让时间变得更有价值感",
+    "completionRate": "完成度",
+    "realtimeTimerSection": "实时收入计时器",
+    "salaryInfoSection": "薪资信息",
+    "workTimeSection": "工作时间",
+    "hourlyRate": "时薪",
+    "minuteRate": "分薪",
+    "secondRate": "秒薪",
+    "dailyRate": "日薪",
+    "currentEarnings": "当前已赚: ¥{{amount}}",
+    "startTimer": "开始计时",
+    "stopTimer": "停止计时",
+    "salaryTypeLabel": "薪资类型",
+    "salaryTypePlaceholder": "选择薪资类型",
+    "salaryAmountLabel": "薪资金额",
+    "salaryAmountPlaceholder": "请输入薪资金额",
+    "cityLabel": "所在城市",
+    "cityPlaceholder": "例如：北京、上海、深圳等",
+    "workHoursPerDayLabel": "每日工作时间（小时）",
+    "workDaysPerWeekLabel": "每周工作天数",
+    "additionalInfoLabel": "补充信息",
+    "additionalInfoPlaceholder": "其他想要补充的薪资或工作相关信息...",
+    "analyzeButton": "分析时间价值",
+    "analyzingButton": "正在分析时间价值...",
+    "resetButton": "重新计算",
+    "reportTitle": "时间价值分析报告:",
+    "requiredFieldsError": "请填写薪资信息。",
+    "analysisError": "分析工资时间价值时发生错误。",
+    "unknownError": "分析工资时间价值时发生未知错误。",
+    "salaryTypes": {
+      "monthly": "月薪",
+      "yearly": "年薪"
+    },
+    "currency": "¥",
+    "apiRequest": "请帮我分析工资时间价值。我的薪资信息如下：\n\n薪资信息：\n- 薪资类型：{{salaryType}}\n- 薪资金额：{{currency}}{{salaryAmount}}\n- 每日工作时间：{{workHoursPerDay}}小时\n- 每周工作天数：{{workDaysPerWeek}}天\n- 所在城市：{{city}}\n\n计算结果：\n- 年收入：{{currency}}{{yearlyIncome}}\n- 月收入：{{currency}}{{monthlyIncome}}\n- 日收入：{{currency}}{{dailyIncome}}\n- 时薪：{{currency}}{{hourlyRate}}\n- 分薪：{{currency}}{{minuteRate}}\n- 秒薪：{{currency}}{{secondRate}}\n\n补充信息：{{additionalInfo}}\n\n请根据这些信息生成详细的工资倒推分析报告，包括时间成本对比、工作效率分析和时间管理建议。"
+  },
+  "workTimeMachine": {
+    "title": "时光机工作体验",
+    "description": "体验30年前、现在和30年后的工作方式，感受职场时代变迁",
+    "currentWorkLabel": "当前工作情况",
+    "currentWorkPlaceholder": "例如：我是一名软件工程师，主要负责前端开发，每天需要参加很多线上会议，使用各种协作工具...",
+    "startButton": "启动时光机",
+    "travelingButton": "正在穿越时空...",
+    "reportTitle": "时光机体验报告:",
+    "emptyWorkError": "请描述你的当前工作情况。",
+    "travelError": "时光穿越时发生错误。",
+    "unknownError": "时光穿越时发生未知错误。",
+    "errorTitle": "错误"
+  },
+  "stealthSpendingLog": {
+    "title": "隐形消费追踪",
+    "description": "计算奶茶、外卖等小额消费的年度总开销，发现隐藏的财务黑洞",
+    "previewTitle": "年度隐形消费预览",
+    "previewHint": "这些看似微不足道的小额支出，一年累计竟然这么多！",
+    "totalAmount": "总金额",
+    "monthlyAverage": "月均",
+    "dailyAverage": "日均",
+    "incomeRatio": "收入占比",
+    "basicInfoSection": "基本信息",
+    "consumptionOverviewSection": "消费概览",
+    "consumptionDetailsSection": "消费明细设置",
+    "monthlyIncomeLabel": "月收入 (¥) *",
+    "monthlyIncomePlaceholder": "请输入您的月收入",
+    "analysisGoalLabel": "分析目标",
+    "analysisGoalPlaceholder": "选择分析目标",
+    "takeoutLabel": "外卖",
+    "drinksLabel": "奶茶咖啡",
+    "ridesLabel": "打车",
+    "snacksLabel": "零食",
+    "impulseLabel": "冲动购物",
+    "subscriptionsLabel": "数字订阅",
+    "appPurchasesLabel": "应用内购买",
+    "otherLabel": "其他小额支出",
+    "totalLabel": "总计",
+    "yearlyUnit": "/年",
+    "takeoutFrequencyLabel": "外卖频率：每周{{frequency}}次",
+    "takeoutPriceLabel": "平均单价 (¥)",
+    "takeoutPricePlaceholder": "如：35",
+    "drinkFrequencyLabel": "奶茶咖啡频率：每周{{frequency}}次",
+    "drinkPriceLabel": "平均单价 (¥)",
+    "drinkPricePlaceholder": "如：25",
+    "rideFrequencyLabel": "打车频率：每月{{frequency}}次",
+    "ridePriceLabel": "平均单价 (¥)",
+    "ridePricePlaceholder": "如：20",
+    "snackFrequencyLabel": "零食频率：每周{{frequency}}次",
+    "snackPriceLabel": "平均单价 (¥)",
+    "snackPricePlaceholder": "如：15",
+    "impulseFrequencyLabel": "冲动购物频率：每月{{frequency}}次",
+    "impulsePriceLabel": "平均单价 (¥)",
+    "impulsePricePlaceholder": "如：100",
+    "subscriptionsMonthlyLabel": "数字订阅月费 (¥)",
+    "subscriptionsPlaceholder": "如：50（包括视频、音乐、云存储等）",
+    "appPurchasesMonthlyLabel": "应用内购买月费 (¥)",
+    "appPurchasesPlaceholder": "如：30（游戏、应用内购买等）",
+    "otherMonthlyLabel": "其他小额支出月费 (¥)",
+    "otherPlaceholder": "如：80（停车费、小商品、临时支出等）",
+    "generateButton": "生成消费分析报告",
+    "generatingButton": "正在分析消费数据...",
+    "resetButton": "重新设置",
+    "reportTitle": "消费分析报告:",
+    "errorTitle": "错误",
+    "requiredFieldsError": "请填写月收入信息。",
+    "analysisError": "生成消费分析报告时发生错误。",
+    "unknownError": "生成消费分析报告时发生未知错误。",
+    "analysisGoals": {
+      "comprehensive": "全面分析隐形消费",
+      "optimization": "重点优化建议",
+      "savings": "节省潜力分析",
+      "psychology": "消费心理分析",
+      "budget": "预算规划建议"
     }
   }
 }

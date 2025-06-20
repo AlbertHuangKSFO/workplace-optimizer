@@ -7,11 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { ValidLocale } from "@/lib/i18n";
+import { useTranslations } from "@/lib/use-translations";
 import { Calculator, Loader2, RefreshCw, Terminal } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-const StealthSpendingLog = () => {
+interface StealthSpendingLogProps {
+  locale: ValidLocale;
+}
+
+const StealthSpendingLog = ({ locale }: StealthSpendingLogProps) => {
+  const { t, loading } = useTranslations(locale);
+
   const [monthlyIncome, setMonthlyIncome] = useState("");
   const [takeoutFreq, setTakeoutFreq] = useState([3]);
   const [takeoutPrice, setTakeoutPrice] = useState("");
@@ -30,6 +38,18 @@ const StealthSpendingLog = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<string | null>(null);
+
+  // 如果翻译还在加载中，显示加载状态
+  if (loading) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Loading...
+        </CardContent>
+      </Card>
+    );
+  }
 
   // 计算预览数据
   const calculatePreview = () => {
@@ -66,7 +86,7 @@ const StealthSpendingLog = () => {
 
   const handleGenerate = async () => {
     if (!monthlyIncome) {
-      setError("请填写月收入信息。");
+      setError(t('stealthSpendingLog.requiredFieldsError'));
       return;
     }
 
@@ -115,8 +135,10 @@ const StealthSpendingLog = () => {
       },
       totalYearly: preview.totalYearly,
       incomePercentage: preview.incomePercentage,
-      analysisGoal: analysisGoal || "全面分析隐形消费并提供优化建议"
+      analysisGoal: analysisGoal || (locale === 'zh-CN' ? "全面分析隐形消费并提供优化建议" : "Comprehensive stealth spending analysis and optimization suggestions")
     };
+
+    const currency = locale === 'zh-CN' ? '¥' : '$';
 
     try {
       const response = await fetch("/api/chat", {
@@ -126,29 +148,51 @@ const StealthSpendingLog = () => {
         },
         body: JSON.stringify({
           toolId: "stealth-spending-log",
+          locale: locale,
           messages: [
             {
               role: "user",
-              content: `请为我分析隐形消费情况。我的消费数据如下：
+              content: locale === 'zh-CN' ?
+                `请为我分析隐形消费情况。我的消费数据如下：
 
 基本信息：
-- 月收入：¥${analysisData.monthlyIncome}
+- 月收入：${currency}${analysisData.monthlyIncome}
 - 分析目标：${analysisData.analysisGoal}
 
 消费明细：
-1. 外卖订餐：每周${analysisData.takeout.frequency}次，平均¥${analysisData.takeout.price}/次，年度总计¥${analysisData.takeout.yearly.toFixed(2)}
-2. 咖啡奶茶：每周${analysisData.drinks.frequency}次，平均¥${analysisData.drinks.price}/次，年度总计¥${analysisData.drinks.yearly.toFixed(2)}
-3. 网约车/打车：每月${analysisData.rides.frequency}次，平均¥${analysisData.rides.price}/次，年度总计¥${analysisData.rides.yearly.toFixed(2)}
-4. 零食小食：每周${analysisData.snacks.frequency}次，平均¥${analysisData.snacks.price}/次，年度总计¥${analysisData.snacks.yearly.toFixed(2)}
-5. 冲动购物：每月${analysisData.impulse.frequency}次，平均¥${analysisData.impulse.price}/次，年度总计¥${analysisData.impulse.yearly.toFixed(2)}
-6. 数字订阅：每月¥${analysisData.subscriptions.monthly}，年度总计¥${analysisData.subscriptions.yearly}
-7. 应用内购买：每月¥${analysisData.appPurchases.monthly}，年度总计¥${analysisData.appPurchases.yearly}
-8. 其他小额支出：每月¥${analysisData.other.monthly}，年度总计¥${analysisData.other.yearly}
+1. 外卖订餐：每周${analysisData.takeout.frequency}次，平均${currency}${analysisData.takeout.price}/次，年度总计${currency}${analysisData.takeout.yearly.toFixed(2)}
+2. 咖啡奶茶：每周${analysisData.drinks.frequency}次，平均${currency}${analysisData.drinks.price}/次，年度总计${currency}${analysisData.drinks.yearly.toFixed(2)}
+3. 网约车/打车：每月${analysisData.rides.frequency}次，平均${currency}${analysisData.rides.price}/次，年度总计${currency}${analysisData.rides.yearly.toFixed(2)}
+4. 零食小食：每周${analysisData.snacks.frequency}次，平均${currency}${analysisData.snacks.price}/次，年度总计${currency}${analysisData.snacks.yearly.toFixed(2)}
+5. 冲动购物：每月${analysisData.impulse.frequency}次，平均${currency}${analysisData.impulse.price}/次，年度总计${currency}${analysisData.impulse.yearly.toFixed(2)}
+6. 数字订阅：每月${currency}${analysisData.subscriptions.monthly}，年度总计${currency}${analysisData.subscriptions.yearly}
+7. 应用内购买：每月${currency}${analysisData.appPurchases.monthly}，年度总计${currency}${analysisData.appPurchases.yearly}
+8. 其他小额支出：每月${currency}${analysisData.other.monthly}，年度总计${currency}${analysisData.other.yearly}
 
-总计隐形消费：¥${analysisData.totalYearly.toFixed(2)}/年
+总计隐形消费：${currency}${analysisData.totalYearly.toFixed(2)}/年
 占月收入比例：${analysisData.incomePercentage.toFixed(1)}%
 
-请根据这些数据生成详细的隐形消费追踪报告，包括消费分析、优化建议和节省潜力计算。`,
+请根据这些数据生成详细的隐形消费追踪报告，包括消费分析、优化建议和节省潜力计算。` :
+                `Please analyze my stealth spending situation. My spending data is as follows:
+
+Basic Information:
+- Monthly Income: ${currency}${analysisData.monthlyIncome}
+- Analysis Goal: ${analysisData.analysisGoal}
+
+Spending Details:
+1. Takeout Orders: ${analysisData.takeout.frequency} times/week, average ${currency}${analysisData.takeout.price}/time, annual total ${currency}${analysisData.takeout.yearly.toFixed(2)}
+2. Coffee & Drinks: ${analysisData.drinks.frequency} times/week, average ${currency}${analysisData.drinks.price}/time, annual total ${currency}${analysisData.drinks.yearly.toFixed(2)}
+3. Ride Services: ${analysisData.rides.frequency} times/month, average ${currency}${analysisData.rides.price}/time, annual total ${currency}${analysisData.rides.yearly.toFixed(2)}
+4. Snacks: ${analysisData.snacks.frequency} times/week, average ${currency}${analysisData.snacks.price}/time, annual total ${currency}${analysisData.snacks.yearly.toFixed(2)}
+5. Impulse Shopping: ${analysisData.impulse.frequency} times/month, average ${currency}${analysisData.impulse.price}/time, annual total ${currency}${analysisData.impulse.yearly.toFixed(2)}
+6. Digital Subscriptions: ${currency}${analysisData.subscriptions.monthly}/month, annual total ${currency}${analysisData.subscriptions.yearly}
+7. App Purchases: ${currency}${analysisData.appPurchases.monthly}/month, annual total ${currency}${analysisData.appPurchases.yearly}
+8. Other Small Expenses: ${currency}${analysisData.other.monthly}/month, annual total ${currency}${analysisData.other.yearly}
+
+Total Stealth Spending: ${currency}${analysisData.totalYearly.toFixed(2)}/year
+Percentage of Monthly Income: ${analysisData.incomePercentage.toFixed(1)}%
+
+Please generate a detailed stealth spending tracking report based on this data, including spending analysis, optimization suggestions, and savings potential calculations.`,
             },
           ],
         }),
@@ -156,13 +200,13 @@ const StealthSpendingLog = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "生成消费分析报告时发生错误。");
+        throw new Error(errorData.error || t('stealthSpendingLog.analysisError'));
       }
 
       const data = await response.json();
       setReport(data.assistantMessage);
     } catch (err: any) {
-      setError(err.message || "生成消费分析报告时发生未知错误。");
+      setError(err.message || t('stealthSpendingLog.unknownError'));
     } finally {
       setIsLoading(false);
     }
@@ -188,15 +232,17 @@ const StealthSpendingLog = () => {
     setError(null);
   };
 
+  const currency = locale === 'zh-CN' ? '¥' : '$';
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-3xl font-bold flex items-center justify-center">
           <span role="img" aria-label="money" className="mr-2 text-4xl">💰</span>
-          隐形消费追踪
+          {t('stealthSpendingLog.title')}
         </CardTitle>
         <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          计算奶茶、外卖等小额消费的年度总开销，发现隐藏的财务黑洞
+          {t('stealthSpendingLog.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -204,29 +250,29 @@ const StealthSpendingLog = () => {
         {preview.totalYearly > 0 && (
           <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-lg border">
             <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold">💸 年度隐形消费预览</h3>
+              <h3 className="text-xl font-semibold">💸 {t('stealthSpendingLog.previewTitle')}</h3>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-orange-600">总金额</div>
-                  <div>¥{preview.totalYearly.toFixed(0)}</div>
+                  <div className="font-semibold text-orange-600">{t('stealthSpendingLog.totalAmount')}</div>
+                  <div>{currency}{preview.totalYearly.toFixed(0)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-red-600">月均</div>
-                  <div>¥{(preview.totalYearly / 12).toFixed(0)}</div>
+                  <div className="font-semibold text-red-600">{t('stealthSpendingLog.monthlyAverage')}</div>
+                  <div>{currency}{(preview.totalYearly / 12).toFixed(0)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-purple-600">日均</div>
-                  <div>¥{(preview.totalYearly / 365).toFixed(0)}</div>
+                  <div className="font-semibold text-purple-600">{t('stealthSpendingLog.dailyAverage')}</div>
+                  <div>{currency}{(preview.totalYearly / 365).toFixed(0)}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-blue-600">收入占比</div>
+                  <div className="font-semibold text-blue-600">{t('stealthSpendingLog.incomeRatio')}</div>
                   <div>{preview.incomePercentage.toFixed(1)}%</div>
                 </div>
               </div>
 
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                💡 这些看似微不足道的小额支出，一年累计竟然这么多！
+                💡 {t('stealthSpendingLog.previewHint')}
               </div>
             </div>
           </div>
@@ -235,80 +281,80 @@ const StealthSpendingLog = () => {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">💼 基本信息</h3>
+              <h3 className="text-lg font-semibold">💼 {t('stealthSpendingLog.basicInfoSection')}</h3>
 
               <div className="space-y-2">
-                <Label htmlFor="monthly-income">月收入 (¥) *</Label>
+                <Label htmlFor="monthly-income">{t('stealthSpendingLog.monthlyIncomeLabel')}</Label>
                 <Input
                   id="monthly-income"
                   type="number"
-                  placeholder="请输入您的月收入"
+                  placeholder={t('stealthSpendingLog.monthlyIncomePlaceholder')}
                   value={monthlyIncome}
                   onChange={(e) => setMonthlyIncome(e.target.value)}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="analysis-goal">分析目标</Label>
+                <Label htmlFor="analysis-goal">{t('stealthSpendingLog.analysisGoalLabel')}</Label>
                 <Select value={analysisGoal} onValueChange={setAnalysisGoal}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择分析目标" />
+                    <SelectValue placeholder={t('stealthSpendingLog.analysisGoalPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="comprehensive">全面分析隐形消费</SelectItem>
-                    <SelectItem value="optimization">重点优化建议</SelectItem>
-                    <SelectItem value="savings">节省潜力分析</SelectItem>
-                    <SelectItem value="psychology">消费心理分析</SelectItem>
-                    <SelectItem value="budget">预算规划建议</SelectItem>
+                    <SelectItem value="comprehensive">{t('stealthSpendingLog.analysisGoals.comprehensive')}</SelectItem>
+                    <SelectItem value="optimization">{t('stealthSpendingLog.analysisGoals.optimization')}</SelectItem>
+                    <SelectItem value="savings">{t('stealthSpendingLog.analysisGoals.savings')}</SelectItem>
+                    <SelectItem value="psychology">{t('stealthSpendingLog.analysisGoals.psychology')}</SelectItem>
+                    <SelectItem value="budget">{t('stealthSpendingLog.analysisGoals.budget')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">📊 消费概览</h3>
+              <h3 className="text-lg font-semibold">📊 {t('stealthSpendingLog.consumptionOverviewSection')}</h3>
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>外卖：</span>
-                  <span className="font-semibold">¥{preview.takeoutYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.takeoutLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.takeoutYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>奶茶咖啡：</span>
-                  <span className="font-semibold">¥{preview.drinkYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.drinksLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.drinkYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>打车：</span>
-                  <span className="font-semibold">¥{preview.rideYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.ridesLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.rideYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>零食：</span>
-                  <span className="font-semibold">¥{preview.snackYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.snacksLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.snackYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>冲动购物：</span>
-                  <span className="font-semibold">¥{preview.impulseYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.impulseLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.impulseYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>数字订阅：</span>
-                  <span className="font-semibold">¥{preview.subscriptionYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.subscriptionsLabel')}：</span>
+                  <span className="font-semibold">{currency}{preview.subscriptionYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
                 <hr className="my-2" />
                 <div className="flex justify-between font-bold text-base">
-                  <span>总计：</span>
-                  <span className="text-red-600">¥{preview.totalYearly.toFixed(0)}/年</span>
+                  <span>{t('stealthSpendingLog.totalLabel')}：</span>
+                  <span className="text-red-600">{currency}{preview.totalYearly.toFixed(0)}{t('stealthSpendingLog.yearlyUnit')}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold">🍔 消费明细设置</h3>
+            <h3 className="text-lg font-semibold">🍔 {t('stealthSpendingLog.consumptionDetailsSection')}</h3>
 
             {/* 外卖消费 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>外卖频率：每周{takeoutFreq[0]}次</Label>
+                <Label>{t('stealthSpendingLog.takeoutFrequencyLabel', { frequency: takeoutFreq[0] })}</Label>
                 <Slider
                   value={takeoutFreq}
                   onValueChange={setTakeoutFreq}
@@ -319,11 +365,11 @@ const StealthSpendingLog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="takeout-price">平均单价 (¥)</Label>
+                <Label htmlFor="takeout-price">{t('stealthSpendingLog.takeoutPriceLabel')}</Label>
                 <Input
                   id="takeout-price"
                   type="number"
-                  placeholder="如：35"
+                  placeholder={t('stealthSpendingLog.takeoutPricePlaceholder')}
                   value={takeoutPrice}
                   onChange={(e) => setTakeoutPrice(e.target.value)}
                 />
@@ -333,7 +379,7 @@ const StealthSpendingLog = () => {
             {/* 奶茶咖啡 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>奶茶咖啡频率：每周{drinkFreq[0]}次</Label>
+                <Label>{t('stealthSpendingLog.drinkFrequencyLabel', { frequency: drinkFreq[0] })}</Label>
                 <Slider
                   value={drinkFreq}
                   onValueChange={setDrinkFreq}
@@ -344,11 +390,11 @@ const StealthSpendingLog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="drink-price">平均单价 (¥)</Label>
+                <Label htmlFor="drink-price">{t('stealthSpendingLog.drinkPriceLabel')}</Label>
                 <Input
                   id="drink-price"
                   type="number"
-                  placeholder="如：25"
+                  placeholder={t('stealthSpendingLog.drinkPricePlaceholder')}
                   value={drinkPrice}
                   onChange={(e) => setDrinkPrice(e.target.value)}
                 />
@@ -358,7 +404,7 @@ const StealthSpendingLog = () => {
             {/* 网约车 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>打车频率：每月{rideFreq[0]}次</Label>
+                <Label>{t('stealthSpendingLog.rideFrequencyLabel', { frequency: rideFreq[0] })}</Label>
                 <Slider
                   value={rideFreq}
                   onValueChange={setRideFreq}
@@ -369,11 +415,11 @@ const StealthSpendingLog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="ride-price">平均单价 (¥)</Label>
+                <Label htmlFor="ride-price">{t('stealthSpendingLog.ridePriceLabel')}</Label>
                 <Input
                   id="ride-price"
                   type="number"
-                  placeholder="如：20"
+                  placeholder={t('stealthSpendingLog.ridePricePlaceholder')}
                   value={ridePrice}
                   onChange={(e) => setRidePrice(e.target.value)}
                 />
@@ -383,7 +429,7 @@ const StealthSpendingLog = () => {
             {/* 零食 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>零食频率：每周{snackFreq[0]}次</Label>
+                <Label>{t('stealthSpendingLog.snackFrequencyLabel', { frequency: snackFreq[0] })}</Label>
                 <Slider
                   value={snackFreq}
                   onValueChange={setSnackFreq}
@@ -394,11 +440,11 @@ const StealthSpendingLog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="snack-price">平均单价 (¥)</Label>
+                <Label htmlFor="snack-price">{t('stealthSpendingLog.snackPriceLabel')}</Label>
                 <Input
                   id="snack-price"
                   type="number"
-                  placeholder="如：15"
+                  placeholder={t('stealthSpendingLog.snackPricePlaceholder')}
                   value={snackPrice}
                   onChange={(e) => setSnackPrice(e.target.value)}
                 />
@@ -408,7 +454,7 @@ const StealthSpendingLog = () => {
             {/* 冲动购物 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>冲动购物频率：每月{impulseFreq[0]}次</Label>
+                <Label>{t('stealthSpendingLog.impulseFrequencyLabel', { frequency: impulseFreq[0] })}</Label>
                 <Slider
                   value={impulseFreq}
                   onValueChange={setImpulseFreq}
@@ -419,11 +465,11 @@ const StealthSpendingLog = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="impulse-price">平均单价 (¥)</Label>
+                <Label htmlFor="impulse-price">{t('stealthSpendingLog.impulsePriceLabel')}</Label>
                 <Input
                   id="impulse-price"
                   type="number"
-                  placeholder="如：100"
+                  placeholder={t('stealthSpendingLog.impulsePricePlaceholder')}
                   value={impulsePrice}
                   onChange={(e) => setImpulsePrice(e.target.value)}
                 />
@@ -433,21 +479,21 @@ const StealthSpendingLog = () => {
             {/* 数字订阅和其他 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="subscriptions">数字订阅月费 (¥)</Label>
+                <Label htmlFor="subscriptions">{t('stealthSpendingLog.subscriptionsMonthlyLabel')}</Label>
                 <Input
                   id="subscriptions"
                   type="number"
-                  placeholder="如：50（包括视频、音乐、云存储等）"
+                  placeholder={t('stealthSpendingLog.subscriptionsPlaceholder')}
                   value={subscriptions}
                   onChange={(e) => setSubscriptions(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="app-purchases">应用内购买月费 (¥)</Label>
+                <Label htmlFor="app-purchases">{t('stealthSpendingLog.appPurchasesMonthlyLabel')}</Label>
                 <Input
                   id="app-purchases"
                   type="number"
-                  placeholder="如：30（游戏、应用内购买等）"
+                  placeholder={t('stealthSpendingLog.appPurchasesPlaceholder')}
                   value={appPurchases}
                   onChange={(e) => setAppPurchases(e.target.value)}
                 />
@@ -455,11 +501,11 @@ const StealthSpendingLog = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="other-expenses">其他小额支出月费 (¥)</Label>
+              <Label htmlFor="other-expenses">{t('stealthSpendingLog.otherMonthlyLabel')}</Label>
               <Input
                 id="other-expenses"
                 type="number"
-                placeholder="如：80（停车费、小商品、临时支出等）"
+                placeholder={t('stealthSpendingLog.otherPlaceholder')}
                 value={otherExpenses}
                 onChange={(e) => setOtherExpenses(e.target.value)}
               />
@@ -472,25 +518,25 @@ const StealthSpendingLog = () => {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                正在分析消费数据...
+                {t('stealthSpendingLog.generatingButton')}
               </>
             ) : (
               <>
                 <Calculator className="mr-2 h-4 w-4" />
-                生成消费分析报告
+                {t('stealthSpendingLog.generateButton')}
               </>
             )}
           </Button>
           <Button onClick={resetForm} variant="outline" className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" />
-            重新设置
+            {t('stealthSpendingLog.resetButton')}
           </Button>
         </div>
 
         {error && (
           <Alert variant="destructive">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>错误</AlertTitle>
+            <AlertTitle>{t('stealthSpendingLog.errorTitle')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -499,7 +545,7 @@ const StealthSpendingLog = () => {
       {report && (
         <CardFooter>
           <div className="w-full space-y-2">
-            <h3 className="text-lg font-semibold">消费分析报告:</h3>
+            <h3 className="text-lg font-semibold">{t('stealthSpendingLog.reportTitle')}</h3>
             <div className="p-4 border rounded-md bg-muted max-h-96 overflow-y-auto">
               <ReactMarkdown
                 components={{
