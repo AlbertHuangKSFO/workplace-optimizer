@@ -3,8 +3,14 @@
 import AntiPuaAssistant from '@/features/office-fun/AntiPuaAssistant';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
+import { ValidLocale } from '@/lib/i18n';
 
-function AntiPuaAssistantPage(): React.JSX.Element {
+interface PageProps {
+  params: Promise<{ locale: ValidLocale }>;
+}
+
+async function AntiPuaAssistantPage({ params }: PageProps): Promise<React.JSX.Element> {
+  const { locale } = await params;
   return (
     <Suspense
       fallback={
@@ -13,7 +19,7 @@ function AntiPuaAssistantPage(): React.JSX.Element {
         </div>
       }
     >
-      <AntiPuaAssistant />
+      <AntiPuaAssistant locale={locale} />
     </Suspense>
   );
 }

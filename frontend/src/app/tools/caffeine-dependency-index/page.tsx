@@ -1,7 +1,10 @@
 import CaffeineDependencyIndex from '@/features/health-wellness/components/CaffeineDependencyIndex';
+import { getCurrentLocale } from '@/lib/server-locale';
 
-export default function CaffeineDependencyIndexPage() {
-  return <CaffeineDependencyIndex />;
+export default async function CaffeineDependencyIndexPage() {
+  const locale = await getCurrentLocale();
+
+  return <CaffeineDependencyIndex locale={locale} />;
 }
 
 export const metadata = {

@@ -2,11 +2,12 @@ import MeetingNonsenseTranslator from '@/features/communication/MeetingNonsenseT
 import { ValidLocale } from '@/lib/i18n';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     locale: ValidLocale;
-  };
+  }>;
 }
 
-export default function MeetingNonsenseTranslatorPage({ params }: PageProps) {
-  return <MeetingNonsenseTranslator locale={params.locale} />;
+export default async function MeetingNonsenseTranslatorPage({ params }: PageProps) {
+  const { locale } = await params;
+  return <MeetingNonsenseTranslator locale={locale} />;
 }

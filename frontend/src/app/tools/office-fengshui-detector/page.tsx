@@ -1,10 +1,11 @@
-'use client';
-
 import OfficeFengshuiDetector from '@/features/office-fun/OfficeFengshuiDetector';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function OfficeFengshuiDetectorPage(): React.JSX.Element {
+async function OfficeFengshuiDetectorPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function OfficeFengshuiDetectorPage(): React.JSX.Element {
         </div>
       }
     >
-      <OfficeFengshuiDetector />
+      <OfficeFengshuiDetector locale={locale} />
     </Suspense>
   );
 }

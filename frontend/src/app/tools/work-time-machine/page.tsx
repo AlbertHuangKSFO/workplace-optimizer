@@ -1,9 +1,12 @@
 import WorkTimeMachine from '@/features/office-fun/components/WorkTimeMachine';
+import { getCurrentLocale } from '@/lib/server-locale';
 
-export default function WorkTimeMachinePage() {
+export default async function WorkTimeMachinePage() {
+  const locale = await getCurrentLocale();
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <WorkTimeMachine />
+      <WorkTimeMachine locale={locale} />
     </div>
   );
 }

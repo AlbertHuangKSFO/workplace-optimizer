@@ -74,10 +74,10 @@ const SlackingIndexCalculator = ({ locale }: Props) => {
             {
               role: "user",
               content: t("slackingIndexCalculator.apiRequest", {
-                workHours: analysisData.workHours,
-                actualWorkHours: analysisData.actualWorkHours,
+                workHours: analysisData.workHours.toString(),
+                actualWorkHours: analysisData.actualWorkHours.toString(),
                 slackingFrequency: analysisData.slackingFrequency,
-                slackingDuration: analysisData.slackingDuration,
+                slackingDuration: analysisData.slackingDuration.toString(),
                 slackingActivities: analysisData.slackingActivities,
                 workEfficiency: analysisData.workEfficiency,
                 riskLevel: analysisData.riskLevel,
@@ -134,7 +134,7 @@ const SlackingIndexCalculator = ({ locale }: Props) => {
             <h3 className="text-lg font-semibold">⏰ {t("slackingIndexCalculator.workTimeSection")}</h3>
 
             <div className="space-y-2">
-              <Label>{t("slackingIndexCalculator.workHoursLabel", { hours: workHours[0] })}</Label>
+              <Label>{t("slackingIndexCalculator.workHoursLabel", { hours: workHours[0].toString() })}</Label>
               <Slider
                 value={workHours}
                 onValueChange={setWorkHours}
@@ -146,7 +146,7 @@ const SlackingIndexCalculator = ({ locale }: Props) => {
             </div>
 
             <div className="space-y-2">
-              <Label>{t("slackingIndexCalculator.actualWorkHoursLabel", { hours: actualWorkHours[0] })}</Label>
+              <Label>{t("slackingIndexCalculator.actualWorkHoursLabel", { hours: actualWorkHours[0].toString() })}</Label>
               <Slider
                 value={actualWorkHours}
                 onValueChange={setActualWorkHours}
@@ -179,7 +179,7 @@ const SlackingIndexCalculator = ({ locale }: Props) => {
             </div>
 
             <div className="space-y-2">
-              <Label>{t("slackingIndexCalculator.slackingDurationLabel", { duration: slackingDuration[0] })}</Label>
+              <Label>{t("slackingIndexCalculator.slackingDurationLabel", { duration: slackingDuration[0].toString() })}</Label>
               <Slider
                 value={slackingDuration}
                 onValueChange={setSlackingDuration}

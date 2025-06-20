@@ -1,10 +1,11 @@
-'use client';
-
 import OfficeOutfitAdvisor from '@/features/office-fun/OfficeOutfitAdvisor';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function OfficeOutfitAdvisorPage(): React.JSX.Element {
+async function OfficeOutfitAdvisorPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function OfficeOutfitAdvisorPage(): React.JSX.Element {
         </div>
       }
     >
-      <OfficeOutfitAdvisor />
+      <OfficeOutfitAdvisor locale={locale} />
     </Suspense>
   );
 }

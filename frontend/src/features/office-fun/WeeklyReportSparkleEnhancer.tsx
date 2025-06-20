@@ -3,9 +3,9 @@
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
 import { useTranslations } from '@/lib/use-translations';
 import { cn } from '@/lib/utils';
-import { ValidLocale } from '@/types/global';
 import { Loader2, VenetianMask, Zap } from 'lucide-react'; // Zap for sparkle/enhance action
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';

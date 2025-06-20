@@ -1,10 +1,11 @@
-'use client';
-
 import MeetingDoodleBuddy from '@/features/office-fun/MeetingDoodleBuddy';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function MeetingDoodleBuddyPage(): React.JSX.Element {
+async function MeetingDoodleBuddyPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function MeetingDoodleBuddyPage(): React.JSX.Element {
         </div>
       }
     >
-      <MeetingDoodleBuddy />
+      <MeetingDoodleBuddy locale={locale} />
     </Suspense>
   );
 }

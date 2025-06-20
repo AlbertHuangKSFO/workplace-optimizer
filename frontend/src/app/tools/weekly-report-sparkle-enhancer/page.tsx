@@ -1,10 +1,11 @@
-'use client';
-
 import WeeklyReportSparkleEnhancer from '@/features/office-fun/WeeklyReportSparkleEnhancer';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function WeeklyReportSparkleEnhancerPage(): React.JSX.Element {
+async function WeeklyReportSparkleEnhancerPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function WeeklyReportSparkleEnhancerPage(): React.JSX.Element {
         </div>
       }
     >
-      <WeeklyReportSparkleEnhancer />
+      <WeeklyReportSparkleEnhancer locale={locale} />
     </Suspense>
   );
 }

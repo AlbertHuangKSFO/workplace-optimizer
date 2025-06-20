@@ -1,7 +1,10 @@
 import WorkerMemeGeneratorPro from '@/features/content-creation/components/WorkerMemeGeneratorPro';
+import { getCurrentLocale } from '@/lib/server-locale';
 
-export default function WorkerMemeGeneratorProPage() {
-  return <WorkerMemeGeneratorPro />;
+export default async function WorkerMemeGeneratorProPage() {
+  const locale = await getCurrentLocale();
+
+  return <WorkerMemeGeneratorPro locale={locale} />;
 }
 
 export const metadata = {

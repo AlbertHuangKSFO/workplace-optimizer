@@ -1,10 +1,11 @@
-'use client';
-
 import UniversalExcuseGenerator from '@/features/office-fun/UniversalExcuseGenerator';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function UniversalExcuseGeneratorPage(): React.JSX.Element {
+async function UniversalExcuseGeneratorPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function UniversalExcuseGeneratorPage(): React.JSX.Element {
         </div>
       }
     >
-      <UniversalExcuseGenerator />
+      <UniversalExcuseGenerator locale={locale} />
     </Suspense>
   );
 }

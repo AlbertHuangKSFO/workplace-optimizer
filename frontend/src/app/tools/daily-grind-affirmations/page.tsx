@@ -1,10 +1,11 @@
-'use client';
-
 import DailyGrindAffirmations from '@/features/office-fun/DailyGrindAffirmations';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function DailyGrindAffirmationsPage(): React.JSX.Element {
+async function DailyGrindAffirmationsPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function DailyGrindAffirmationsPage(): React.JSX.Element {
         </div>
       }
     >
-      <DailyGrindAffirmations />
+      <DailyGrindAffirmations locale={locale} />
     </Suspense>
   );
 }

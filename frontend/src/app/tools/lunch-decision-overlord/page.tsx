@@ -1,10 +1,11 @@
-'use client';
-
 import LunchDecisionOverlord from '@/features/office-fun/LunchDecisionOverlord';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function LunchDecisionOverlordPage(): React.JSX.Element {
+async function LunchDecisionOverlordPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function LunchDecisionOverlordPage(): React.JSX.Element {
         </div>
       }
     >
-      <LunchDecisionOverlord />
+      <LunchDecisionOverlord locale={locale} />
     </Suspense>
   );
 }

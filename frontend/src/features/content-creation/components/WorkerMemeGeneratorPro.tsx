@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ValidLocale } from '@/lib/i18n';
 import { useTranslations } from '@/lib/use-translations';
-import { ValidLocale } from '@/types/global';
 import { Copy, Download, ImagePlay, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 

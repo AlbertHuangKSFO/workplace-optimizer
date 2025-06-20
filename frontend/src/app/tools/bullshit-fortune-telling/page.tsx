@@ -1,10 +1,11 @@
-'use client';
-
 import BullshitFortuneTelling from '@/features/office-fun/BullshitFortuneTelling';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function BullshitFortuneTellingPage(): React.JSX.Element {
+async function BullshitFortuneTellingPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function BullshitFortuneTellingPage(): React.JSX.Element {
         </div>
       }
     >
-      <BullshitFortuneTelling />
+      <BullshitFortuneTelling locale={locale} />
     </Suspense>
   );
 }

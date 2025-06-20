@@ -1,10 +1,11 @@
-'use client';
-
 import ImpressiveMeetingPhrases from '@/features/office-fun/ImpressiveMeetingPhrases';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function ImpressiveMeetingPhrasesPage(): React.JSX.Element {
+async function ImpressiveMeetingPhrasesPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function ImpressiveMeetingPhrasesPage(): React.JSX.Element {
         </div>
       }
     >
-      <ImpressiveMeetingPhrases />
+      <ImpressiveMeetingPhrases locale={locale} />
     </Suspense>
   );
 }

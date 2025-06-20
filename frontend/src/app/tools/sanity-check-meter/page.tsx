@@ -1,10 +1,11 @@
-'use client';
-
 import SanityCheckMeter from '@/features/office-fun/SanityCheckMeter';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function SanityCheckMeterPage(): React.JSX.Element {
+async function SanityCheckMeterPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function SanityCheckMeterPage(): React.JSX.Element {
         </div>
       }
     >
-      <SanityCheckMeter />
+      <SanityCheckMeter locale={locale} />
     </Suspense>
   );
 }

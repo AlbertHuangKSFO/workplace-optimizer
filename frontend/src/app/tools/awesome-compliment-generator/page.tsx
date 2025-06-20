@@ -1,10 +1,16 @@
 'use client';
 
 import AwesomeComplimentGenerator from '@/features/office-fun/AwesomeComplimentGenerator';
+import { ValidLocale } from '@/lib/i18n';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function AwesomeComplimentGeneratorPage(): React.JSX.Element {
+interface PageProps {
+  params: Promise<{ locale: ValidLocale }>;
+}
+
+async function AwesomeComplimentGeneratorPage({ params }: PageProps): Promise<React.JSX.Element> {
+  const { locale } = await params;
   return (
     <Suspense
       fallback={
@@ -13,7 +19,7 @@ function AwesomeComplimentGeneratorPage(): React.JSX.Element {
         </div>
       }
     >
-      <AwesomeComplimentGenerator />
+      <AwesomeComplimentGenerator locale={locale} />
     </Suspense>
   );
 }

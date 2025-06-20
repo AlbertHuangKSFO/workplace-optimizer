@@ -354,7 +354,7 @@ Please generate a detailed stealth spending tracking report based on this data, 
             {/* 外卖消费 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>{t('stealthSpendingLog.takeoutFrequencyLabel', { frequency: takeoutFreq[0] })}</Label>
+                <Label>{t('stealthSpendingLog.takeoutFrequencyLabel', { frequency: takeoutFreq[0].toString() })}</Label>
                 <Slider
                   value={takeoutFreq}
                   onValueChange={setTakeoutFreq}
@@ -379,7 +379,7 @@ Please generate a detailed stealth spending tracking report based on this data, 
             {/* 奶茶咖啡 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>{t('stealthSpendingLog.drinkFrequencyLabel', { frequency: drinkFreq[0] })}</Label>
+                <Label>{t('stealthSpendingLog.drinkFrequencyLabel', { frequency: drinkFreq[0].toString() })}</Label>
                 <Slider
                   value={drinkFreq}
                   onValueChange={setDrinkFreq}
@@ -404,7 +404,7 @@ Please generate a detailed stealth spending tracking report based on this data, 
             {/* 网约车 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>{t('stealthSpendingLog.rideFrequencyLabel', { frequency: rideFreq[0] })}</Label>
+                <Label>{t('stealthSpendingLog.rideFrequencyLabel', { frequency: rideFreq[0].toString() })}</Label>
                 <Slider
                   value={rideFreq}
                   onValueChange={setRideFreq}
@@ -429,7 +429,7 @@ Please generate a detailed stealth spending tracking report based on this data, 
             {/* 零食 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>{t('stealthSpendingLog.snackFrequencyLabel', { frequency: snackFreq[0] })}</Label>
+                <Label>{t('stealthSpendingLog.snackFrequencyLabel', { frequency: snackFreq[0].toString() })}</Label>
                 <Slider
                   value={snackFreq}
                   onValueChange={setSnackFreq}
@@ -454,7 +454,7 @@ Please generate a detailed stealth spending tracking report based on this data, 
             {/* 冲动购物 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
               <div className="space-y-2">
-                <Label>{t('stealthSpendingLog.impulseFrequencyLabel', { frequency: impulseFreq[0] })}</Label>
+                <Label>{t('stealthSpendingLog.impulseFrequencyLabel', { frequency: impulseFreq[0].toString() })}</Label>
                 <Slider
                   value={impulseFreq}
                   onValueChange={setImpulseFreq}

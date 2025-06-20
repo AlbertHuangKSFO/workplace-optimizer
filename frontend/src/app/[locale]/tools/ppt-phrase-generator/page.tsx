@@ -1,4 +1,4 @@
-import PPTPhraseGenerator from '@/features/generation/ppt/PptPhraseGenerator';
+import PPTPhraseGenerator from '@/features/generation/ppt/PPTPhraseGenerator';
 import { ValidLocale } from '@/lib/i18n';
 
 interface PageProps {

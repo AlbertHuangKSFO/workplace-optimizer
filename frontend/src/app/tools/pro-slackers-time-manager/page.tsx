@@ -1,10 +1,11 @@
-'use client';
-
 import ProSlackersTimeManager from '@/features/office-fun/ProSlackersTimeManager';
+import { getCurrentLocale } from '@/lib/server-locale';
 import { Loader2 } from 'lucide-react';
 import React, { Suspense } from 'react';
 
-function ProSlackersTimeManagerPage(): React.JSX.Element {
+async function ProSlackersTimeManagerPage(): Promise<React.JSX.Element> {
+  const locale = await getCurrentLocale();
+
   return (
     <Suspense
       fallback={
@@ -13,7 +14,7 @@ function ProSlackersTimeManagerPage(): React.JSX.Element {
         </div>
       }
     >
-      <ProSlackersTimeManager />
+      <ProSlackersTimeManager locale={locale} />
     </Suspense>
   );
 }
